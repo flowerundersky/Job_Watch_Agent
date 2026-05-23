@@ -1,0 +1,1 @@
+"""Recruitment monitoring agent package."""
