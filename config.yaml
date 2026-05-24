@@ -1,16 +1,16 @@
 job_role: AI应用开发工程师
-top_x: 10
+top_x: 30
 model_backend:
   backend: openai_compatible
   api_base_url: "https://www.tokenrouter.tech/v1"
   api_key: "sk-m61odK2EZm8eFJNKj9DpzC0ZTHJ7XHHeuzsB7GYWG6ZX5Smv"
   model: "gpt-5.5"
-  timeout_seconds: 30
+  timeout_seconds: 60
   temperature: 0.2
-  max_tokens: 1024
+  max_tokens: 4096
   system_prompt: "你是招聘情报分析助手。请根据岗位名称筛选最可能发布此岗位招聘信息的公司，并在第二阶段判断这些公司招聘页面上最近一次招聘信息是什么时候发布的。只返回 JSON，不要输出解释。"
 runtime:
   output_dir: output
-  timeout_seconds: 15
+  timeout_seconds: 30
   max_crawl_chars: 12000
   max_links_per_page: 20

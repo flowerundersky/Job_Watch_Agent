@@ -1,0 +1,372 @@
+{
+  "job_role": "AI应用开发工程师",
+  "top_x": 30,
+  "model_backend": {
+    "backend": "openai_compatible",
+    "api_base_url": "https://www.tokenrouter.tech/v1",
+    "model": "gpt-5.5"
+  },
+  "raw_output": "{\"job_role\":\"AI应用开发工程师\",\"top_x\":30,\"companies\":[{\"rank\":1,\"name\":\"阿里巴巴集团\",\"recruitment_url\":\"https://talent.alibaba.com/\",\"reason\":\"阿里云、通义大模型及企业智能应用场景丰富，长期招聘AI应用开发相关岗位。\"},{\"rank\":2,\"name\":\"腾讯\",\"recruitment_url\":\"https://careers.tencent.com/\",\"reason\":\"腾讯云、混元大模型、微信生态和企业服务均需要AI应用开发工程师。\"},{\"rank\":3,\"name\":\"百度\",\"recruitment_url\":\"https://talent.baidu.com/\",\"reason\":\"百度在文心大模型、智能云、搜索与智能体应用方向岗位需求高。\"},{\"rank\":4,\"name\":\"字节跳动\",\"recruitment_url\":\"https://jobs.bytedance.com/\",\"reason\":\"字节在豆包、火山引擎、内容推荐和AI产品应用方向持续招聘。\"},{\"rank\":5,\"name\":\"华为\",\"recruitment_url\":\"https://career.huawei.com/\",\"reason\":\"华为云、昇腾、盘古大模型和行业AI解决方案需要应用开发人才。\"},{\"rank\":6,\"name\":\"美团\",\"recruitment_url\":\"https://zhaopin.meituan.com/\",\"reason\":\"美团在本地生活、智能客服、搜索推荐和运营自动化中大量落地AI应用。\"},{\"rank\":7,\"name\":\"京东\",\"recruitment_url\":\"https://zhaopin.jd.com/\",\"reason\":\"京东云、供应链、零售、物流和智能客服场景需要AI应用开发工程师。\"},{\"rank\":8,\"name\":\"小米集团\",\"recruitment_url\":\"https://hr.xiaomi.com/\",\"reason\":\"小米在手机、IoT、汽车和智能助手等终端AI应用方向需求明显。\"},{\"rank\":9,\"name\":\"网易\",\"recruitment_url\":\"https://hr.163.com/\",\"reason\":\"网易在游戏、教育、云音乐、有道大模型和AIGC应用方面招聘相关岗位。\"},{\"rank\":10,\"name\":\"快手\",\"recruitment_url\":\"https://zhaopin.kuaishou.cn/\",\"reason\":\"快手在短视频推荐、内容生成、直播电商和可灵AI等方向有AI应用需求。\"},{\"rank\":11,\"name\":\"科大讯飞\",\"recruitment_url\":\"https://www.iflytek.com/careers\",\"reason\":\"科大讯飞深耕语音、认知大模型、教育和办公AI应用，岗位匹配度高。\"},{\"rank\":12,\"name\":\"商汤科技\",\"recruitment_url\":\"https://www.sensetime.com/cn/careers\",\"reason\":\"商汤在计算机视觉、多模态大模型和行业智能应用开发领域需求集中。\"},{\"rank\":13,\"name\":\"旷视科技\",\"recruitment_url\":\"https://www.megvii.com/careers/\",\"reason\":\"旷视聚焦视觉AI、城市物联网和企业智能化应用，常见AI工程岗位。\"},{\"rank\":14,\"name\":\"依图科技\",\"recruitment_url\":\"https://www.yitutech.com/cn/careers\",\"reason\":\"依图在医疗、城市和视觉智能应用方向与AI应用开发岗位高度相关。\"},{\"rank\":15,\"name\":\"第四范式\",\"recruitment_url\":\"https://www.4paradigm.com/careers\",\"reason\":\"第四范式以企业级AI平台和决策智能为核心，招聘AI应用与平台开发人才。\"},{\"rank\":16,\"name\":\"云从科技\",\"recruitment_url\":\"https://www.cloudwalk.com/careers.html\",\"reason\":\"云从在人机协同、视觉识别和行业AI解决方案中需要应用开发能力。\"},{\"rank\":17,\"name\":\"深度求索 DeepSeek\",\"recruitment_url\":\"https://www.deepseek.com/\",\"reason\":\"DeepSeek专注大模型研发与应用生态，相关AI应用开发岗位匹配度高。\"},{\"rank\":18,\"name\":\"智谱AI\",\"recruitment_url\":\"https://www.zhipuai.cn/careers\",\"reason\":\"智谱AI围绕GLM大模型、智能体和企业级AI应用招聘工程人才。\"},{\"rank\":19,\"name\":\"月之暗面 Kimi\",\"recruitment_url\":\"https://www.moonshot.cn/careers\",\"reason\":\"月之暗面专注大模型产品与应用开发，AI应用工程师需求明确。\"},{\"rank\":20,\"name\":\"百川智能\",\"recruitment_url\":\"https://www.baichuan-ai.com/careers\",\"reason\":\"百川智能布局大模型、AI助手和行业应用，适合AI应用开发岗位。\"},{\"rank\":21,\"name\":\"MiniMax\",\"recruitment_url\":\"https://www.minimaxi.com/careers\",\"reason\":\"MiniMax在大模型、智能体、语音和AI原生应用方向招聘相关人才。\"},{\"rank\":22,\"name\":\"零一万物\",\"recruitment_url\":\"https://www.lingyiwanwu.com/\",\"reason\":\"零一万物专注大模型和AI应用产品，可能发布AI应用开发工程师岗位。\"},{\"rank\":23,\"name\":\"出门问问\",\"recruitment_url\":\"https://www.mobvoi.com/cn/pages/careers\",\"reason\":\"出门问问在AI语音、可穿戴设备和AIGC应用领域需要应用开发人才。\"},{\"rank\":24,\"name\":\"联想集团\",\"recruitment_url\":\"https://jobs.lenovo.com/\",\"reason\":\"联想在AI PC、企业智能化、边缘AI和行业解决方案中招聘AI应用开发岗位。\"},{\"rank\":25,\"name\":\"OPPO\",\"recruitment_url\":\"https://careers.oppo.com/\",\"reason\":\"OPPO在手机AI助手、影像算法和端侧大模型应用方向有招聘需求。\"},{\"rank\":26,\"name\":\"vivo\",\"recruitment_url\":\"https://hr.vivo.com/\",\"reason\":\"vivo在移动端AI、智能助手和系统级AI应用开发方面岗位匹配。\"},{\"rank\":27,\"name\":\"荣耀\",\"recruitment_url\":\"https://career.hihonor.com/\",\"reason\":\"荣耀在终端AI、智慧互联和手机智能体验方向需要AI应用开发工程师。\"},{\"rank\":28,\"name\":\"蔚来\",\"recruitment_url\":\"https://nio.jobs.feishu.cn/\",\"reason\":\"蔚来在智能座舱、自动化运营和用户服务AI应用中有相关开发需求。\"},{\"rank\":29,\"name\":\"理想汽车\",\"recruitment_url\":\"https://www.lixiang.com/employment\",\"reason\":\"理想汽车在智能座舱、辅助驾驶数据应用和企业AI工具方面招聘AI应用人才。\"},{\"rank\":30,\"name\":\"小鹏汽车\",\"recruitment_url\":\"https://www.xiaopeng.com/careers.html\",\"reason\":\"小鹏在智能汽车、语音交互、座舱智能和AI产品应用方向岗位相关。\"}]}",
+  "candidates": [
+    {
+      "rank": 1,
+      "name": "阿里巴巴集团",
+      "recruitment_url": "https://talent.alibaba.com/",
+      "reason": "阿里云、通义大模型及企业智能应用场景丰富，长期招聘AI应用开发相关岗位。",
+      "raw": {
+        "rank": 1,
+        "name": "阿里巴巴集团",
+        "recruitment_url": "https://talent.alibaba.com/",
+        "reason": "阿里云、通义大模型及企业智能应用场景丰富，长期招聘AI应用开发相关岗位。"
+      }
+    },
+    {
+      "rank": 2,
+      "name": "腾讯",
+      "recruitment_url": "https://careers.tencent.com/",
+      "reason": "腾讯云、混元大模型、微信生态和企业服务均需要AI应用开发工程师。",
+      "raw": {
+        "rank": 2,
+        "name": "腾讯",
+        "recruitment_url": "https://careers.tencent.com/",
+        "reason": "腾讯云、混元大模型、微信生态和企业服务均需要AI应用开发工程师。"
+      }
+    },
+    {
+      "rank": 3,
+      "name": "百度",
+      "recruitment_url": "https://talent.baidu.com/",
+      "reason": "百度在文心大模型、智能云、搜索与智能体应用方向岗位需求高。",
+      "raw": {
+        "rank": 3,
+        "name": "百度",
+        "recruitment_url": "https://talent.baidu.com/",
+        "reason": "百度在文心大模型、智能云、搜索与智能体应用方向岗位需求高。"
+      }
+    },
+    {
+      "rank": 4,
+      "name": "字节跳动",
+      "recruitment_url": "https://jobs.bytedance.com/",
+      "reason": "字节在豆包、火山引擎、内容推荐和AI产品应用方向持续招聘。",
+      "raw": {
+        "rank": 4,
+        "name": "字节跳动",
+        "recruitment_url": "https://jobs.bytedance.com/",
+        "reason": "字节在豆包、火山引擎、内容推荐和AI产品应用方向持续招聘。"
+      }
+    },
+    {
+      "rank": 5,
+      "name": "华为",
+      "recruitment_url": "https://career.huawei.com/",
+      "reason": "华为云、昇腾、盘古大模型和行业AI解决方案需要应用开发人才。",
+      "raw": {
+        "rank": 5,
+        "name": "华为",
+        "recruitment_url": "https://career.huawei.com/",
+        "reason": "华为云、昇腾、盘古大模型和行业AI解决方案需要应用开发人才。"
+      }
+    },
+    {
+      "rank": 6,
+      "name": "美团",
+      "recruitment_url": "https://zhaopin.meituan.com/",
+      "reason": "美团在本地生活、智能客服、搜索推荐和运营自动化中大量落地AI应用。",
+      "raw": {
+        "rank": 6,
+        "name": "美团",
+        "recruitment_url": "https://zhaopin.meituan.com/",
+        "reason": "美团在本地生活、智能客服、搜索推荐和运营自动化中大量落地AI应用。"
+      }
+    },
+    {
+      "rank": 7,
+      "name": "京东",
+      "recruitment_url": "https://zhaopin.jd.com/",
+      "reason": "京东云、供应链、零售、物流和智能客服场景需要AI应用开发工程师。",
+      "raw": {
+        "rank": 7,
+        "name": "京东",
+        "recruitment_url": "https://zhaopin.jd.com/",
+        "reason": "京东云、供应链、零售、物流和智能客服场景需要AI应用开发工程师。"
+      }
+    },
+    {
+      "rank": 8,
+      "name": "小米集团",
+      "recruitment_url": "https://hr.xiaomi.com/",
+      "reason": "小米在手机、IoT、汽车和智能助手等终端AI应用方向需求明显。",
+      "raw": {
+        "rank": 8,
+        "name": "小米集团",
+        "recruitment_url": "https://hr.xiaomi.com/",
+        "reason": "小米在手机、IoT、汽车和智能助手等终端AI应用方向需求明显。"
+      }
+    },
+    {
+      "rank": 9,
+      "name": "网易",
+      "recruitment_url": "https://hr.163.com/",
+      "reason": "网易在游戏、教育、云音乐、有道大模型和AIGC应用方面招聘相关岗位。",
+      "raw": {
+        "rank": 9,
+        "name": "网易",
+        "recruitment_url": "https://hr.163.com/",
+        "reason": "网易在游戏、教育、云音乐、有道大模型和AIGC应用方面招聘相关岗位。"
+      }
+    },
+    {
+      "rank": 10,
+      "name": "快手",
+      "recruitment_url": "https://zhaopin.kuaishou.cn/",
+      "reason": "快手在短视频推荐、内容生成、直播电商和可灵AI等方向有AI应用需求。",
+      "raw": {
+        "rank": 10,
+        "name": "快手",
+        "recruitment_url": "https://zhaopin.kuaishou.cn/",
+        "reason": "快手在短视频推荐、内容生成、直播电商和可灵AI等方向有AI应用需求。"
+      }
+    },
+    {
+      "rank": 11,
+      "name": "科大讯飞",
+      "recruitment_url": "https://www.iflytek.com/careers",
+      "reason": "科大讯飞深耕语音、认知大模型、教育和办公AI应用，岗位匹配度高。",
+      "raw": {
+        "rank": 11,
+        "name": "科大讯飞",
+        "recruitment_url": "https://www.iflytek.com/careers",
+        "reason": "科大讯飞深耕语音、认知大模型、教育和办公AI应用，岗位匹配度高。"
+      }
+    },
+    {
+      "rank": 12,
+      "name": "商汤科技",
+      "recruitment_url": "https://www.sensetime.com/cn/careers",
+      "reason": "商汤在计算机视觉、多模态大模型和行业智能应用开发领域需求集中。",
+      "raw": {
+        "rank": 12,
+        "name": "商汤科技",
+        "recruitment_url": "https://www.sensetime.com/cn/careers",
+        "reason": "商汤在计算机视觉、多模态大模型和行业智能应用开发领域需求集中。"
+      }
+    },
+    {
+      "rank": 13,
+      "name": "旷视科技",
+      "recruitment_url": "https://www.megvii.com/careers/",
+      "reason": "旷视聚焦视觉AI、城市物联网和企业智能化应用，常见AI工程岗位。",
+      "raw": {
+        "rank": 13,
+        "name": "旷视科技",
+        "recruitment_url": "https://www.megvii.com/careers/",
+        "reason": "旷视聚焦视觉AI、城市物联网和企业智能化应用，常见AI工程岗位。"
+      }
+    },
+    {
+      "rank": 14,
+      "name": "依图科技",
+      "recruitment_url": "https://www.yitutech.com/cn/careers",
+      "reason": "依图在医疗、城市和视觉智能应用方向与AI应用开发岗位高度相关。",
+      "raw": {
+        "rank": 14,
+        "name": "依图科技",
+        "recruitment_url": "https://www.yitutech.com/cn/careers",
+        "reason": "依图在医疗、城市和视觉智能应用方向与AI应用开发岗位高度相关。"
+      }
+    },
+    {
+      "rank": 15,
+      "name": "第四范式",
+      "recruitment_url": "https://www.4paradigm.com/careers",
+      "reason": "第四范式以企业级AI平台和决策智能为核心，招聘AI应用与平台开发人才。",
+      "raw": {
+        "rank": 15,
+        "name": "第四范式",
+        "recruitment_url": "https://www.4paradigm.com/careers",
+        "reason": "第四范式以企业级AI平台和决策智能为核心，招聘AI应用与平台开发人才。"
+      }
+    },
+    {
+      "rank": 16,
+      "name": "云从科技",
+      "recruitment_url": "https://www.cloudwalk.com/careers.html",
+      "reason": "云从在人机协同、视觉识别和行业AI解决方案中需要应用开发能力。",
+      "raw": {
+        "rank": 16,
+        "name": "云从科技",
+        "recruitment_url": "https://www.cloudwalk.com/careers.html",
+        "reason": "云从在人机协同、视觉识别和行业AI解决方案中需要应用开发能力。"
+      }
+    },
+    {
+      "rank": 17,
+      "name": "深度求索 DeepSeek",
+      "recruitment_url": "https://www.deepseek.com/",
+      "reason": "DeepSeek专注大模型研发与应用生态，相关AI应用开发岗位匹配度高。",
+      "raw": {
+        "rank": 17,
+        "name": "深度求索 DeepSeek",
+        "recruitment_url": "https://www.deepseek.com/",
+        "reason": "DeepSeek专注大模型研发与应用生态，相关AI应用开发岗位匹配度高。"
+      }
+    },
+    {
+      "rank": 18,
+      "name": "智谱AI",
+      "recruitment_url": "https://www.zhipuai.cn/careers",
+      "reason": "智谱AI围绕GLM大模型、智能体和企业级AI应用招聘工程人才。",
+      "raw": {
+        "rank": 18,
+        "name": "智谱AI",
+        "recruitment_url": "https://www.zhipuai.cn/careers",
+        "reason": "智谱AI围绕GLM大模型、智能体和企业级AI应用招聘工程人才。"
+      }
+    },
+    {
+      "rank": 19,
+      "name": "月之暗面 Kimi",
+      "recruitment_url": "https://www.moonshot.cn/careers",
+      "reason": "月之暗面专注大模型产品与应用开发，AI应用工程师需求明确。",
+      "raw": {
+        "rank": 19,
+        "name": "月之暗面 Kimi",
+        "recruitment_url": "https://www.moonshot.cn/careers",
+        "reason": "月之暗面专注大模型产品与应用开发，AI应用工程师需求明确。"
+      }
+    },
+    {
+      "rank": 20,
+      "name": "百川智能",
+      "recruitment_url": "https://www.baichuan-ai.com/careers",
+      "reason": "百川智能布局大模型、AI助手和行业应用，适合AI应用开发岗位。",
+      "raw": {
+        "rank": 20,
+        "name": "百川智能",
+        "recruitment_url": "https://www.baichuan-ai.com/careers",
+        "reason": "百川智能布局大模型、AI助手和行业应用，适合AI应用开发岗位。"
+      }
+    },
+    {
+      "rank": 21,
+      "name": "MiniMax",
+      "recruitment_url": "https://www.minimaxi.com/careers",
+      "reason": "MiniMax在大模型、智能体、语音和AI原生应用方向招聘相关人才。",
+      "raw": {
+        "rank": 21,
+        "name": "MiniMax",
+        "recruitment_url": "https://www.minimaxi.com/careers",
+        "reason": "MiniMax在大模型、智能体、语音和AI原生应用方向招聘相关人才。"
+      }
+    },
+    {
+      "rank": 22,
+      "name": "零一万物",
+      "recruitment_url": "https://www.lingyiwanwu.com/",
+      "reason": "零一万物专注大模型和AI应用产品，可能发布AI应用开发工程师岗位。",
+      "raw": {
+        "rank": 22,
+        "name": "零一万物",
+        "recruitment_url": "https://www.lingyiwanwu.com/",
+        "reason": "零一万物专注大模型和AI应用产品，可能发布AI应用开发工程师岗位。"
+      }
+    },
+    {
+      "rank": 23,
+      "name": "出门问问",
+      "recruitment_url": "https://www.mobvoi.com/cn/pages/careers",
+      "reason": "出门问问在AI语音、可穿戴设备和AIGC应用领域需要应用开发人才。",
+      "raw": {
+        "rank": 23,
+        "name": "出门问问",
+        "recruitment_url": "https://www.mobvoi.com/cn/pages/careers",
+        "reason": "出门问问在AI语音、可穿戴设备和AIGC应用领域需要应用开发人才。"
+      }
+    },
+    {
+      "rank": 24,
+      "name": "联想集团",
+      "recruitment_url": "https://jobs.lenovo.com/",
+      "reason": "联想在AI PC、企业智能化、边缘AI和行业解决方案中招聘AI应用开发岗位。",
+      "raw": {
+        "rank": 24,
+        "name": "联想集团",
+        "recruitment_url": "https://jobs.lenovo.com/",
+        "reason": "联想在AI PC、企业智能化、边缘AI和行业解决方案中招聘AI应用开发岗位。"
+      }
+    },
+    {
+      "rank": 25,
+      "name": "OPPO",
+      "recruitment_url": "https://careers.oppo.com/",
+      "reason": "OPPO在手机AI助手、影像算法和端侧大模型应用方向有招聘需求。",
+      "raw": {
+        "rank": 25,
+        "name": "OPPO",
+        "recruitment_url": "https://careers.oppo.com/",
+        "reason": "OPPO在手机AI助手、影像算法和端侧大模型应用方向有招聘需求。"
+      }
+    },
+    {
+      "rank": 26,
+      "name": "vivo",
+      "recruitment_url": "https://hr.vivo.com/",
+      "reason": "vivo在移动端AI、智能助手和系统级AI应用开发方面岗位匹配。",
+      "raw": {
+        "rank": 26,
+        "name": "vivo",
+        "recruitment_url": "https://hr.vivo.com/",
+        "reason": "vivo在移动端AI、智能助手和系统级AI应用开发方面岗位匹配。"
+      }
+    },
+    {
+      "rank": 27,
+      "name": "荣耀",
+      "recruitment_url": "https://career.hihonor.com/",
+      "reason": "荣耀在终端AI、智慧互联和手机智能体验方向需要AI应用开发工程师。",
+      "raw": {
+        "rank": 27,
+        "name": "荣耀",
+        "recruitment_url": "https://career.hihonor.com/",
+        "reason": "荣耀在终端AI、智慧互联和手机智能体验方向需要AI应用开发工程师。"
+      }
+    },
+    {
+      "rank": 28,
+      "name": "蔚来",
+      "recruitment_url": "https://nio.jobs.feishu.cn/",
+      "reason": "蔚来在智能座舱、自动化运营和用户服务AI应用中有相关开发需求。",
+      "raw": {
+        "rank": 28,
+        "name": "蔚来",
+        "recruitment_url": "https://nio.jobs.feishu.cn/",
+        "reason": "蔚来在智能座舱、自动化运营和用户服务AI应用中有相关开发需求。"
+      }
+    },
+    {
+      "rank": 29,
+      "name": "理想汽车",
+      "recruitment_url": "https://www.lixiang.com/employment",
+      "reason": "理想汽车在智能座舱、辅助驾驶数据应用和企业AI工具方面招聘AI应用人才。",
+      "raw": {
+        "rank": 29,
+        "name": "理想汽车",
+        "recruitment_url": "https://www.lixiang.com/employment",
+        "reason": "理想汽车在智能座舱、辅助驾驶数据应用和企业AI工具方面招聘AI应用人才。"
+      }
+    },
+    {
+      "rank": 30,
+      "name": "小鹏汽车",
+      "recruitment_url": "https://www.xiaopeng.com/careers.html",
+      "reason": "小鹏在智能汽车、语音交互、座舱智能和AI产品应用方向岗位相关。",
+      "raw": {
+        "rank": 30,
+        "name": "小鹏汽车",
+        "recruitment_url": "https://www.xiaopeng.com/careers.html",
+        "reason": "小鹏在智能汽车、语音交互、座舱智能和AI产品应用方向岗位相关。"
+      }
+    }
+  ]
+}

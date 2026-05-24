@@ -39,7 +39,7 @@ def test_relay_api_can_select_companies() -> None:
     workflow = JobWatchWorkflow(config)
     candidates, raw_output = workflow._select_companies()
 
-    output_path = Path("test_relay_connect.json")
+    output_path = Path("output/test_output/test_relay_connect.json")
     output_payload = {
         "job_role": config.job_role,
         "top_x": config.top_x,

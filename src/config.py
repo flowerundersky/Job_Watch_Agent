@@ -13,8 +13,10 @@ class RuntimeSettings:
     timeout_seconds: int = 15
     max_crawl_chars: int = 12000
     max_links_per_page: int = 20
-    report_filename: str = "job_watch_report.md"
-    result_filename: str = "job_watch_result.json"
+    report_filename: str = "result_output/job_watch_report.md"
+    result_filename: str = "result_output/job_watch_result.json"
+    snapshot_filename: str = "result_output/job_watch_snapshot.json"
+    selection_filename: str = "result_output/job_watch_selection.json"
 
 
 @dataclass(slots=True)
@@ -42,7 +44,7 @@ class AppConfig:
 
     @property
     def snapshot_path(self) -> Path:
-        return self.runtime.output_dir / "job_watch_snapshot.json"
+        return self.runtime.output_dir / self.runtime.snapshot_filename
 
     @property
     def report_path(self) -> Path:
@@ -51,6 +53,10 @@ class AppConfig:
     @property
     def result_path(self) -> Path:
         return self.runtime.output_dir / self.runtime.result_filename
+
+    @property
+    def selection_path(self) -> Path:
+        return self.runtime.output_dir / self.runtime.selection_filename
 
 
 def _read_yaml(path: Path) -> dict[str, Any]:
@@ -67,8 +73,10 @@ def _to_runtime_settings(data: dict[str, Any] | None) -> RuntimeSettings:
         timeout_seconds=int(data.get("timeout_seconds", 15)),
         max_crawl_chars=int(data.get("max_crawl_chars", 12000)),
         max_links_per_page=int(data.get("max_links_per_page", 20)),
-        report_filename=str(data.get("report_filename", "job_watch_report.md")),
-        result_filename=str(data.get("result_filename", "job_watch_result.json")),
+        report_filename=str(data.get("report_filename", "result_output/job_watch_report.md")),
+        result_filename=str(data.get("result_filename", "result_output/job_watch_result.json")),
+        snapshot_filename=str(data.get("snapshot_filename", "result_output/job_watch_snapshot.json")),
+        selection_filename=str(data.get("selection_filename", "result_output/job_watch_selection.json")),
     )
 
 

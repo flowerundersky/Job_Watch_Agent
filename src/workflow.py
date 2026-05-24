@@ -27,6 +27,7 @@ class JobWatchWorkflow:
         self.config.runtime.output_dir.mkdir(parents=True, exist_ok=True)
 
         selected_candidates, raw_selection_output = self._select_companies()
+        self._write_selection_output(selected_candidates, raw_selection_output)
         crawled_pages = crawl_company_pages(
             selected_candidates,
             timeout_seconds=self.config.runtime.timeout_seconds,
@@ -175,6 +176,9 @@ class JobWatchWorkflow:
 
     def _write_outputs(self, result: WorkflowResult) -> None:
         payload = result.to_dict()
+        Path(result.result_path).parent.mkdir(parents=True, exist_ok=True)
+        Path(result.snapshot_path).parent.mkdir(parents=True, exist_ok=True)
+        Path(result.report_path).parent.mkdir(parents=True, exist_ok=True)
         Path(result.result_path).write_text(
             json.dumps(payload, ensure_ascii=False, indent=2),
             encoding="utf-8",
@@ -193,6 +197,26 @@ class JobWatchWorkflow:
             encoding="utf-8",
         )
         Path(result.report_path).write_text(self._render_markdown(result), encoding="utf-8")
+
+    def _write_selection_output(
+        self,
+        selected_candidates: list[CompanyCandidate],
+        raw_selection_output: str,
+    ) -> None:
+        self.config.selection_path.parent.mkdir(parents=True, exist_ok=True)
+        self.config.selection_path.write_text(
+            json.dumps(
+                {
+                    "job_role": self.config.job_role,
+                    "top_x": self.config.top_x,
+                    "raw_selection_output": raw_selection_output,
+                    "selected_companies": [candidate.to_dict() for candidate in selected_candidates],
+                },
+                ensure_ascii=False,
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
 
     def _render_markdown(self, result: WorkflowResult) -> str:
         lines = [
