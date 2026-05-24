@@ -1,10 +1,10 @@
-job_role: 前端工程师
-top_x: 3
+job_role: AI应用开发工程师
+top_x: 10
 model_backend:
   backend: openai_compatible
-  api_base_url: "https://your-relay.example.com/v1"
-  api_key: "replace-with-your-api-key"
-  model: gpt-4o-mini
+  api_base_url: "https://www.tokenrouter.tech/v1"
+  api_key: "sk-m61odK2EZm8eFJNKj9DpzC0ZTHJ7XHHeuzsB7GYWG6ZX5Smv"
+  model: "gpt-5.5"
   timeout_seconds: 30
   temperature: 0.2
   max_tokens: 1024

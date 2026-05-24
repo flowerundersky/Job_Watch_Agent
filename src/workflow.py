@@ -10,7 +10,12 @@ from .config import AppConfig
 from .crawler import crawl_company_pages
 from .model import OpenAICompatibleBackend, analyze_latest_posting, create_backend
 from .models import AnalysisResult, CompanyCandidate, CrawledPage, WorkflowResult
-from .prompt import build_analysis_messages, build_company_selection_messages, extract_json_object
+from .prompt import (
+    build_analysis_messages,
+    build_company_selection_messages,
+    build_company_selection_retry_message,
+    extract_json_object,
+)
 
 
 class JobWatchWorkflow:
@@ -48,10 +53,29 @@ class JobWatchWorkflow:
         return result
 
     def _select_companies(self) -> tuple[list[CompanyCandidate], str]:
-        raw_output = self.backend.chat(build_company_selection_messages(self.config.job_role, self.config.top_x))
+        messages = build_company_selection_messages(self.config.job_role, self.config.top_x)
+        raw_output = self.backend.chat(messages)
         payload = extract_json_object(raw_output)
         candidates = self._parse_company_candidates(payload)
-        return candidates, raw_output
+
+        attempts = 0
+        while len(candidates) < self.config.top_x and attempts < 2:
+            attempts += 1
+            current_payload = [candidate.to_dict() for candidate in candidates]
+            messages = messages + [
+                {"role": "assistant", "content": raw_output},
+                *build_company_selection_retry_message(self.config.job_role, self.config.top_x, current_payload),
+            ]
+            raw_output = self.backend.chat(messages)
+            payload = extract_json_object(raw_output)
+            candidates = self._merge_company_candidates(candidates, self._parse_company_candidates(payload))
+
+        if len(candidates) < self.config.top_x:
+            raise ValueError(
+                f"company selection returned only {len(candidates)} candidates, expected {self.config.top_x}"
+            )
+
+        return candidates[: self.config.top_x], raw_output
 
     def _analyze_latest_posting(
         self,
@@ -115,7 +139,27 @@ class JobWatchWorkflow:
         if not candidates:
             raise ValueError("company selection output did not return usable candidates")
 
-        return candidates[: self.config.top_x]
+        return candidates
+
+    def _merge_company_candidates(
+        self,
+        existing: list[CompanyCandidate],
+        new_items: list[CompanyCandidate],
+    ) -> list[CompanyCandidate]:
+        merged: list[CompanyCandidate] = list(existing)
+        seen_keys = {
+            (candidate.name.strip().lower(), candidate.recruitment_url.strip().lower())
+            for candidate in merged
+        }
+        for candidate in new_items:
+            key = (candidate.name.strip().lower(), candidate.recruitment_url.strip().lower())
+            if key in seen_keys:
+                continue
+            merged.append(candidate)
+            seen_keys.add(key)
+        for index, candidate in enumerate(merged, start=1):
+            candidate.rank = index
+        return merged
 
     def _build_summary(
         self,

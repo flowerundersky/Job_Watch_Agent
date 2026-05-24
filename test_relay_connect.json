@@ -1,0 +1,132 @@
+{
+  "job_role": "AI应用开发工程师",
+  "top_x": 10,
+  "model_backend": {
+    "backend": "openai_compatible",
+    "api_base_url": "https://www.tokenrouter.tech/v1",
+    "model": "gpt-5.5"
+  },
+  "raw_output": "{\"job_role\":\"AI应用开发工程师\",\"top_x\":10,\"companies\":[{\"rank\":1,\"name\":\"百度\",\"recruitment_url\":\"https://talent.baidu.com/\",\"reason\":\"百度长期布局人工智能、大模型、智能云与AI应用生态，相关AI应用开发岗位需求高。\"},{\"rank\":2,\"name\":\"阿里巴巴\",\"recruitment_url\":\"https://talent.alibaba.com/\",\"reason\":\"阿里云、通义大模型及企业级AI应用场景丰富，常发布AI应用开发、算法工程化相关岗位。\"},{\"rank\":3,\"name\":\"腾讯\",\"recruitment_url\":\"https://careers.tencent.com/\",\"reason\":\"腾讯在混元大模型、云服务、办公协同和内容生态中持续落地AI应用，岗位匹配度高。\"},{\"rank\":4,\"name\":\"字节跳动\",\"recruitment_url\":\"https://jobs.bytedance.com/\",\"reason\":\"字节跳动在AI产品、推荐系统、智能创作和大模型应用方向投入大，相关开发岗位较多。\"},{\"rank\":5,\"name\":\"华为\",\"recruitment_url\":\"https://career.huawei.com/\",\"reason\":\"华为在昇腾、盘古大模型、云计算和行业AI解决方案中有大量AI应用工程化需求。\"},{\"rank\":6,\"name\":\"京东\",\"recruitment_url\":\"https://campus.jd.com/\",\"reason\":\"京东在智能供应链、零售科技、客服机器人和大模型应用方面持续招聘AI应用开发人才。\"},{\"rank\":7,\"name\":\"美团\",\"recruitment_url\":\"https://zhaopin.meituan.com/\",\"reason\":\"美团在本地生活、搜索推荐、智能调度和AI工具平台方面有较强应用开发需求。\"},{\"rank\":8,\"name\":\"小米\",\"recruitment_url\":\"https://hr.xiaomi.com/\",\"reason\":\"小米在手机、IoT、智能座舱和大模型助手等场景中需要AI应用开发工程师。\"},{\"rank\":9,\"name\":\"科大讯飞\",\"recruitment_url\":\"https://job.iflytek.com/\",\"reason\":\"科大讯飞主营智能语音、认知智能和大模型应用，岗位名称与业务方向高度匹配。\"},{\"rank\":10,\"name\":\"商汤科技\",\"recruitment_url\":\"https://www.sensetime.com/cn/join-us\",\"reason\":\"商汤科技聚焦计算机视觉、大模型和行业AI解决方案，常见AI应用研发类岗位。\"}]}",
+  "candidates": [
+    {
+      "rank": 1,
+      "name": "百度",
+      "recruitment_url": "https://talent.baidu.com/",
+      "reason": "百度长期布局人工智能、大模型、智能云与AI应用生态，相关AI应用开发岗位需求高。",
+      "raw": {
+        "rank": 1,
+        "name": "百度",
+        "recruitment_url": "https://talent.baidu.com/",
+        "reason": "百度长期布局人工智能、大模型、智能云与AI应用生态，相关AI应用开发岗位需求高。"
+      }
+    },
+    {
+      "rank": 2,
+      "name": "阿里巴巴",
+      "recruitment_url": "https://talent.alibaba.com/",
+      "reason": "阿里云、通义大模型及企业级AI应用场景丰富，常发布AI应用开发、算法工程化相关岗位。",
+      "raw": {
+        "rank": 2,
+        "name": "阿里巴巴",
+        "recruitment_url": "https://talent.alibaba.com/",
+        "reason": "阿里云、通义大模型及企业级AI应用场景丰富，常发布AI应用开发、算法工程化相关岗位。"
+      }
+    },
+    {
+      "rank": 3,
+      "name": "腾讯",
+      "recruitment_url": "https://careers.tencent.com/",
+      "reason": "腾讯在混元大模型、云服务、办公协同和内容生态中持续落地AI应用，岗位匹配度高。",
+      "raw": {
+        "rank": 3,
+        "name": "腾讯",
+        "recruitment_url": "https://careers.tencent.com/",
+        "reason": "腾讯在混元大模型、云服务、办公协同和内容生态中持续落地AI应用，岗位匹配度高。"
+      }
+    },
+    {
+      "rank": 4,
+      "name": "字节跳动",
+      "recruitment_url": "https://jobs.bytedance.com/",
+      "reason": "字节跳动在AI产品、推荐系统、智能创作和大模型应用方向投入大，相关开发岗位较多。",
+      "raw": {
+        "rank": 4,
+        "name": "字节跳动",
+        "recruitment_url": "https://jobs.bytedance.com/",
+        "reason": "字节跳动在AI产品、推荐系统、智能创作和大模型应用方向投入大，相关开发岗位较多。"
+      }
+    },
+    {
+      "rank": 5,
+      "name": "华为",
+      "recruitment_url": "https://career.huawei.com/",
+      "reason": "华为在昇腾、盘古大模型、云计算和行业AI解决方案中有大量AI应用工程化需求。",
+      "raw": {
+        "rank": 5,
+        "name": "华为",
+        "recruitment_url": "https://career.huawei.com/",
+        "reason": "华为在昇腾、盘古大模型、云计算和行业AI解决方案中有大量AI应用工程化需求。"
+      }
+    },
+    {
+      "rank": 6,
+      "name": "京东",
+      "recruitment_url": "https://campus.jd.com/",
+      "reason": "京东在智能供应链、零售科技、客服机器人和大模型应用方面持续招聘AI应用开发人才。",
+      "raw": {
+        "rank": 6,
+        "name": "京东",
+        "recruitment_url": "https://campus.jd.com/",
+        "reason": "京东在智能供应链、零售科技、客服机器人和大模型应用方面持续招聘AI应用开发人才。"
+      }
+    },
+    {
+      "rank": 7,
+      "name": "美团",
+      "recruitment_url": "https://zhaopin.meituan.com/",
+      "reason": "美团在本地生活、搜索推荐、智能调度和AI工具平台方面有较强应用开发需求。",
+      "raw": {
+        "rank": 7,
+        "name": "美团",
+        "recruitment_url": "https://zhaopin.meituan.com/",
+        "reason": "美团在本地生活、搜索推荐、智能调度和AI工具平台方面有较强应用开发需求。"
+      }
+    },
+    {
+      "rank": 8,
+      "name": "小米",
+      "recruitment_url": "https://hr.xiaomi.com/",
+      "reason": "小米在手机、IoT、智能座舱和大模型助手等场景中需要AI应用开发工程师。",
+      "raw": {
+        "rank": 8,
+        "name": "小米",
+        "recruitment_url": "https://hr.xiaomi.com/",
+        "reason": "小米在手机、IoT、智能座舱和大模型助手等场景中需要AI应用开发工程师。"
+      }
+    },
+    {
+      "rank": 9,
+      "name": "科大讯飞",
+      "recruitment_url": "https://job.iflytek.com/",
+      "reason": "科大讯飞主营智能语音、认知智能和大模型应用，岗位名称与业务方向高度匹配。",
+      "raw": {
+        "rank": 9,
+        "name": "科大讯飞",
+        "recruitment_url": "https://job.iflytek.com/",
+        "reason": "科大讯飞主营智能语音、认知智能和大模型应用，岗位名称与业务方向高度匹配。"
+      }
+    },
+    {
+      "rank": 10,
+      "name": "商汤科技",
+      "recruitment_url": "https://www.sensetime.com/cn/join-us",
+      "reason": "商汤科技聚焦计算机视觉、大模型和行业AI解决方案，常见AI应用研发类岗位。",
+      "raw": {
+        "rank": 10,
+        "name": "商汤科技",
+        "recruitment_url": "https://www.sensetime.com/cn/join-us",
+        "reason": "商汤科技聚焦计算机视觉、大模型和行业AI解决方案，常见AI应用研发类岗位。"
+      }
+    }
+  ]
+}
