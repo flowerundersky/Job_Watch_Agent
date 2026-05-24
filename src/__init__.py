@@ -1,1 +1,1 @@
-"""Recruitment monitoring agent package."""
+"""Second-version job-watch workflow package."""

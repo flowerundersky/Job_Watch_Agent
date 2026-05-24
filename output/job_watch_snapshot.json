@@ -1,0 +1,86 @@
+{
+  "job_role": "前端工程师",
+  "top_x": 3,
+  "selected_companies": [
+    {
+      "rank": 1,
+      "name": "字节跳动",
+      "recruitment_url": "https://jobs.bytedance.com/",
+      "reason": "内置兜底：字节跳动 的技术岗位招聘页适合检索前端相关职位",
+      "raw": {
+        "rank": 1,
+        "name": "字节跳动",
+        "recruitment_url": "https://jobs.bytedance.com/",
+        "reason": "内置兜底：字节跳动 的技术岗位招聘页适合检索前端相关职位",
+        "raw": {
+          "query": "前端工程师 招聘 官网",
+          "fallback": true
+        }
+      }
+    },
+    {
+      "rank": 2,
+      "name": "腾讯",
+      "recruitment_url": "https://careers.tencent.com/",
+      "reason": "内置兜底：腾讯 的技术岗位招聘页适合检索前端相关职位",
+      "raw": {
+        "rank": 2,
+        "name": "腾讯",
+        "recruitment_url": "https://careers.tencent.com/",
+        "reason": "内置兜底：腾讯 的技术岗位招聘页适合检索前端相关职位",
+        "raw": {
+          "query": "前端工程师 招聘 官网",
+          "fallback": true
+        }
+      }
+    },
+    {
+      "rank": 3,
+      "name": "阿里巴巴",
+      "recruitment_url": "https://talent.alibaba.com/",
+      "reason": "内置兜底：阿里巴巴 的技术岗位招聘页适合检索前端相关职位",
+      "raw": {
+        "rank": 3,
+        "name": "阿里巴巴",
+        "recruitment_url": "https://talent.alibaba.com/",
+        "reason": "内置兜底：阿里巴巴 的技术岗位招聘页适合检索前端相关职位",
+        "raw": {
+          "query": "前端工程师 招聘 官网",
+          "fallback": true
+        }
+      }
+    }
+  ],
+  "crawled_pages": [
+    {
+      "company": "字节跳动",
+      "recruitment_url": "https://jobs.bytedance.com/",
+      "page_url": "https://jobs.bytedance.com/",
+      "title": "",
+      "text": "",
+      "date_candidates": [],
+      "links": [],
+      "error": ""
+    },
+    {
+      "company": "腾讯",
+      "recruitment_url": "https://careers.tencent.com/",
+      "page_url": "https://careers.tencent.com/",
+      "title": "首页 | 腾讯招聘",
+      "text": "首页 | 腾讯招聘",
+      "date_candidates": [],
+      "links": [],
+      "error": ""
+    },
+    {
+      "company": "阿里巴巴",
+      "recruitment_url": "https://talent.alibaba.com/",
+      "page_url": "https://talent.alibaba.com/",
+      "title": "阿里巴巴集团招聘官网",
+      "text": "阿里巴巴集团招聘官网",
+      "date_candidates": [],
+      "links": [],
+      "error": ""
+    }
+  ]
+}

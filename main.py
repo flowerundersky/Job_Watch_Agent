@@ -4,7 +4,7 @@ from pathlib import Path
 import sys
 
 from src.config import load_config
-from src.pipeline import JobMonitorPipeline
+from src.workflow import JobWatchWorkflow
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -12,11 +12,12 @@ def main(argv: list[str] | None = None) -> int:
     config_path = Path(arguments[0]) if arguments else Path("config.yaml")
 
     config = load_config(config_path)
-    pipeline = JobMonitorPipeline(config)
-    result = pipeline.run()
+    workflow = JobWatchWorkflow(config)
+    result = workflow.run()
 
     print(result.summary)
     print(f"report: {result.report_path}")
+    print(f"result: {result.result_path}")
     print(f"snapshot: {result.snapshot_path}")
     return 0
 
