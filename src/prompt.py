@@ -37,12 +37,14 @@ def build_company_selection_retry_message(
     company_filters: str = "",
 ) -> list[dict[str, str]]:
     filter_line = f"筛选条件：{company_filters}\n" if company_filters.strip() else ""
+    missing_count = max(0, top_x - len(current_companies))
     return [
         {
             "role": "user",
             "content": (
                 f"岗位：{job_role}\n"
                 f"目标数量：{top_x}\n"
+                f"还缺少：{missing_count} 家\n"
                 f"{filter_line}"
                 f"当前已返回公司数：{len(current_companies)}\n"
                 f"当前结果：{json.dumps(current_companies, ensure_ascii=False, separators=(',', ':'))}\n"

@@ -37,7 +37,9 @@ def test_relay_api_can_select_companies() -> None:
     )
 
     workflow = JobWatchWorkflow(config)
-    candidates = workflow._select_companies()
+    selection = workflow._select_companies_with_missing()
+    selected = selection["selected"]
+    missing = selection["missing"]
 
     output_path = Path("output/test_output/test_relay_connect.json")
     output_payload = {
@@ -49,19 +51,26 @@ def test_relay_api_can_select_companies() -> None:
             "api_base_url": api_base_url,
             "model": model,
         },
-        "candidates": [
+        "selected": [
             {
                 "rank": candidate.rank,
                 "name": candidate.name,
                 "recruitment_url": candidate.recruitment_url,
             }
-            for candidate in candidates
+            for candidate in selected
         ],
+        "missing": missing,
     }
-    output_path.write_text(json.dumps(output_payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    output_path.write_text(json.dumps(output_payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    assert candidates, "expected at least one company candidate"
-    assert candidates[0].name.strip()
-    assert candidates[0].recruitment_url.strip()
-    assert workflow._looks_like_campus_recruitment_url(candidates[0].recruitment_url)
-    assert candidates[0].rank >= 1
+    assert selected, "expected at least one company candidate"
+    assert "selected" in output_payload and "missing" in output_payload
+    assert list(output_payload.keys()).index("selected") < list(output_payload.keys()).index("missing")
+    assert len(selected) <= config.top_x
+    assert len(selected) + len(missing) >= config.top_x
+    assert selected[0].name.strip()
+    assert selected[0].recruitment_url.strip()
+    assert workflow._looks_like_campus_recruitment_url(selected[0].recruitment_url)
+    assert selected[0].rank >= 1
+    if missing:
+        assert any(item.get("missing_reason") for item in missing)

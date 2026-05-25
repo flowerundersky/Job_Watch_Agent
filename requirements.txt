@@ -3,3 +3,4 @@ PyYAML
 requests
 pytest
 langgraph
+playwright

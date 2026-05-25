@@ -17,6 +17,7 @@ from .prompt import build_analysis_messages, build_company_selection_messages, b
 
 class WorkflowState(TypedDict, total=False):
     selected_candidates: list[CompanyCandidate]
+    missing_candidates: list[dict[str, Any]]
     crawled_pages: list[CrawledPage]
     analysis: AnalysisResult
     changes: dict[str, Any]
@@ -50,9 +51,12 @@ class JobWatchWorkflow:
         return graph.compile()
 
     def _graph_select_companies(self, state: WorkflowState) -> dict[str, Any]:
-        selected_candidates = self._select_companies()
-        self._write_selection_output(selected_candidates)
-        return {"selected_candidates": selected_candidates}
+        selection = self._select_companies_with_missing()
+        self._write_selection_output(selection["selected"], selection["missing"])
+        return {
+            "selected_candidates": selection["selected"],
+            "missing_candidates": selection["missing"],
+        }
 
     def _graph_crawl_pages(self, state: WorkflowState) -> dict[str, Any]:
         selected_candidates = state["selected_candidates"]
@@ -72,6 +76,7 @@ class JobWatchWorkflow:
 
     def _graph_persist(self, state: WorkflowState) -> dict[str, Any]:
         selected_candidates = state["selected_candidates"]
+        missing_candidates = state.get("missing_candidates", [])
         crawled_pages = state["crawled_pages"]
         analysis = state["analysis"]
         changes = self._build_changes(crawled_pages, analysis)
@@ -79,6 +84,7 @@ class JobWatchWorkflow:
             job_role=self.config.job_role,
             top_x=self.config.top_x,
             selected_companies=selected_candidates,
+            missing_companies=missing_candidates,
             crawled_pages=crawled_pages,
             analysis=analysis,
             report_path=str(self.config.report_path),
@@ -92,6 +98,9 @@ class JobWatchWorkflow:
         return {"result": result, "changes": changes}
 
     def _select_companies(self) -> list[CompanyCandidate]:
+        return self._select_companies_with_missing()["selected"]
+
+    def _select_companies_with_missing(self) -> dict[str, Any]:
         messages = build_company_selection_messages(
             self.config.job_role,
             self.config.top_x,
@@ -99,7 +108,7 @@ class JobWatchWorkflow:
         )
         raw_output = self.backend.chat(messages)
         payload = extract_json_object(raw_output)
-        candidates = self._parse_company_candidates(payload)
+        candidates, missing_candidates = self._parse_company_candidates(payload)
 
         attempts = 0
         while len(candidates) < self.config.top_x and attempts < 2:
@@ -116,14 +125,13 @@ class JobWatchWorkflow:
             ]
             raw_output = self.backend.chat(messages)
             payload = extract_json_object(raw_output)
-            candidates = self._merge_company_candidates(candidates, self._parse_company_candidates(payload))
+            new_candidates, rejected_items = self._parse_company_candidates(payload)
+            candidates = self._merge_company_candidates(candidates, new_candidates)
+            missing_candidates = self._merge_missing_candidates(missing_candidates, rejected_items)
 
-        if len(candidates) < self.config.top_x:
-            raise ValueError(
-                f"company selection returned only {len(candidates)} candidates, expected {self.config.top_x}"
-            )
-
-        return candidates[: self.config.top_x]
+        selected = candidates[: self.config.top_x]
+        missing = self._finalize_missing_candidates(selected, missing_candidates)
+        return {"selected": selected, "missing": missing}
 
     def _analyze_latest_posting(
         self,
@@ -151,14 +159,16 @@ class JobWatchWorkflow:
         analysis = analyze_latest_posting(self.config.job_role, selected_companies, crawled_pages)
         return analysis
 
-    def _parse_company_candidates(self, payload: dict[str, Any]) -> list[CompanyCandidate]:
+    def _parse_company_candidates(self, payload: dict[str, Any]) -> tuple[list[CompanyCandidate], list[dict[str, Any]]]:
         raw_companies = payload.get("companies", [])
         if not isinstance(raw_companies, list):
             raise ValueError("company selection output missing companies list")
 
         candidates: list[CompanyCandidate] = []
+        missing: list[dict[str, Any]] = []
         for index, item in enumerate(raw_companies, start=1):
             if not isinstance(item, dict):
+                missing.append({"rank": index, "missing_reason": "invalid item"})
                 continue
             name = str(item.get("name") or item.get("company") or "").strip()
             recruitment_url = str(
@@ -169,8 +179,26 @@ class JobWatchWorkflow:
                 or ""
             ).strip()
             if not name or not recruitment_url:
+                missing.append(
+                    {
+                        "rank": int(item.get("rank") or index),
+                        "name": name,
+                        "recruitment_url": recruitment_url,
+                        "reason": str(item.get("reason") or "").strip(),
+                        "missing_reason": "missing name or recruitment_url",
+                    }
+                )
                 continue
             if not self._looks_like_campus_recruitment_url(recruitment_url):
+                missing.append(
+                    {
+                        "rank": int(item.get("rank") or index),
+                        "name": name,
+                        "recruitment_url": recruitment_url,
+                        "reason": str(item.get("reason") or "").strip(),
+                        "missing_reason": "url not campus-like",
+                    }
+                )
                 continue
             candidates.append(
                 CompanyCandidate(
@@ -181,7 +209,7 @@ class JobWatchWorkflow:
                     raw=item,
                 )
             )
-        return candidates
+        return candidates, missing
 
     def _merge_company_candidates(
         self,
@@ -202,6 +230,48 @@ class JobWatchWorkflow:
         for index, candidate in enumerate(merged, start=1):
             candidate.rank = index
         return merged
+
+    def _merge_missing_candidates(
+        self,
+        existing: list[dict[str, Any]],
+        new_items: list[dict[str, Any]],
+    ) -> list[dict[str, Any]]:
+        merged: list[dict[str, Any]] = list(existing)
+        seen_keys = {
+            (
+                str(item.get("name") or "").strip().lower(),
+                str(item.get("recruitment_url") or "").strip().lower(),
+                str(item.get("missing_reason") or "").strip().lower(),
+            )
+            for item in merged
+        }
+        for item in new_items:
+            key = (
+                str(item.get("name") or "").strip().lower(),
+                str(item.get("recruitment_url") or "").strip().lower(),
+                str(item.get("missing_reason") or "").strip().lower(),
+            )
+            if key in seen_keys:
+                continue
+            merged.append(item)
+            seen_keys.add(key)
+        return merged
+
+    def _finalize_missing_candidates(
+        self,
+        selected_candidates: list[CompanyCandidate],
+        missing_candidates: list[dict[str, Any]],
+    ) -> list[dict[str, Any]]:
+        missing = list(missing_candidates)
+        remaining = max(0, self.config.top_x - len(selected_candidates))
+        for index in range(remaining):
+            missing.append(
+                {
+                    "rank": len(selected_candidates) + index + 1,
+                    "missing_reason": "not filled after retries",
+                }
+            )
+        return missing
 
     def _build_summary(
         self,
@@ -281,6 +351,7 @@ class JobWatchWorkflow:
             "job_role": result.job_role,
             "top_x": result.top_x,
             "selected_companies": [self._compact_candidate(candidate) for candidate in result.selected_companies],
+            "missing_companies": result.missing_companies,
             "crawled_pages": [self._compact_page(page) for page in result.crawled_pages],
             "analysis": {
                 "job_role": result.analysis.job_role,
@@ -295,6 +366,7 @@ class JobWatchWorkflow:
             "job_role": result.job_role,
             "top_x": result.top_x,
             "selected_companies": [self._compact_candidate(candidate) for candidate in result.selected_companies],
+            "missing_companies": result.missing_companies,
             "crawled_pages": [self._compact_page(page) for page in result.crawled_pages],
             "analysis": {
                 "job_role": result.analysis.job_role,
@@ -326,6 +398,7 @@ class JobWatchWorkflow:
     def _write_selection_output(
         self,
         selected_candidates: list[CompanyCandidate],
+        missing_candidates: list[dict[str, Any]],
     ) -> None:
         self.config.selection_path.parent.mkdir(parents=True, exist_ok=True)
         self.config.selection_path.write_text(
@@ -334,6 +407,7 @@ class JobWatchWorkflow:
                     "job_role": self.config.job_role,
                     "top_x": self.config.top_x,
                     "selected_companies": [self._compact_candidate(candidate) for candidate in selected_candidates],
+                    "missing_companies": missing_candidates,
                 },
                 ensure_ascii=False,
                 separators=(",", ":"),
