@@ -2,8 +2,8 @@ job_role: AI应用开发工程师
 top_x: 30
 model_backend:
   backend: openai_compatible
-  api_base_url: "https://www.tokenrouter.tech/v1"
-  api_key: "sk-m61odK2EZm8eFJNKj9DpzC0ZTHJ7XHHeuzsB7GYWG6ZX5Smv"
+  api_base_url: "你的url"
+  api_key: "你的key"
   model: "gpt-5.5"
   timeout_seconds: 60
   temperature: 0.2
