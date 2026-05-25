@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import json
 import re
 from html import unescape
+from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, urljoin, urlparse
 
@@ -109,6 +111,60 @@ def crawl_company_pages(
             )
         )
     return pages
+
+
+def load_company_candidates_from_selection(path: Path) -> list[CompanyCandidate]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    raw_candidates = _extract_candidates_from_selection_payload(payload)
+    candidates: list[CompanyCandidate] = []
+
+    for index, item in enumerate(raw_candidates, start=1):
+        if not isinstance(item, dict):
+            continue
+        name = normalize_text(str(item.get("name") or item.get("company") or ""))
+        recruitment_url = normalize_text(
+            str(
+                item.get("recruitment_url")
+                or item.get("url")
+                or item.get("career_url")
+                or item.get("careers_url")
+                or ""
+            )
+        )
+        if not name or not recruitment_url:
+            continue
+        candidates.append(
+            CompanyCandidate(
+                rank=int(item.get("rank") or index),
+                name=name,
+                recruitment_url=recruitment_url,
+                reason=str(item.get("reason") or "").strip(),
+                raw=item,
+            )
+        )
+
+    return candidates
+
+
+def _extract_candidates_from_selection_payload(payload: dict[str, Any]) -> list[Any]:
+    for key in ("selected_companies", "candidates", "companies"):
+        value = payload.get(key)
+        if isinstance(value, list):
+            return value
+
+    raw_output = payload.get("raw_selection_output") or payload.get("raw_output")
+    if not isinstance(raw_output, str) or not raw_output.strip():
+        return []
+
+    try:
+        parsed = json.loads(raw_output)
+    except json.JSONDecodeError:
+        return []
+
+    if isinstance(parsed, dict):
+        value = parsed.get("companies")
+        return value if isinstance(value, list) else []
+    return []
 
 
 def crawl_company_page(

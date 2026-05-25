@@ -1,6 +1,6 @@
 # 测试报告
 
-## 测试岗位->公司链路
+## 测试岗位->公司链路(验证中转站token能用)
 
 ### `tests/test_relay_connection.py`
 

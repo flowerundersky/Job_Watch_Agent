@@ -1,0 +1,99 @@
+{
+  "selection_source": "output/result_output/job_watch_selection.json",
+  "requested_candidates": [
+    {
+      "rank": 1,
+      "name": "百度",
+      "recruitment_url": "https://talent.baidu.com/",
+      "reason": "百度长期布局人工智能、大模型、智能云与AI应用生态，相关AI应用开发岗位需求高。",
+      "raw": {
+        "rank": 1,
+        "name": "百度",
+        "recruitment_url": "https://talent.baidu.com/",
+        "reason": "百度长期布局人工智能、大模型、智能云与AI应用生态，相关AI应用开发岗位需求高。",
+        "raw": {
+          "rank": 1,
+          "name": "百度",
+          "recruitment_url": "https://talent.baidu.com/",
+          "reason": "百度长期布局人工智能、大模型、智能云与AI应用生态，相关AI应用开发岗位需求高。"
+        }
+      }
+    },
+    {
+      "rank": 2,
+      "name": "阿里巴巴",
+      "recruitment_url": "https://talent.alibaba.com/",
+      "reason": "阿里云、通义大模型及企业级AI应用场景丰富，常发布AI应用开发、算法工程化相关岗位。",
+      "raw": {
+        "rank": 2,
+        "name": "阿里巴巴",
+        "recruitment_url": "https://talent.alibaba.com/",
+        "reason": "阿里云、通义大模型及企业级AI应用场景丰富，常发布AI应用开发、算法工程化相关岗位。",
+        "raw": {
+          "rank": 2,
+          "name": "阿里巴巴",
+          "recruitment_url": "https://talent.alibaba.com/",
+          "reason": "阿里云、通义大模型及企业级AI应用场景丰富，常发布AI应用开发、算法工程化相关岗位。"
+        }
+      }
+    },
+    {
+      "rank": 3,
+      "name": "腾讯",
+      "recruitment_url": "https://careers.tencent.com/",
+      "reason": "腾讯在混元大模型、云服务、办公协同和内容生态中持续落地AI应用，岗位匹配度高。",
+      "raw": {
+        "rank": 3,
+        "name": "腾讯",
+        "recruitment_url": "https://careers.tencent.com/",
+        "reason": "腾讯在混元大模型、云服务、办公协同和内容生态中持续落地AI应用，岗位匹配度高。",
+        "raw": {
+          "rank": 3,
+          "name": "腾讯",
+          "recruitment_url": "https://careers.tencent.com/",
+          "reason": "腾讯在混元大模型、云服务、办公协同和内容生态中持续落地AI应用，岗位匹配度高。"
+        }
+      }
+    }
+  ],
+  "crawled_pages": [
+    {
+      "company": "百度",
+      "recruitment_url": "https://talent.baidu.com/",
+      "page_url": "https://talent.baidu.com/jobs/social",
+      "title": "百度校园招聘",
+      "text": "百度校园招聘 首页 职位 招聘动态 了解百度 登录 社会招聘 百度一下 使用百度前必读 | 招聘帮助 | 百度校园 | 关于百度",
+      "date_candidates": [],
+      "links": [
+        "https://talent.baidu.com/static/index.html#/recruitHelp"
+      ],
+      "error": ""
+    },
+    {
+      "company": "阿里巴巴",
+      "recruitment_url": "https://talent.alibaba.com/",
+      "page_url": "https://talent.alibaba.com/",
+      "title": "阿里巴巴集团招聘官网",
+      "text": "阿里巴巴集团招聘官网",
+      "date_candidates": [],
+      "links": [],
+      "error": ""
+    },
+    {
+      "company": "腾讯",
+      "recruitment_url": "https://careers.tencent.com/",
+      "page_url": "https://careers.tencent.com/",
+      "title": "首页 | 腾讯招聘",
+      "text": "首页 | 腾讯招聘",
+      "date_candidates": [],
+      "links": [],
+      "error": ""
+    }
+  ],
+  "summary": {
+    "requested_count": 3,
+    "crawled_count": 3,
+    "success_count": 3,
+    "error_count": 0
+  }
+}
