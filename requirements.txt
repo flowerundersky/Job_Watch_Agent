@@ -2,3 +2,4 @@ beautifulsoup4
 PyYAML
 requests
 pytest
+langgraph

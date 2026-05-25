@@ -33,11 +33,10 @@ def test_relay_api_can_select_companies() -> None:
         timeout_seconds=config.model_backend.timeout_seconds,
         temperature=config.model_backend.temperature,
         max_tokens=config.model_backend.max_tokens,
-        system_prompt=config.model_backend.system_prompt,
     )
 
     workflow = JobWatchWorkflow(config)
-    candidates, raw_output = workflow._select_companies()
+    candidates = workflow._select_companies()
 
     output_path = Path("output/test_output/test_relay_connect.json")
     output_payload = {
@@ -48,13 +47,18 @@ def test_relay_api_can_select_companies() -> None:
             "api_base_url": api_base_url,
             "model": model,
         },
-        "raw_output": raw_output,
-        "candidates": [candidate.to_dict() for candidate in candidates],
+        "candidates": [
+            {
+                "rank": candidate.rank,
+                "name": candidate.name,
+                "recruitment_url": candidate.recruitment_url,
+            }
+            for candidate in candidates
+        ],
     }
-    output_path.write_text(json.dumps(output_payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    output_path.write_text(json.dumps(output_payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
-    assert raw_output.strip(), "model backend returned empty output"
-    assert candidates, f"expected at least one company candidate, got raw output: {raw_output}"
+    assert candidates, "expected at least one company candidate"
     assert candidates[0].name.strip()
     assert candidates[0].recruitment_url.strip()
     assert candidates[0].rank >= 1

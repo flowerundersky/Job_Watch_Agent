@@ -116,7 +116,7 @@ def analyze_latest_posting(
 ) -> AnalysisResult:
     latest_company = ""
     latest_posted_at = ""
-    evidence = ""
+    latest_channel_status = "unknown"
     best_score = -1
 
     for page in crawled_pages:
@@ -125,23 +125,18 @@ def analyze_latest_posting(
             best_score = score
             latest_company = page.company
             latest_posted_at = posted_at
-            evidence = _build_evidence(page)
+            latest_channel_status = page.channel_status or "unknown"
 
     if not latest_company and selected_companies:
         latest_company = selected_companies[0].name
 
-    summary = (
-        f"岗位 {job_role} 的招聘官网抓取完成，共分析 {len(selected_companies)} 家公司，"
-        f"识别到最近一次招聘信息为 {latest_posted_at or '未识别'}。"
-    )
     confidence = "high" if latest_posted_at else "low"
 
     return AnalysisResult(
         job_role=job_role,
         latest_company=latest_company,
         latest_posted_at=latest_posted_at,
-        evidence=evidence,
-        summary=summary,
+        channel_status=latest_channel_status,
         confidence=confidence,
     )
 
@@ -170,14 +165,6 @@ def _date_score(value: str) -> int:
     if re.search(r"\d{1,2}月\d{1,2}日", compact):
         return 3
     return 1
-
-
-def _build_evidence(page: CrawledPage) -> str:
-    if page.date_candidates:
-        return f"{page.company} | {page.date_candidates[0]} | {page.recruitment_url}"
-    if page.text:
-        return f"{page.company} | {page.title or '招聘页面'} | {page.recruitment_url}"
-    return f"{page.company} | {page.recruitment_url}"
 
 
 def _last_user_message(messages: Sequence[dict[str, str]]) -> str:

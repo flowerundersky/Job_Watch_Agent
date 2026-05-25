@@ -28,11 +28,6 @@ class ModelBackendSettings:
     timeout_seconds: int = 30
     temperature: float = 0.0
     max_tokens: int = 1024
-    system_prompt: str = (
-        "你是招聘情报分析助手。你需要根据岗位名称筛选最可能发布此岗位招聘信息的公司，"
-        "并在第二阶段判断这些公司招聘页面上最近一次招聘信息是什么时候发布的。"
-        "只返回 JSON，不要输出解释。"
-    )
 
 
 @dataclass(slots=True)
@@ -90,7 +85,6 @@ def _to_model_backend_settings(data: dict[str, Any] | None) -> ModelBackendSetti
         timeout_seconds=int(data.get("timeout_seconds", 30)),
         temperature=float(data.get("temperature", 0.0)),
         max_tokens=int(data.get("max_tokens", 1024)),
-        system_prompt=str(data.get("system_prompt", ModelBackendSettings.system_prompt)),
     )
 
 

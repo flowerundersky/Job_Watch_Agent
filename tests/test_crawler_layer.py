@@ -37,8 +37,23 @@ def test_crawler_can_crawl_selected_company_pages() -> None:
         json.dumps(
             {
                 "selection_source": str(selection_path),
-                "requested_candidates": [candidate.to_dict() for candidate in selected_candidates],
-                "crawled_pages": [page.to_dict() for page in pages],
+                "requested_candidates": [
+                    {
+                        "rank": candidate.rank,
+                        "name": candidate.name,
+                        "recruitment_url": candidate.recruitment_url,
+                    }
+                    for candidate in selected_candidates
+                ],
+                "crawled_pages": [
+                    {
+                        "company": page.company,
+                        "page_url": page.page_url,
+                        "date_candidates": page.date_candidates[:1],
+                        "error": page.error,
+                    }
+                    for page in pages
+                ],
                 "summary": {
                     "requested_count": len(selected_candidates),
                     "crawled_count": len(pages),
@@ -47,7 +62,7 @@ def test_crawler_can_crawl_selected_company_pages() -> None:
                 },
             },
             ensure_ascii=False,
-            indent=2,
+            separators=(",", ":"),
         ),
         encoding="utf-8",
     )

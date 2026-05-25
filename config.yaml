@@ -8,7 +8,6 @@ model_backend:
   timeout_seconds: 60
   temperature: 0.2
   max_tokens: 4096
-  system_prompt: "你是招聘情报分析助手。请根据岗位名称筛选最可能发布此岗位招聘信息的公司，并在第二阶段判断这些公司招聘页面上最近一次招聘信息是什么时候发布的。只返回 JSON，不要输出解释。"
 runtime:
   output_dir: output
   timeout_seconds: 30

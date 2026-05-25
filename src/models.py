@@ -21,8 +21,10 @@ class CrawledPage:
     company: str
     recruitment_url: str
     page_url: str
-    title: str
-    text: str
+    site_type: str = "html"
+    channel_status: str = "unknown"
+    title: str = ""
+    text: str = ""
     date_candidates: list[str] = field(default_factory=list)
     links: list[str] = field(default_factory=list)
     error: str = ""
@@ -36,10 +38,8 @@ class AnalysisResult:
     job_role: str
     latest_company: str
     latest_posted_at: str
-    evidence: str
-    summary: str
+    channel_status: str
     confidence: str
-    raw_output: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -52,12 +52,11 @@ class WorkflowResult:
     selected_companies: list[CompanyCandidate]
     crawled_pages: list[CrawledPage]
     analysis: AnalysisResult
-    raw_selection_output: str
-    raw_analysis_output: str
     report_path: str
     result_path: str
     snapshot_path: str
     summary: str
+    changes: dict[str, Any] = field(default_factory=dict)
     error: str = ""
 
     def to_dict(self) -> dict[str, Any]:
@@ -67,11 +66,10 @@ class WorkflowResult:
             "selected_companies": [item.to_dict() for item in self.selected_companies],
             "crawled_pages": [item.to_dict() for item in self.crawled_pages],
             "analysis": self.analysis.to_dict(),
-            "raw_selection_output": self.raw_selection_output,
-            "raw_analysis_output": self.raw_analysis_output,
             "report_path": self.report_path,
             "result_path": self.result_path,
             "snapshot_path": self.snapshot_path,
             "summary": self.summary,
+            "changes": self.changes,
             "error": self.error,
         }

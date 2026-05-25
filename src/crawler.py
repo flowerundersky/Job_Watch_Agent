@@ -24,6 +24,10 @@ DATE_PATTERNS = (
     r"\d{1,2}月\d{1,2}日",
 )
 
+API_HINTS = ("api", "json", "graphql", "xhr", "fetch", "ajax", "data-")
+CHANNEL_OPEN_HINTS = ("校招进行中", "校招开启", "校园招聘", "招聘中", "正在招聘", "开放投递", "开启投递")
+CHANNEL_CLOSED_HINTS = ("已结束", "停止招聘", "暂未开放", "未开启", "暂停招聘", "已关闭", "招聘结束")
+
 DEFAULT_COMPANY_FALLBACKS: list[tuple[str, str]] = [
     ("字节跳动", "https://jobs.bytedance.com/"),
     ("腾讯", "https://careers.tencent.com/"),
@@ -151,19 +155,6 @@ def _extract_candidates_from_selection_payload(payload: dict[str, Any]) -> list[
         value = payload.get(key)
         if isinstance(value, list):
             return value
-
-    raw_output = payload.get("raw_selection_output") or payload.get("raw_output")
-    if not isinstance(raw_output, str) or not raw_output.strip():
-        return []
-
-    try:
-        parsed = json.loads(raw_output)
-    except json.JSONDecodeError:
-        return []
-
-    if isinstance(parsed, dict):
-        value = parsed.get("companies")
-        return value if isinstance(value, list) else []
     return []
 
 
@@ -182,21 +173,35 @@ def crawl_company_page(
             headers={"User-Agent": user_agent},
         )
         response.raise_for_status()
-        soup = BeautifulSoup(response.text, "html.parser")
+        html = response.text
+        rendered_html = _render_with_playwright(response.url, timeout_seconds=timeout_seconds, user_agent=user_agent)
+        if rendered_html:
+            html = rendered_html
+
+        soup = BeautifulSoup(html, "html.parser")
         title = _extract_title(soup)
         text = normalize_text(soup.get_text("\n", strip=True))[:max_crawl_chars]
         links = _extract_links(soup, response.url, max_links=max_links_per_page)
         date_candidates = _extract_date_candidates(soup, text)
+        site_type = _detect_site_type(soup, text, links)
+        if site_type == "api":
+            api_date_candidates = _extract_date_candidates_from_api(links, timeout_seconds=timeout_seconds, user_agent=user_agent)
+            for candidate_text in api_date_candidates:
+                if candidate_text not in date_candidates:
+                    date_candidates.append(candidate_text)
         if not date_candidates:
             date_candidates = _extract_date_candidates_from_links(
                 links,
                 timeout_seconds=timeout_seconds,
                 user_agent=user_agent,
             )
+        channel_status = _extract_channel_status(text, date_candidates)
         return CrawledPage(
             company=candidate.name,
             recruitment_url=candidate.recruitment_url,
             page_url=response.url,
+            site_type=site_type,
+            channel_status=channel_status,
             title=title,
             text=text,
             date_candidates=date_candidates,
@@ -207,6 +212,8 @@ def crawl_company_page(
             company=candidate.name,
             recruitment_url=candidate.recruitment_url,
             page_url=candidate.recruitment_url,
+            site_type="html",
+            channel_status="unknown",
             title="",
             text="",
             date_candidates=[],
@@ -277,6 +284,82 @@ def _extract_date_candidates_from_links(
             if candidate not in candidates:
                 candidates.append(candidate)
     return candidates
+
+
+def _extract_date_candidates_from_api(
+    links: list[str],
+    *,
+    timeout_seconds: int,
+    user_agent: str,
+) -> list[str]:
+    candidates: list[str] = []
+    for link in _extract_api_urls(links)[:3]:
+        try:
+            response = requests.get(link, timeout=timeout_seconds, headers={"User-Agent": user_agent})
+            response.raise_for_status()
+            payload = response.json()
+        except Exception:  # noqa: BLE001
+            continue
+        text = normalize_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")))
+        for candidate in _extract_date_candidates_from_text(text):
+            if candidate not in candidates:
+                candidates.append(candidate)
+    return candidates
+
+
+def _extract_api_urls(links: list[str]) -> list[str]:
+    api_urls: list[str] = []
+    for link in links:
+        lowered = link.lower()
+        if any(hint in lowered for hint in API_HINTS) and link not in api_urls:
+            api_urls.append(link)
+    return api_urls
+
+
+def _extract_date_candidates_from_text(text: str) -> list[str]:
+    candidates: list[str] = []
+    for pattern in DATE_PATTERNS:
+        for match in re.findall(pattern, text):
+            if match not in candidates:
+                candidates.append(match)
+    return candidates
+
+
+def _detect_site_type(soup: BeautifulSoup, text: str, links: list[str]) -> str:
+    if any(any(hint in link.lower() for hint in API_HINTS) for link in links):
+        return "api"
+    if len(text) < 80 and soup.find_all("script"):
+        return "playwright"
+    return "html"
+
+
+def _extract_channel_status(text: str, date_candidates: list[str]) -> str:
+    compact = normalize_text(text)
+    if any(hint in compact for hint in CHANNEL_CLOSED_HINTS):
+        return "closed"
+    if any(hint in compact for hint in CHANNEL_OPEN_HINTS):
+        return "open"
+    if date_candidates and any(keyword in compact for keyword in ("校招", "校园招聘", "招聘")):
+        return "open"
+    return "unknown"
+
+
+def _render_with_playwright(url: str, *, timeout_seconds: int, user_agent: str) -> str:
+    try:
+        from playwright.sync_api import sync_playwright
+    except Exception:  # noqa: BLE001
+        return ""
+
+    try:
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(headless=True)
+            page = browser.new_page(user_agent=user_agent)
+            page.goto(url, wait_until="networkidle", timeout=timeout_seconds * 1000)
+            content = page.content()
+            browser.close()
+            return content
+    except Exception:  # noqa: BLE001
+        return ""
 
 
 def _resolve_search_url(href: str) -> str:
