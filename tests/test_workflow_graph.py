@@ -9,7 +9,11 @@ from src.workflow import JobWatchWorkflow
 
 
 class _DummyBackend:
+    def __init__(self) -> None:
+        self.messages = []
+
     def chat(self, messages):
+        self.messages = list(messages)
         return json.dumps(
             {
                 "job_role": "前端工程师",
@@ -29,12 +33,14 @@ class _DummyBackend:
 def test_langgraph_workflow_runs_end_to_end(tmp_path, monkeypatch) -> None:
     config = AppConfig(
         job_role="前端工程师",
+        company_filters="优先校招官网；只看技术岗",
         top_x=1,
         runtime=RuntimeSettings(output_dir=tmp_path),
         model_backend=ModelBackendSettings(backend="heuristic"),
     )
     workflow = JobWatchWorkflow(config)
-    workflow.backend = _DummyBackend()
+    backend = _DummyBackend()
+    workflow.backend = backend
 
     monkeypatch.setattr(
         "src.workflow.crawl_company_pages",
@@ -55,6 +61,7 @@ def test_langgraph_workflow_runs_end_to_end(tmp_path, monkeypatch) -> None:
 
     result = workflow.run()
 
+    assert any("筛选条件：优先校招官网；只看技术岗" in str(message.get("content", "")) for message in backend.messages)
     assert result.analysis.latest_company == "示例公司"
     assert result.analysis.latest_posted_at == "2026-05-25"
     assert result.analysis.channel_status == "open"

@@ -92,7 +92,11 @@ class JobWatchWorkflow:
         return {"result": result, "changes": changes}
 
     def _select_companies(self) -> list[CompanyCandidate]:
-        messages = build_company_selection_messages(self.config.job_role, self.config.top_x)
+        messages = build_company_selection_messages(
+            self.config.job_role,
+            self.config.top_x,
+            self.config.company_filters,
+        )
         raw_output = self.backend.chat(messages)
         payload = extract_json_object(raw_output)
         candidates = self._parse_company_candidates(payload)
@@ -103,7 +107,12 @@ class JobWatchWorkflow:
             current_payload = [candidate.to_dict() for candidate in candidates]
             messages = messages + [
                 {"role": "assistant", "content": raw_output},
-                *build_company_selection_retry_message(self.config.job_role, self.config.top_x, current_payload),
+                *build_company_selection_retry_message(
+                    self.config.job_role,
+                    self.config.top_x,
+                    current_payload,
+                    self.config.company_filters,
+                ),
             ]
             raw_output = self.backend.chat(messages)
             payload = extract_json_object(raw_output)

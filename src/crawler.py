@@ -50,10 +50,14 @@ def search_company_candidates(
     job_role: str,
     top_x: int,
     *,
+    company_filters: str = "",
     timeout_seconds: int = 15,
     user_agent: str = "JobWatchAgent/2.0",
 ) -> list[CompanyCandidate]:
+    filter_text = company_filters.strip()
     query = f"{job_role} 招聘 官网"
+    if filter_text:
+        query = f"{query} {filter_text}"
     try:
         response = requests.get(
             SEARCH_URL,
@@ -92,7 +96,7 @@ def search_company_candidates(
     except Exception:
         pass
 
-    return _fallback_company_candidates(job_role, top_x, query=query)
+    return _fallback_company_candidates(job_role, top_x, query=query, company_filters=filter_text)
 
 
 def crawl_company_pages(
@@ -387,17 +391,28 @@ def _derive_company_name(title: str, url: str) -> str:
     return domain.split(".")[0] if domain else title
 
 
-def _fallback_company_candidates(job_role: str, top_x: int, *, query: str) -> list[CompanyCandidate]:
+def _fallback_company_candidates(
+    job_role: str,
+    top_x: int,
+    *,
+    query: str,
+    company_filters: str = "",
+) -> list[CompanyCandidate]:
     matched: list[CompanyCandidate] = []
     role_text = job_role.lower()
+    filter_text = company_filters.lower()
     for index, (name, recruitment_url) in enumerate(DEFAULT_COMPANY_FALLBACKS, start=1):
         reason = f"内置兜底：{name} 是常见招聘官网入口，适合继续抓取 {job_role} 相关信息"
+        if filter_text:
+            reason = f"内置兜底：{name} 适合继续抓取 {job_role}，并满足筛选条件：{company_filters}"
         if any(keyword in role_text for keyword in ("前端", "web", "ui", "react", "vue")):
             reason = f"内置兜底：{name} 的技术岗位招聘页适合检索前端相关职位"
         elif any(keyword in role_text for keyword in ("测试", "qa", "质量", "qa")):
             reason = f"内置兜底：{name} 的招聘页适合检索测试与质量保障岗位"
         elif any(keyword in role_text for keyword in ("算法", "ai", "ml", "机器学习", "大模型")):
             reason = f"内置兜底：{name} 的招聘页适合检索算法与 AI 岗位"
+        if filter_text:
+            reason = f"{reason}；筛选条件：{company_filters}"
         matched.append(
             CompanyCandidate(
                 rank=index,

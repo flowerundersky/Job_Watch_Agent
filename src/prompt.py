@@ -6,20 +6,25 @@ import json
 from typing import Any
 
 
-def build_company_selection_messages(job_role: str, top_x: int) -> list[dict[str, str]]:
+def build_company_selection_messages(job_role: str, top_x: int, company_filters: str = "") -> list[dict[str, str]]:
+    filter_text = f"\n筛选条件：{company_filters}" if company_filters.strip() else ""
     return [
         {
             "role": "system",
             "content": (
-                f"根据岗位名称选出最可能发布此岗位的 {top_x} 家公司和官网入口。只输出 JSON。"
-                f"格式：{{\"job_role\":\"...\",\"top_x\":{top_x},\"companies\":[{{\"rank\":1,\"name\":\"...\",\"recruitment_url\":\"https://...\"}}]}}"
+                f"你是一个根据岗位名称和筛选条件搜索公司网站的助手。"
+                f"我是一名快要毕业的大学生，想要了解哪些公司可能正在招聘某个岗位的员工和实习生，以及这些公司的校园招聘官网入口。"
+                f"你的任务是根据岗位名称和筛选条件选出最可能发布此岗位的 {top_x} 家公司和该公司的校园招聘官网入口。"
+                f"recruitment_url里输出的是公司的校园招聘网站入口。只输出 JSON。"
+                f"输出的格式：{{\"job_role\":\"...\",\"top_x\":{top_x},\"companies\":[{{\"name\":\"...\",\"recruitment_url\":\"https://...\"}}]}}"
+                f"最后达到的目标是帮助我快速锁定目标公司的校园招聘官网。"
             ),
         },
         {
             "role": "user",
             "content": (
-                f"岗位：{job_role}\n数量：{top_x}\n"
-                f"请返回最可能发布“{job_role}”招聘信息的前 {top_x} 家公司及其官网入口。"
+                f"岗位：{job_role}\n数量：{top_x}{filter_text}\n公司最好具备的条件：{company_filters}\n"
+                f"请返回最可能发布“{job_role}”招聘信息的前 {top_x} 家公司及其校招官网入口。"
             ),
         },
     ]
@@ -29,13 +34,16 @@ def build_company_selection_retry_message(
     job_role: str,
     top_x: int,
     current_companies: list[dict[str, Any]],
+    company_filters: str = "",
 ) -> list[dict[str, str]]:
+    filter_line = f"筛选条件：{company_filters}\n" if company_filters.strip() else ""
     return [
         {
             "role": "user",
             "content": (
                 f"岗位：{job_role}\n"
                 f"目标数量：{top_x}\n"
+                f"{filter_line}"
                 f"当前已返回公司数：{len(current_companies)}\n"
                 f"当前结果：{json.dumps(current_companies, ensure_ascii=False, separators=(',', ':'))}\n"
                 f"请补齐到恰好 {top_x} 家公司，不要重复已有公司，只输出新增部分。"

@@ -14,6 +14,7 @@ from src.workflow import JobWatchWorkflow
 def test_relay_api_can_select_companies() -> None:
     config_path = Path("config.yaml")
     config = load_config(config_path)
+    config.company_filters = os.getenv("JOB_WATCH_COMPANY_FILTERS", config.company_filters or "优先校招官网")
 
     api_base_url = os.getenv("JOB_WATCH_API_BASE_URL", config.model_backend.api_base_url).strip()
     api_key = os.getenv("JOB_WATCH_API_KEY", config.model_backend.api_key).strip()
@@ -41,6 +42,7 @@ def test_relay_api_can_select_companies() -> None:
     output_path = Path("output/test_output/test_relay_connect.json")
     output_payload = {
         "job_role": config.job_role,
+        "company_filters": config.company_filters,
         "top_x": config.top_x,
         "model_backend": {
             "backend": config.model_backend.backend,

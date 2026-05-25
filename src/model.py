@@ -72,9 +72,15 @@ class HeuristicBackend:
     def _select(self, prompt_text: str) -> dict[str, Any]:
         job_role = _extract_after_label(prompt_text, "岗位") or "招聘岗位"
         top_x_text = _extract_after_label(prompt_text, "数量") or "3"
+        company_filters = _extract_after_label(prompt_text, "筛选条件")
         match = re.search(r"\d+", top_x_text)
         top_x = max(1, int(match.group(0))) if match else 3
-        candidates = search_company_candidates(job_role, top_x, timeout_seconds=self.timeout_seconds)
+        candidates = search_company_candidates(
+            job_role,
+            top_x,
+            timeout_seconds=self.timeout_seconds,
+            company_filters=company_filters,
+        )
         return {
             "job_role": job_role,
             "top_x": top_x,
