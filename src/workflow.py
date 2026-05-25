@@ -170,6 +170,8 @@ class JobWatchWorkflow:
             ).strip()
             if not name or not recruitment_url:
                 continue
+            if not self._looks_like_campus_recruitment_url(recruitment_url):
+                continue
             candidates.append(
                 CompanyCandidate(
                     rank=int(item.get("rank") or index),
@@ -179,10 +181,6 @@ class JobWatchWorkflow:
                     raw=item,
                 )
             )
-
-        if not candidates:
-            raise ValueError("company selection output did not return usable candidates")
-
         return candidates
 
     def _merge_company_candidates(
@@ -409,3 +407,29 @@ class JobWatchWorkflow:
             "unknown": "未知",
         }
         return mapping.get(value.strip().lower(), value or "未知")
+
+    @staticmethod
+    def _looks_like_campus_recruitment_url(url: str) -> bool:
+        from urllib.parse import unquote, urlparse
+
+        normalized = unquote(url).lower()
+        parsed = urlparse(normalized)
+        target = f"{parsed.netloc}{parsed.path}"
+        hints = (
+            "career",
+            "careers",
+            "job",
+            "jobs",
+            "talent",
+            "recruit",
+            "recruitment",
+            "zhaopin",
+            "campus",
+            "campus-recruit",
+            "school-recruit",
+            "graduate",
+            "campus招聘",
+            "校招",
+            "招聘",
+        )
+        return any(hint in target for hint in hints)

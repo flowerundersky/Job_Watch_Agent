@@ -7,7 +7,7 @@ import re
 from html import unescape
 from pathlib import Path
 from typing import Any
-from urllib.parse import parse_qs, urljoin, urlparse
+from urllib.parse import parse_qs, unquote, urljoin, urlparse
 
 import requests
 from bs4 import BeautifulSoup
@@ -27,6 +27,23 @@ DATE_PATTERNS = (
 API_HINTS = ("api", "json", "graphql", "xhr", "fetch", "ajax", "data-")
 CHANNEL_OPEN_HINTS = ("校招进行中", "校招开启", "校园招聘", "招聘中", "正在招聘", "开放投递", "开启投递")
 CHANNEL_CLOSED_HINTS = ("已结束", "停止招聘", "暂未开放", "未开启", "暂停招聘", "已关闭", "招聘结束")
+CAREER_URL_HINTS = (
+    "career",
+    "careers",
+    "job",
+    "jobs",
+    "talent",
+    "recruit",
+    "recruitment",
+    "zhaopin",
+    "campus",
+    "campus-recruit",
+    "school-recruit",
+    "graduate",
+    "campus招聘",
+    "校招",
+    "招聘",
+)
 
 DEFAULT_COMPANY_FALLBACKS: list[tuple[str, str]] = [
     ("字节跳动", "https://jobs.bytedance.com/"),
@@ -79,6 +96,8 @@ def search_company_candidates(
             if not title:
                 continue
             seen_urls.add(resolved_url)
+            if not _looks_like_campus_recruitment_url(resolved_url):
+                continue
             candidates.append(
                 CompanyCandidate(
                     rank=index,
@@ -160,6 +179,13 @@ def _extract_candidates_from_selection_payload(payload: dict[str, Any]) -> list[
         if isinstance(value, list):
             return value
     return []
+
+
+def _looks_like_campus_recruitment_url(url: str) -> bool:
+    normalized = unquote(url).lower()
+    parsed = urlparse(normalized)
+    target = f"{parsed.netloc}{parsed.path}"
+    return any(hint in target for hint in CAREER_URL_HINTS)
 
 
 def crawl_company_page(

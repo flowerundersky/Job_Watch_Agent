@@ -63,4 +63,5 @@ def test_relay_api_can_select_companies() -> None:
     assert candidates, "expected at least one company candidate"
     assert candidates[0].name.strip()
     assert candidates[0].recruitment_url.strip()
+    assert workflow._looks_like_campus_recruitment_url(candidates[0].recruitment_url)
     assert candidates[0].rank >= 1
