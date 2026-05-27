@@ -1,407 +1,1701 @@
 {
   "selection_source": "output/result_output/job_watch_selection.json",
-  "job_role": "AI应用开发工程师",
-  "top_x": 30,
+  "job_role": "",
+  "top_x": 7,
   "selected_companies": [
     {
       "rank": 1,
-      "name": "阿里巴巴集团",
-      "recruitment_url": "https://talent.alibaba.com/campus"
+      "name": "百度",
+      "recruitment_url": "https://talent.baidu.com/"
     },
     {
       "rank": 2,
-      "name": "腾讯",
-      "recruitment_url": "https://join.qq.com/campus.html"
+      "name": "阿里巴巴集团",
+      "recruitment_url": "https://talent.alibaba.com/"
     },
     {
       "rank": 3,
-      "name": "百度",
-      "recruitment_url": "https://talent.baidu.com/jobs/list?recruitType=CAMPUS"
+      "name": "字节跳动",
+      "recruitment_url": "https://jobs.bytedance.com/zh/"
     },
     {
       "rank": 4,
-      "name": "字节跳动",
-      "recruitment_url": "https://jobs.bytedance.com/campus"
+      "name": "华为",
+      "recruitment_url": "https://career.huawei.com/"
     },
     {
       "rank": 5,
-      "name": "华为",
-      "recruitment_url": "https://career.huawei.com/reccampportal/portal5/campus-recruitment.html"
+      "name": "京东",
+      "recruitment_url": "https://zhaopin.jd.com/"
     },
     {
       "rank": 6,
       "name": "美团",
-      "recruitment_url": "https://campus.meituan.com/"
+      "recruitment_url": "https://zhaopin.meituan.com/"
     },
     {
       "rank": 7,
-      "name": "京东",
-      "recruitment_url": "https://campus.jd.com/"
-    },
-    {
-      "rank": 8,
-      "name": "小米集团",
-      "recruitment_url": "https://hr.xiaomi.com/campus"
-    },
-    {
-      "rank": 9,
-      "name": "网易",
-      "recruitment_url": "https://campus.163.com/"
-    },
-    {
-      "rank": 10,
       "name": "快手",
-      "recruitment_url": "https://campus.kuaishou.cn/"
-    },
-    {
-      "rank": 11,
-      "name": "蚂蚁集团",
-      "recruitment_url": "https://talent.antgroup.com/campus-recruitment"
-    },
-    {
-      "rank": 12,
-      "name": "滴滴",
-      "recruitment_url": "https://campus.didiglobal.com/"
-    },
-    {
-      "rank": 13,
-      "name": "拼多多",
-      "recruitment_url": "https://careers.pinduoduo.com/campus/"
-    },
-    {
-      "rank": 14,
-      "name": "携程集团",
-      "recruitment_url": "https://campus.ctrip.com/"
-    },
-    {
-      "rank": 15,
-      "name": "哔哩哔哩",
-      "recruitment_url": "https://jobs.bilibili.com/campus"
-    },
-    {
-      "rank": 16,
-      "name": "商汤科技",
-      "recruitment_url": "https://www.sensetime.com/cn/join-us/campus-recruitment"
-    },
-    {
-      "rank": 17,
-      "name": "旷视科技",
-      "recruitment_url": "https://www.megvii.com/campus/"
-    },
-    {
-      "rank": 18,
-      "name": "科大讯飞",
-      "recruitment_url": "https://campus.iflytek.com/"
-    },
-    {
-      "rank": 19,
-      "name": "大疆创新",
-      "recruitment_url": "https://we.dji.com/zh-CN/campus"
-    },
-    {
-      "rank": 20,
-      "name": "联想集团",
-      "recruitment_url": "https://talent.lenovo.com.cn/campus"
-    },
-    {
-      "rank": 21,
-      "name": "荣耀",
-      "recruitment_url": "https://career.hihonor.com/SU60ee766f0dcad412cc41103a/pb/school.html"
-    },
-    {
-      "rank": 22,
-      "name": "OPPO",
-      "recruitment_url": "https://careers.oppo.com/campus"
-    },
-    {
-      "rank": 23,
-      "name": "vivo",
-      "recruitment_url": "https://hr.vivo.com/wt/vivo/web/index/campus"
-    },
-    {
-      "rank": 24,
-      "name": "海康威视",
-      "recruitment_url": "https://campus.hikvision.com/"
-    },
-    {
-      "rank": 25,
-      "name": "大华股份",
-      "recruitment_url": "https://dahua.zhiye.com/campus"
-    },
-    {
-      "rank": 26,
-      "name": "蔚来",
-      "recruitment_url": "https://nio.jobs.feishu.cn/campus"
-    },
-    {
-      "rank": 27,
-      "name": "理想汽车",
-      "recruitment_url": "https://www.lixiang.com/careers/campus.html"
-    },
-    {
-      "rank": 28,
-      "name": "小鹏汽车",
-      "recruitment_url": "https://campus.xiaopeng.com/"
-    },
-    {
-      "rank": 29,
-      "name": "地平线机器人",
-      "recruitment_url": "https://horizonrobotics.jobs.feishu.cn/campus"
-    },
-    {
-      "rank": 30,
-      "name": "第四范式",
-      "recruitment_url": "https://4paradigm.jobs.feishu.cn/campus"
+      "recruitment_url": "https://zhaopin.kuaishou.cn/"
     }
   ],
   "crawled_pages": [
     {
-      "company": "阿里巴巴集团",
-      "page_url": "https://talent.alibaba.com/",
-      "site_type": "html",
-      "channel_status": "unknown",
-      "date_candidates": [],
-      "error": ""
-    },
-    {
-      "company": "腾讯",
-      "page_url": "https://join.qq.com/404.html",
-      "site_type": "html",
-      "channel_status": "unknown",
-      "date_candidates": [],
-      "error": ""
-    },
-    {
       "company": "百度",
-      "page_url": "https://talent.baidu.com/jobs/list?recruitType=CAMPUS",
-      "site_type": "html",
-      "channel_status": "open",
+      "page_url": "about:blank",
+      "site_type": "playwright",
+      "channel_status": "unknown",
       "date_candidates": [],
+      "observation_summary": {
+        "title": "",
+        "heading_count": 0,
+        "section_count": 0,
+        "interactive_element_count": 0,
+        "link_count": 0
+      },
+      "error": ""
+    },
+    {
+      "company": "阿里巴巴集团",
+      "page_url": "https://talent.alibaba.com/?lang=zh",
+      "site_type": "playwright",
+      "channel_status": "open",
+      "date_candidates": [
+        "5月10日"
+      ],
+      "observation_summary": {
+        "title": "阿里巴巴集团招聘官网",
+        "heading_count": 7,
+        "section_count": 12,
+        "interactive_element_count": 3,
+        "link_count": 1
+      },
       "error": ""
     },
     {
       "company": "字节跳动",
-      "page_url": "https://jobs.bytedance.com/campus",
-      "site_type": "html",
-      "channel_status": "open",
+      "page_url": "https://jobs.bytedance.com/zh/",
+      "site_type": "playwright",
+      "channel_status": "unknown",
       "date_candidates": [],
+      "observation_summary": {
+        "title": "",
+        "heading_count": 0,
+        "section_count": 0,
+        "interactive_element_count": 0,
+        "link_count": 0
+      },
       "error": ""
     },
     {
       "company": "华为",
-      "page_url": "https://career.huawei.com/reccampportal/portal5/campus-recruitment.html",
-      "site_type": "html",
+      "page_url": "https://career.huawei.com/reccampportal/portal5/index.html",
+      "site_type": "playwright",
       "channel_status": "open",
       "date_candidates": [
-        "1998-20"
+        "2024.07.23"
       ],
-      "error": ""
-    },
-    {
-      "company": "美团",
-      "page_url": "https://zhaopin.meituan.com/web/campus",
-      "site_type": "html",
-      "channel_status": "unknown",
-      "date_candidates": [],
+      "observation_summary": {
+        "title": "Huawei Career",
+        "heading_count": 3,
+        "section_count": 3,
+        "interactive_element_count": 38,
+        "link_count": 20
+      },
       "error": ""
     },
     {
       "company": "京东",
-      "page_url": "https://campus.jd.com/",
-      "site_type": "html",
-      "channel_status": "unknown",
-      "date_candidates": [],
+      "page_url": "https://zhaopin.jd.com/home;jsessionid=653028EA1452D808FF6F1E770A78CEDB.s1",
+      "site_type": "playwright",
+      "channel_status": "open",
+      "date_candidates": [
+        "2026-05-27"
+      ],
+      "observation_summary": {
+        "title": "京东招聘-首页",
+        "heading_count": 4,
+        "section_count": 12,
+        "interactive_element_count": 28,
+        "link_count": 7
+      },
       "error": ""
     },
     {
-      "company": "小米集团",
-      "page_url": "https://hr.xiaomi.com/campus",
-      "site_type": "html",
-      "channel_status": "unknown",
-      "date_candidates": [],
-      "error": ""
-    },
-    {
-      "company": "网易",
-      "page_url": "https://campus.163.com/",
-      "site_type": "html",
-      "channel_status": "unknown",
-      "date_candidates": [],
+      "company": "美团",
+      "page_url": "https://zhaopin.meituan.com/web/home",
+      "site_type": "playwright",
+      "channel_status": "open",
+      "date_candidates": [
+        "2026/02/27"
+      ],
+      "observation_summary": {
+        "title": "首页 | 美团招聘",
+        "heading_count": 0,
+        "section_count": 12,
+        "interactive_element_count": 27,
+        "link_count": 16
+      },
       "error": ""
     },
     {
       "company": "快手",
-      "page_url": "https://campus.kuaishou.cn/",
-      "site_type": "html",
+      "page_url": "https://zhaopin.kuaishou.cn/#/official/index/",
+      "site_type": "playwright",
       "channel_status": "open",
       "date_candidates": [],
+      "observation_summary": {
+        "title": "快手招聘",
+        "heading_count": 0,
+        "section_count": 3,
+        "interactive_element_count": 8,
+        "link_count": 8
+      },
       "error": ""
+    }
+  ],
+  "dom_observations": [
+    {
+      "company": "百度",
+      "page_url": "about:blank",
+      "observation": {
+        "page_url": "about:blank",
+        "title": "",
+        "headings": [],
+        "visible_text_excerpt": "",
+        "sections": [],
+        "interactive_elements": [],
+        "links": []
+      }
     },
     {
-      "company": "蚂蚁集团",
-      "page_url": "https://talent.antgroup.com/campus-recruitment",
-      "site_type": "html",
-      "channel_status": "unknown",
-      "date_candidates": [],
-      "error": ""
+      "company": "阿里巴巴集团",
+      "page_url": "https://talent.alibaba.com/?lang=zh",
+      "observation": {
+        "page_url": "https://talent.alibaba.com/?lang=zh",
+        "title": "阿里巴巴集团招聘官网",
+        "headings": [
+          "阿里巴巴中国电商集团",
+          "阿里国际数字商业集团",
+          "云智能集团",
+          "其他业务",
+          "文化氛围",
+          "生活在阿里",
+          "温暖公益"
+        ],
+        "visible_text_excerpt": "首页 个人中心 更多招聘 登录 招聘网站仅作为招聘岗位显示和简历投递入口，不代表阿里巴巴集团业务组织架构。 阿里巴巴控股集团 围绕大消费、AI+云两大战略重心，阿里巴巴集团旗下有三大业务集团及若干业务公司。其中，阿里巴巴控股集团旗下包含多个支持集团发展的技术及职能部门。控股集团有力支撑协调各业务集团和业务公司发展，为阿里巴巴生态体系孵化新的活力与可能性。 进入招聘官网 阿里巴巴中国电商集团 淘天集团 淘天集团是全球领先互联网消费平台企业，主要由淘宝和天猫组成，还有天猫超市、天猫国际、闲鱼、1688.com、淘宝直播、阿里妈妈等业务。 进入招聘官网 淘宝闪购 淘宝闪购是中国领先的生活服务及即时配送平台。作为阿里巴巴旗下的即时零售业务，淘宝闪购旨在满足消费者对多个品类商品的即时配送需求。 进入招聘官网 飞猪 飞猪是一家领先的线上旅游平台，为满足消费者的旅游出行需求提供全面的服务。 进入招聘官网 阿里国际数字商业集团 阿里国际数字商业集团 阿里国际数字商业集团旗下拥有速卖通、Lazada、Trendyol、Daraz等全球领先的B2C电商平台以及全球最大的B2B贸易平台阿里国际站。致力于以AI技术为驱动，连接全球消费者和中小企业，推动全球贸易数字化发展。 进入招聘官网 云智能集团 阿里云 阿里云是中国第一、全球领先的全栈人工智能服务商，提供最先进的智能能力和遍布全球的AI云计算网络，向全球各地提供开发者生态友好的AI服务。 进入招聘官网 其他业务 通义实验室 通义实验室是阿里巴巴集团旗下专注于大模型技术研发的机构，负责基础模型体系的研究、训练与迭代，模型配套技术的增强；团队致力于推动模型能力的开源、生态建设及行业应用。其开源模型在全球社区中拥有广泛影响力，衍生模型数量与下载规模持续增长。 进入招聘官网 钉钉 钉钉是阿里巴巴旗下AI工作平台，致力于打造AI时代的工作方式。 进入招聘官网 千问C端事业群 阿里千问C端事业群，包含千问APP、夸克、AI硬件、UC、书旗、超级汇川等。千问努力打造AI时代的第一入口，让人人随时随地使用 AI。 进入招聘官网 平头哥 平头哥半导体有限公司是阿里巴巴集团全资半导体芯片业务主体，致力于AI时代的芯片基础设施创新，打造数据中心算力、存力、网力芯片和IoT芯片， 通过端云一体全栈产品系列为数字化、智能化时代提供无处不在的普惠算力。 进入招聘官网 高德地图 高德地图是专业领先的出行和位置服务方案提供商，致力于以科技创新和生态协作，打造一体化出行生活服务。 进入招聘官网 菜鸟集团 菜鸟集团成立于2013年，是全球领先的智慧物流与供应链科技企业，服务覆盖200+国家和地区，为全球品牌、商家及消费者提供端到端的智能供应链与物流解决方案。 进入招聘官网 虎鲸文娱集团 虎鲸文娱集团坚定“内容+科技”双轮驱动战略，为用户提供在线、线下全场景娱乐体验",
+        "sections": [
+          {
+            "heading": "阿里巴巴中国电商集团",
+            "text": "首页 个人中心 更多招聘 登录 招聘网站仅作为招聘岗位显示和简历投递入口，不代表阿里巴巴集团业务组织架构。 阿里巴巴控股集团 围绕大消费、AI+云两大战略重心，阿里巴巴集团旗下有三大业务集团及若干业务公司。其中，阿里巴巴控股集团旗下包含多个支持集团发展的技术及职能部门。控股集团有力支撑协调各业务集团和业务公司发展，为阿里巴巴生态体系孵化新的活力与可能性。 进入招聘官网 阿里巴巴中国电商集团 淘天集团 淘天集团是全球领先互联网消费平台企业，主要由淘宝和天猫组成，还有天猫超市、天猫国际、闲鱼、1688.com、淘宝直播、阿里妈妈等业务。 进入招聘官网 淘宝闪购 淘宝闪购是中国领先的生活服务及即时配送平台。作为阿里巴巴旗下的即时零售业务，淘宝闪购旨在满足消费者对多个品类商品的即时配送需求。 进入招聘官网 飞猪 飞猪是一家领先的线上旅游平台，为满足消费者的旅游出行需求提供全面的服务。 进入招聘官网 阿里国际数字商业集团 阿里国际数字商业集团 阿里国际数字商业集团旗下拥有速卖通、Lazada、Trendyol、Daraz等全球领先的B2C电商平台以及全球最大的B2B贸易平台阿里国际站。致力于以AI技术为驱动，连接全球消费者和中小企业，推动全球贸易数字化发展。 进入招聘官网 云智能集团 阿里云 阿里云是中国第一、全球领先的全栈人工智能服务商，提供最先进的智能能力和遍布全球的AI云计算网络，向全",
+            "links": [
+              {
+                "text": "阿里巴巴校园招聘官网",
+                "href": "https://campus-talent.alibaba.com/campus/index"
+              }
+            ]
+          },
+          {
+            "heading": "阿里巴巴中国电商集团",
+            "text": "首页 个人中心 更多招聘 登录 招聘网站仅作为招聘岗位显示和简历投递入口，不代表阿里巴巴集团业务组织架构。 阿里巴巴控股集团 围绕大消费、AI+云两大战略重心，阿里巴巴集团旗下有三大业务集团及若干业务公司。其中，阿里巴巴控股集团旗下包含多个支持集团发展的技术及职能部门。控股集团有力支撑协调各业务集团和业务公司发展，为阿里巴巴生态体系孵化新的活力与可能性。 进入招聘官网 阿里巴巴中国电商集团 淘天集团 淘天集团是全球领先互联网消费平台企业，主要由淘宝和天猫组成，还有天猫超市、天猫国际、闲鱼、1688.com、淘宝直播、阿里妈妈等业务。 进入招聘官网 淘宝闪购 淘宝闪购是中国领先的生活服务及即时配送平台。作为阿里巴巴旗下的即时零售业务，淘宝闪购旨在满足消费者对多个品类商品的即时配送需求。 进入招聘官网 飞猪 飞猪是一家领先的线上旅游平台，为满足消费者的旅游出行需求提供全面的服务。 进入招聘官网 阿里国际数字商业集团 阿里国际数字商业集团 阿里国际数字商业集团旗下拥有速卖通、Lazada、Trendyol、Daraz等全球领先的B2C电商平台以及全球最大的B2B贸易平台阿里国际站。致力于以AI技术为驱动，连接全球消费者和中小企业，推动全球贸易数字化发展。 进入招聘官网 云智能集团 阿里云 阿里云是中国第一、全球领先的全栈人工智能服务商，提供最先进的智能能力和遍布全球的AI云计算网络，向全",
+            "links": [
+              {
+                "text": "阿里巴巴校园招聘官网",
+                "href": "https://campus-talent.alibaba.com/campus/index"
+              }
+            ]
+          },
+          {
+            "heading": "阿里巴巴中国电商集团",
+            "text": "首页 个人中心 更多招聘 登录 招聘网站仅作为招聘岗位显示和简历投递入口，不代表阿里巴巴集团业务组织架构。 阿里巴巴控股集团 围绕大消费、AI+云两大战略重心，阿里巴巴集团旗下有三大业务集团及若干业务公司。其中，阿里巴巴控股集团旗下包含多个支持集团发展的技术及职能部门。控股集团有力支撑协调各业务集团和业务公司发展，为阿里巴巴生态体系孵化新的活力与可能性。 进入招聘官网 阿里巴巴中国电商集团 淘天集团 淘天集团是全球领先互联网消费平台企业，主要由淘宝和天猫组成，还有天猫超市、天猫国际、闲鱼、1688.com、淘宝直播、阿里妈妈等业务。 进入招聘官网 淘宝闪购 淘宝闪购是中国领先的生活服务及即时配送平台。作为阿里巴巴旗下的即时零售业务，淘宝闪购旨在满足消费者对多个品类商品的即时配送需求。 进入招聘官网 飞猪 飞猪是一家领先的线上旅游平台，为满足消费者的旅游出行需求提供全面的服务。 进入招聘官网 阿里国际数字商业集团 阿里国际数字商业集团 阿里国际数字商业集团旗下拥有速卖通、Lazada、Trendyol、Daraz等全球领先的B2C电商平台以及全球最大的B2B贸易平台阿里国际站。致力于以AI技术为驱动，连接全球消费者和中小企业，推动全球贸易数字化发展。 进入招聘官网 云智能集团 阿里云 阿里云是中国第一、全球领先的全栈人工智能服务商，提供最先进的智能能力和遍布全球的AI云计算网络，向全",
+            "links": []
+          },
+          {
+            "heading": "阿里巴巴中国电商集团",
+            "text": "招聘网站仅作为招聘岗位显示和简历投递入口，不代表阿里巴巴集团业务组织架构。 阿里巴巴控股集团 围绕大消费、AI+云两大战略重心，阿里巴巴集团旗下有三大业务集团及若干业务公司。其中，阿里巴巴控股集团旗下包含多个支持集团发展的技术及职能部门。控股集团有力支撑协调各业务集团和业务公司发展，为阿里巴巴生态体系孵化新的活力与可能性。 进入招聘官网 阿里巴巴中国电商集团 淘天集团 淘天集团是全球领先互联网消费平台企业，主要由淘宝和天猫组成，还有天猫超市、天猫国际、闲鱼、1688.com、淘宝直播、阿里妈妈等业务。 进入招聘官网 淘宝闪购 淘宝闪购是中国领先的生活服务及即时配送平台。作为阿里巴巴旗下的即时零售业务，淘宝闪购旨在满足消费者对多个品类商品的即时配送需求。 进入招聘官网 飞猪 飞猪是一家领先的线上旅游平台，为满足消费者的旅游出行需求提供全面的服务。 进入招聘官网 阿里国际数字商业集团 阿里国际数字商业集团 阿里国际数字商业集团旗下拥有速卖通、Lazada、Trendyol、Daraz等全球领先的B2C电商平台以及全球最大的B2B贸易平台阿里国际站。致力于以AI技术为驱动，连接全球消费者和中小企业，推动全球贸易数字化发展。 进入招聘官网 云智能集团 阿里云 阿里云是中国第一、全球领先的全栈人工智能服务商，提供最先进的智能能力和遍布全球的AI云计算网络，向全球各地提供开发者生态友好的AI服",
+            "links": []
+          },
+          {
+            "heading": "",
+            "text": "招聘网站仅作为招聘岗位显示和简历投递入口，不代表阿里巴巴集团业务组织架构。 阿里巴巴控股集团 围绕大消费、AI+云两大战略重心，阿里巴巴集团旗下有三大业务集团及若干业务公司。其中，阿里巴巴控股集团旗下包含多个支持集团发展的技术及职能部门。控股集团有力支撑协调各业务集团和业务公司发展，为阿里巴巴生态体系孵化新的活力与可能性。 进入招聘官网",
+            "links": []
+          },
+          {
+            "heading": "",
+            "text": "招聘网站仅作为招聘岗位显示和简历投递入口，不代表阿里巴巴集团业务组织架构。 阿里巴巴控股集团 围绕大消费、AI+云两大战略重心，阿里巴巴集团旗下有三大业务集团及若干业务公司。其中，阿里巴巴控股集团旗下包含多个支持集团发展的技术及职能部门。控股集团有力支撑协调各业务集团和业务公司发展，为阿里巴巴生态体系孵化新的活力与可能性。 进入招聘官网",
+            "links": []
+          },
+          {
+            "heading": "",
+            "text": "招聘网站仅作为招聘岗位显示和简历投递入口，不代表阿里巴巴集团业务组织架构。",
+            "links": []
+          },
+          {
+            "heading": "",
+            "text": "阿里巴巴控股集团 围绕大消费、AI+云两大战略重心，阿里巴巴集团旗下有三大业务集团及若干业务公司。其中，阿里巴巴控股集团旗下包含多个支持集团发展的技术及职能部门。控股集团有力支撑协调各业务集团和业务公司发展，为阿里巴巴生态体系孵化新的活力与可能性。 进入招聘官网",
+            "links": []
+          },
+          {
+            "heading": "",
+            "text": "阿里巴巴控股集团 围绕大消费、AI+云两大战略重心，阿里巴巴集团旗下有三大业务集团及若干业务公司。其中，阿里巴巴控股集团旗下包含多个支持集团发展的技术及职能部门。控股集团有力支撑协调各业务集团和业务公司发展，为阿里巴巴生态体系孵化新的活力与可能性。 进入招聘官网",
+            "links": []
+          },
+          {
+            "heading": "",
+            "text": "阿里巴巴控股集团 围绕大消费、AI+云两大战略重心，阿里巴巴集团旗下有三大业务集团及若干业务公司。其中，阿里巴巴控股集团旗下包含多个支持集团发展的技术及职能部门。控股集团有力支撑协调各业务集团和业务公司发展，为阿里巴巴生态体系孵化新的活力与可能性。 进入招聘官网",
+            "links": []
+          },
+          {
+            "heading": "",
+            "text": "阿里巴巴控股集团 围绕大消费、AI+云两大战略重心，阿里巴巴集团旗下有三大业务集团及若干业务公司。其中，阿里巴巴控股集团旗下包含多个支持集团发展的技术及职能部门。控股集团有力支撑协调各业务集团和业务公司发展，为阿里巴巴生态体系孵化新的活力与可能性。 进入招聘官网",
+            "links": []
+          },
+          {
+            "heading": "",
+            "text": "阿里巴巴控股集团 围绕大消费、AI+云两大战略重心，阿里巴巴集团旗下有三大业务集团及若干业务公司。其中，阿里巴巴控股集团旗下包含多个支持集团发展的技术及职能部门。控股集团有力支撑协调各业务集团和业务公司发展，为阿里巴巴生态体系孵化新的活力与可能性。",
+            "links": []
+          }
+        ],
+        "interactive_elements": [
+          {
+            "tag": "button",
+            "role": "button",
+            "text": "Previous",
+            "href": "",
+            "visible": false
+          },
+          {
+            "tag": "button",
+            "role": "button",
+            "text": "Next",
+            "href": "",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "阿里巴巴校园招聘官网",
+            "href": "https://campus-talent.alibaba.com/campus/index",
+            "visible": true
+          }
+        ],
+        "links": [
+          "https://campus-talent.alibaba.com/campus/index"
+        ]
+      }
     },
     {
-      "company": "滴滴",
-      "page_url": "https://campus.didiglobal.com/campus_apply/didiglobal/96064",
-      "site_type": "html",
-      "channel_status": "open",
-      "date_candidates": [],
-      "error": ""
+      "company": "字节跳动",
+      "page_url": "https://jobs.bytedance.com/zh/",
+      "observation": {
+        "page_url": "https://jobs.bytedance.com/zh/",
+        "title": "",
+        "headings": [],
+        "visible_text_excerpt": "Not Found",
+        "sections": [],
+        "interactive_elements": [],
+        "links": []
+      }
     },
     {
-      "company": "拼多多",
-      "page_url": "https://careers.pddglobalhr.com/campus/",
-      "site_type": "html",
-      "channel_status": "open",
-      "date_candidates": [],
-      "error": ""
+      "company": "华为",
+      "page_url": "https://career.huawei.com/reccampportal/portal5/index.html",
+      "observation": {
+        "page_url": "https://career.huawei.com/reccampportal/portal5/index.html",
+        "title": "Huawei Career",
+        "headings": [
+          "Join Us and Move the World Forward",
+          "Experienced",
+          "Graduate"
+        ],
+        "visible_text_excerpt": "校园招聘 社会招聘 新闻公告 成长与发展 华为生活 登录 Worldwide 联系HR TopMinds Students Experienced News Growth Huawei life Login Worldwide Contact Join Us and Move the World Forward Join Us and Move the World Forward We are Looking for Top Minds More Huawei is Open for Global Recruitment More Huawei Hiring Global Outstanding Postdoctoral Researchers More Students/Graduates Campus Recruitment Overseas Chinese graduates (Doctor's) Search Experienced talent Experienced Recruitment All Types Anywhere Search Learn More News We are Looking for Top Minds 2024.07.23 Huawei Hiring International Graduates from Chinese Universities 2022.03.07 Huawei is Open for Global Recruitment 2022.03.04 Huawei Hiring Global Outstanding Postdoctoral Researchers 2021.04.15 More FAQs FAQs for International Graduates from Chinese Universities More Huawei Career TopMinds Campus Recruitment Experienced Recruitment Recruitment News About Huawei Corporate Information Corporate Governance Executives Annual Reports Sustainability Trust Center Public Policy Press & Events News Events Huawei Facts Gallery Quick Links Xinsheng Community Huawei Cloud Huawei Consumer Huawei Enterprise Huawei Carrier Industry Insights Global Connectivity Index C",
+        "sections": [
+          {
+            "heading": "",
+            "text": "校园招聘 社会招聘 新闻公告 成长与发展 华为生活 登录 Worldwide 联系HR Huawei Worldwide Careers - 中文 Huawei Worldwide Careers - English Choose your local Huawei Careers website here: Northeast Europe - English Western Europe - English 登录 登录 校园招聘 社会招聘 新闻公告 成长与发展 华为生活 Huawei Worldwide Careers - English Huawei Worldwide Careers - 中文 Choose your local Huawei website here: Northeast Europe - English Western Europe - English 联系HR Worldwide",
+            "links": [
+              {
+                "text": "",
+                "href": "https://career.huawei.com/reccampportal/portal5/index.html?v=20241208"
+              },
+              {
+                "text": "校园招聘",
+                "href": "https://career.huawei.com/reccampportal/portal5/campus-recruitment.html?v=20241208"
+              },
+              {
+                "text": "社会招聘",
+                "href": "https://career.huawei.com/reccampportal/portal5/social-recruitment.html?v=20241208"
+              },
+              {
+                "text": "新闻公告",
+                "href": "https://career.huawei.com/reccampportal/portal5/news.html"
+              },
+              {
+                "text": "成长与发展",
+                "href": "https://career.huawei.com/reccampportal/portal5/employee.html"
+              },
+              {
+                "text": "华为生活",
+                "href": "https://career.huawei.com/reccampportal/portal5/huawei-live.html"
+              }
+            ]
+          },
+          {
+            "heading": "",
+            "text": "TopMinds Students Experienced News Growth Huawei life Login Worldwide Contact Huawei Worldwide Careers - 中文 Huawei Worldwide Careers - English Choose your local Huawei Careers website here: Japan - 日本語 Latin America - English Europe - English Login Login TopMinds Students Experienced News Growth Huawei life Huawei Worldwide Careers - English Huawei Worldwide Careers - 中文 Choose your local Huawei website here: Japan - 日本語 Latin America - English Europe - English Contact HR Worldwide",
+            "links": [
+              {
+                "text": "",
+                "href": "https://career.huawei.com/reccampportal/portal5/index.html"
+              },
+              {
+                "text": "TopMinds",
+                "href": "https://career.huawei.com/reccampportal/portal5/topminds.html"
+              },
+              {
+                "text": "Students",
+                "href": "https://career.huawei.com/reccampportal/portal5/campus-recruitment.html"
+              },
+              {
+                "text": "Experienced",
+                "href": "https://career.huawei.com/reccampportal/portal5/social-recruitment.html"
+              },
+              {
+                "text": "News",
+                "href": "https://career.huawei.com/reccampportal/portal5/news.html"
+              },
+              {
+                "text": "Growth",
+                "href": "https://career.huawei.com/reccampportal/portal5/employee.html"
+              }
+            ]
+          },
+          {
+            "heading": "",
+            "text": "Huawei Career TopMinds Campus Recruitment Experienced Recruitment Recruitment News About Huawei Corporate Information Corporate Governance Executives Annual Reports Sustainability Trust Center Public Policy Press & Events News Events Huawei Facts Gallery Quick Links Xinsheng Community Huawei Cloud Huawei Consumer Huawei Enterprise Huawei Carrier Industry Insights Global Connectivity Index Contact HR Copyright © Huawei Technologies Co., Ltd. 1998-2026. All Rights Reserved. Terms of Use | Privacy Statement | Cookie Policy | Contact HR",
+            "links": [
+              {
+                "text": "Huawei Career",
+                "href": "https://career.huawei.com/reccampportal/portal5/index.html"
+              },
+              {
+                "text": "TopMinds",
+                "href": "https://career.huawei.com/reccampportal/portal5/topminds.html"
+              },
+              {
+                "text": "Campus Recruitment",
+                "href": "https://career.huawei.com/reccampportal/portal5/campus-recruitment.html"
+              },
+              {
+                "text": "Experienced Recruitment",
+                "href": "https://career.huawei.com/reccampportal/portal5/social-recruitment.html"
+              },
+              {
+                "text": "Recruitment News",
+                "href": "https://career.huawei.com/reccampportal/portal5/news.html"
+              },
+              {
+                "text": "About Huawei",
+                "href": "https://www.huawei.com/en/about-huawei"
+              }
+            ]
+          }
+        ],
+        "interactive_elements": [
+          {
+            "tag": "a",
+            "role": "",
+            "text": "",
+            "href": "https://career.huawei.com/reccampportal/portal5/index.html?v=20241208",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "校园招聘",
+            "href": "https://career.huawei.com/reccampportal/portal5/campus-recruitment.html?v=20241208",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "社会招聘",
+            "href": "https://career.huawei.com/reccampportal/portal5/social-recruitment.html?v=20241208",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "新闻公告",
+            "href": "https://career.huawei.com/reccampportal/portal5/news.html",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "成长与发展",
+            "href": "https://career.huawei.com/reccampportal/portal5/employee.html",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "华为生活",
+            "href": "https://career.huawei.com/reccampportal/portal5/huawei-live.html",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "登录",
+            "href": "javascript:;",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "联系HR",
+            "href": "https://career.huawei.com/reccampportal/portal5/contact-hr.html",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "English",
+            "href": "https://career.huawei.com/socRecruitment/polandportal/index.html?v=20241120",
+            "visible": false
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "English",
+            "href": "https://career.huawei.com/reccampportal/campus4/pages/westernEurope/index.html?v=20241120",
+            "visible": false
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "",
+            "href": "https://career.huawei.com/reccampportal/portal5/index.html?v=20241208",
+            "visible": false
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "校园招聘",
+            "href": "https://career.huawei.com/reccampportal/portal5/campus-recruitment.html?v=20241208",
+            "visible": false
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "社会招聘",
+            "href": "https://career.huawei.com/reccampportal/portal5/social-recruitment.html?v=20241208",
+            "visible": false
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "新闻公告",
+            "href": "https://career.huawei.com/reccampportal/portal5/news.html",
+            "visible": false
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "成长与发展",
+            "href": "https://career.huawei.com/reccampportal/portal5/employee.html",
+            "visible": false
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "华为生活",
+            "href": "https://career.huawei.com/reccampportal/portal5/huawei-live.html",
+            "visible": false
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "Huawei Worldwide Careers - English",
+            "href": "https://career.huawei.com/reccampportal/portal5/index.html#",
+            "visible": false
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "Huawei Worldwide Careers - 中文",
+            "href": "https://career.huawei.com/reccampportal/portal5/index.html#",
+            "visible": false
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "Choose your local Huawei website here:",
+            "href": "javascript:;",
+            "visible": false
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "",
+            "href": "javascript:;",
+            "visible": false
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "Northeast Europe - English",
+            "href": "https://career.huawei.com/socRecruitment/polandportal/index.html?v=20241120",
+            "visible": false
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "Western Europe - English",
+            "href": "https://career.huawei.com/reccampportal/campus4/pages/westernEurope/index.html?v=20241120",
+            "visible": false
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "",
+            "href": "https://career.huawei.com/reccampportal/portal5/index.html",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "TopMinds",
+            "href": "https://career.huawei.com/reccampportal/portal5/topminds.html",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "Students",
+            "href": "https://career.huawei.com/reccampportal/portal5/campus-recruitment.html",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "Experienced",
+            "href": "https://career.huawei.com/reccampportal/portal5/social-recruitment.html",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "News",
+            "href": "https://career.huawei.com/reccampportal/portal5/news.html",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "Growth",
+            "href": "https://career.huawei.com/reccampportal/portal5/employee.html",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "Huawei life",
+            "href": "https://career.huawei.com/reccampportal/portal5/huawei-live.html",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "Login",
+            "href": "javascript:;",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "Contact",
+            "href": "https://career.huawei.com/reccampportal/portal5/contact-hr.html",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "日本語",
+            "href": "https://career.huawei.com/reccampportal/jp/index.html",
+            "visible": false
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "English",
+            "href": "https://career.huawei.com/reccampportal/la/index.html",
+            "visible": false
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "English",
+            "href": "https://career.huawei.com/reccampportal/euportal/portal/index.html",
+            "visible": false
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "",
+            "href": "https://career.huawei.com/reccampportal/portal5/index.html",
+            "visible": false
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "TopMinds",
+            "href": "https://career.huawei.com/reccampportal/portal5/topminds.html",
+            "visible": false
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "Students",
+            "href": "https://career.huawei.com/reccampportal/portal5/campus-recruitment.html",
+            "visible": false
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "Experienced",
+            "href": "https://career.huawei.com/reccampportal/portal5/social-recruitment.html",
+            "visible": false
+          }
+        ],
+        "links": [
+          "https://career.huawei.com/reccampportal/portal5/index.html?v=20241208",
+          "https://career.huawei.com/reccampportal/portal5/campus-recruitment.html?v=20241208",
+          "https://career.huawei.com/reccampportal/portal5/social-recruitment.html?v=20241208",
+          "https://career.huawei.com/reccampportal/portal5/news.html",
+          "https://career.huawei.com/reccampportal/portal5/employee.html",
+          "https://career.huawei.com/reccampportal/portal5/huawei-live.html",
+          "javascript:;",
+          "https://career.huawei.com/reccampportal/portal5/contact-hr.html",
+          "https://career.huawei.com/socRecruitment/polandportal/index.html?v=20241120",
+          "https://career.huawei.com/reccampportal/campus4/pages/westernEurope/index.html?v=20241120",
+          "https://career.huawei.com/reccampportal/portal5/index.html#",
+          "https://career.huawei.com/reccampportal/portal5/index.html",
+          "https://career.huawei.com/reccampportal/portal5/topminds.html",
+          "https://career.huawei.com/reccampportal/portal5/campus-recruitment.html",
+          "https://career.huawei.com/reccampportal/portal5/social-recruitment.html",
+          "https://career.huawei.com/reccampportal/jp/index.html",
+          "https://career.huawei.com/reccampportal/la/index.html",
+          "https://career.huawei.com/reccampportal/euportal/portal/index.html",
+          "https://career.huawei.com/reccampportal/portal5/campus-recruitment.html?quickSearch=AI",
+          "https://career.huawei.com/reccampportal/portal5/newsInfo_26.html"
+        ]
+      }
     },
     {
-      "company": "携程集团",
-      "page_url": "https://careers.ctrip.com/#/campus",
-      "site_type": "html",
-      "channel_status": "unknown",
-      "date_candidates": [],
-      "error": ""
+      "company": "京东",
+      "page_url": "https://zhaopin.jd.com/home;jsessionid=653028EA1452D808FF6F1E770A78CEDB.s1",
+      "observation": {
+        "page_url": "https://zhaopin.jd.com/home;jsessionid=653028EA1452D808FF6F1E770A78CEDB.s1",
+        "title": "京东招聘-首页",
+        "headings": [
+          "我们的使命",
+          "业务布局",
+          "工作在京东",
+          "热招职位"
+        ],
+        "visible_text_excerpt": "首 页 发展在京东 社会招聘 校园招聘 实习生招聘 登录 / 注册 关注我们 搜索 我们的使命 京东集团定位于“以供应链为基础的技术与服务企业”， 京东集团奉行客户为先、创新、拼搏、担当、感恩、诚信的价值观，以“技术为本，让生活更美好”，目标是成为全球最值得信赖的企业。 业务布局 京东致力于成为一家为社会创造最大价值的公司。经过20多年砥砺前行，京东在商业领域一次又一次突破创新，取得了跨越式发展。 与此同时，京东不忘初心，积极履行企业社会责任，在促进就业、提升社会效率、反哺实体经济等方面不断为社会做出贡献。 零售 科技 物流 健康 工业 产发 国际业务 创新零售 工作在京东 热招职位 职位名称 职位类别 工作地点 发布时间 战略投资专家（工业方向） 运营类 北京市 2026-05-27 商务拓展岗BD（AIDC行业经验） 运营类 北京市 2026-05-27 搬家运营岗 运营类 上海市 2026-05-27 巡检岗 运营类 北京市 2026-05-27 机器人硬件测试工程师（NVH方向） 研发类 北京市 2026-05-27 选址开发 运营类 广西壮族自治区 2026-05-27 销售岗 运营类 河南省 2026-05-27 电气工程师 运营类 北京市 2026-05-27 账号安全专家 研发类 北京市 2026-05-27 高客销售（干细胞方向） 运营类 北京 2026-05-27 | 友情链接 京东 JD.COM京东校招京东公益|京东版权所有 Copyright © 2018 JD.COM Powered by 京ICP备1123581321号-01 | 京ICP证1123581321号-02 | 京公网安备1123581321345589号",
+        "sections": [
+          {
+            "heading": "",
+            "text": "首 页 发展在京东 社会招聘 校园招聘 实习生招聘 登录 / 注册 关注我们",
+            "links": [
+              {
+                "text": "京东招聘",
+                "href": "https://zhaopin.jd.com/home"
+              },
+              {
+                "text": "首 页",
+                "href": "https://zhaopin.jd.com/"
+              },
+              {
+                "text": "发展在京东",
+                "href": "https://zhaopin.jd.com/web/static/develop/2"
+              },
+              {
+                "text": "社会招聘",
+                "href": "https://zhaopin.jd.com/web/job/job_info_list/3"
+              },
+              {
+                "text": "校园招聘",
+                "href": "http://campus.jd.com/home"
+              },
+              {
+                "text": "实习生招聘",
+                "href": "https://campus.jd.com/#/jobs?selProjects=45"
+              }
+            ]
+          },
+          {
+            "heading": "",
+            "text": "首 页 发展在京东 社会招聘 校园招聘 实习生招聘 登录 / 注册 关注我们",
+            "links": [
+              {
+                "text": "京东招聘",
+                "href": "https://zhaopin.jd.com/home"
+              },
+              {
+                "text": "首 页",
+                "href": "https://zhaopin.jd.com/"
+              },
+              {
+                "text": "发展在京东",
+                "href": "https://zhaopin.jd.com/web/static/develop/2"
+              },
+              {
+                "text": "社会招聘",
+                "href": "https://zhaopin.jd.com/web/job/job_info_list/3"
+              },
+              {
+                "text": "校园招聘",
+                "href": "http://campus.jd.com/home"
+              },
+              {
+                "text": "实习生招聘",
+                "href": "https://campus.jd.com/#/jobs?selProjects=45"
+              }
+            ]
+          },
+          {
+            "heading": "",
+            "text": "首 页 发展在京东 社会招聘 校园招聘 实习生招聘",
+            "links": [
+              {
+                "text": "首 页",
+                "href": "https://zhaopin.jd.com/"
+              },
+              {
+                "text": "发展在京东",
+                "href": "https://zhaopin.jd.com/web/static/develop/2"
+              },
+              {
+                "text": "社会招聘",
+                "href": "https://zhaopin.jd.com/web/job/job_info_list/3"
+              },
+              {
+                "text": "校园招聘",
+                "href": "http://campus.jd.com/home"
+              },
+              {
+                "text": "实习生招聘",
+                "href": "https://campus.jd.com/#/jobs?selProjects=45"
+              }
+            ]
+          },
+          {
+            "heading": "",
+            "text": "京东零售 京东物流 京东科技 京东健康 国际事业部 京东产发 京东工业 京东创新零售 探索研究院 京东集团 职能类 采销类 客服类 金融业务类 研发类 运营类 北京市 天津市 河北省 山西省 内蒙古自治区 辽宁省 吉林省 黑龙江省 上海市 江苏省 浙江省 安徽省 福建省 江西省 山东省 河南省 湖北省 湖南省 广东省 广西壮族自治区 海南省 重庆市 四川省 贵州省 云南省 西藏自治区 陕西省 甘肃省 青海省 宁夏回族自治区 新疆维吾尔自治区 台湾省 香港特别行政区 澳门特别行政区 搜索",
+            "links": [
+              {
+                "text": "搜索",
+                "href": "javascript:;"
+              }
+            ]
+          },
+          {
+            "heading": "",
+            "text": "京东零售 京东物流 京东科技 京东健康 国际事业部 京东产发 京东工业 京东创新零售 探索研究院 京东集团",
+            "links": []
+          },
+          {
+            "heading": "",
+            "text": "京东零售 京东物流 京东科技 京东健康 国际事业部 京东产发 京东工业 京东创新零售 探索研究院 京东集团",
+            "links": []
+          },
+          {
+            "heading": "",
+            "text": "职能类 采销类 客服类 金融业务类 研发类 运营类",
+            "links": []
+          },
+          {
+            "heading": "",
+            "text": "职能类 采销类 客服类 金融业务类 研发类 运营类",
+            "links": []
+          },
+          {
+            "heading": "",
+            "text": "北京市 天津市 河北省 山西省 内蒙古自治区 辽宁省 吉林省 黑龙江省 上海市 江苏省 浙江省 安徽省 福建省 江西省 山东省 河南省 湖北省 湖南省 广东省 广西壮族自治区 海南省 重庆市 四川省 贵州省 云南省 西藏自治区 陕西省 甘肃省 青海省 宁夏回族自治区 新疆维吾尔自治区 台湾省 香港特别行政区 澳门特别行政区",
+            "links": []
+          },
+          {
+            "heading": "",
+            "text": "北京市 天津市 河北省 山西省 内蒙古自治区 辽宁省 吉林省 黑龙江省 上海市 江苏省 浙江省 安徽省 福建省 江西省 山东省 河南省 湖北省 湖南省 广东省 广西壮族自治区 海南省 重庆市 四川省 贵州省 云南省 西藏自治区 陕西省 甘肃省 青海省 宁夏回族自治区 新疆维吾尔自治区 台湾省 香港特别行政区 澳门特别行政区",
+            "links": []
+          },
+          {
+            "heading": "我们的使命",
+            "text": "我们的使命 京东集团定位于“以供应链为基础的技术与服务企业”， 京东集团奉行客户为先、创新、拼搏、担当、感恩、诚信的价值观，以“技术为本，让生活更美好”，目标是成为全球最值得信赖的企业。 业务布局 京东致力于成为一家为社会创造最大价值的公司。经过20多年砥砺前行，京东在商业领域一次又一次突破创新，取得了跨越式发展。 与此同时，京东不忘初心，积极履行企业社会责任，在促进就业、提升社会效率、反哺实体经济等方面不断为社会做出贡献。 零售 京东零售定位于“以供应链为基础的友好交易平台”，基于对成本、效率、产品、价格、服务的持续优化，致力于为用户提供“又好又便宜”的极致消费体验；帮助合作伙伴降本增效，实现高质量发展。 科技 京东科技是京东集团旗下专注于以技术为客户服务的业务子集团，致力于为城市、企业、金融机构等各类客户提供全价值链的技术性产品与服务。京东科技现已成为整个京东集团对外提供技术服务的核心平台，是更懂产业的数智化解决方案提供商。 物流 京东物流于2017年正式独立并对外开放，2021年5月赴香港上市，依托一体化供应链能力及先进的物流技术，为消费者、各类企业用户提供“有速度，更有温度”的服务体验。 健康 京东健康是京东集团旗下专注于医疗健康业务的子集团，于2020年12月登陆香港联交所。基于“以医药及健康产品供应链为核心、医疗服务为抓手、数字驱动的用户全生命周期全场景的健康管理企业”",
+            "links": [
+              {
+                "text": "战略投资专家（工业方向）",
+                "href": "javascript:;"
+              },
+              {
+                "text": "商务拓展岗BD（AIDC行业经验）",
+                "href": "javascript:;"
+              },
+              {
+                "text": "搬家运营岗",
+                "href": "javascript:;"
+              },
+              {
+                "text": "巡检岗",
+                "href": "javascript:;"
+              },
+              {
+                "text": "机器人硬件测试工程师（NVH方向）",
+                "href": "javascript:;"
+              },
+              {
+                "text": "选址开发",
+                "href": "javascript:;"
+              }
+            ]
+          },
+          {
+            "heading": "我们的使命",
+            "text": "我们的使命 京东集团定位于“以供应链为基础的技术与服务企业”， 京东集团奉行客户为先、创新、拼搏、担当、感恩、诚信的价值观，以“技术为本，让生活更美好”，目标是成为全球最值得信赖的企业。",
+            "links": []
+          }
+        ],
+        "interactive_elements": [
+          {
+            "tag": "a",
+            "role": "",
+            "text": "京东招聘",
+            "href": "https://zhaopin.jd.com/home",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "首 页",
+            "href": "https://zhaopin.jd.com/",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "发展在京东",
+            "href": "https://zhaopin.jd.com/web/static/develop/2",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "社会招聘",
+            "href": "https://zhaopin.jd.com/web/job/job_info_list/3",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "校园招聘",
+            "href": "http://campus.jd.com/home",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "实习生招聘",
+            "href": "https://campus.jd.com/#/jobs?selProjects=45",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "登录",
+            "href": "javascript:;",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "注册",
+            "href": "javascript:;",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "关注我们",
+            "href": "javascript:;",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "搜索",
+            "href": "javascript:;",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "战略投资专家（工业方向）",
+            "href": "javascript:;",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "商务拓展岗BD（AIDC行业经验）",
+            "href": "javascript:;",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "搬家运营岗",
+            "href": "javascript:;",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "巡检岗",
+            "href": "javascript:;",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "机器人硬件测试工程师（NVH方向）",
+            "href": "javascript:;",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "选址开发",
+            "href": "javascript:;",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "销售岗",
+            "href": "javascript:;",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "电气工程师",
+            "href": "javascript:;",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "账号安全专家",
+            "href": "javascript:;",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "高客销售（干细胞方向）",
+            "href": "javascript:;",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "",
+            "href": "javascript:;",
+            "visible": false
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "京东 JD.COM",
+            "href": "https://www.jd.com/",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "京东校招",
+            "href": "http://campus.jd.com/home",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "京东公益",
+            "href": "http://gongyi.jd.com/",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "",
+            "href": "https://www.linkedin.com/company/jd.com/",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "",
+            "href": "https://www.zhihu.com/org/jing-dong-zhao-pin/activities",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "",
+            "href": "javascript:;",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "",
+            "href": "https://weibo.com/p/1006065310871548/home?from=page_100606&mod=TAB&is_all=1#place",
+            "visible": true
+          }
+        ],
+        "links": [
+          "https://zhaopin.jd.com/home",
+          "https://zhaopin.jd.com/",
+          "https://zhaopin.jd.com/web/static/develop/2",
+          "https://zhaopin.jd.com/web/job/job_info_list/3",
+          "http://campus.jd.com/home",
+          "https://campus.jd.com/#/jobs?selProjects=45",
+          "javascript:;"
+        ]
+      }
     },
     {
-      "company": "哔哩哔哩",
-      "page_url": "https://jobs.bilibili.com/campus",
-      "site_type": "html",
-      "channel_status": "unknown",
-      "date_candidates": [],
-      "error": ""
+      "company": "美团",
+      "page_url": "https://zhaopin.meituan.com/web/home",
+      "observation": {
+        "page_url": "https://zhaopin.meituan.com/web/home",
+        "title": "首页 | 美团招聘",
+        "headings": [],
+        "visible_text_excerpt": "首页 北斗计划 社会招聘 校园招聘 美团赛事 了解美团 Global Careers 登录 一起成长，一起更好 Grow Together, Better Together 北斗计划 面向全球顶尖校园科技人才的招聘项目，诚邀各技术领域的优秀同学加入 社会招聘 面向有一定工作经验的优秀人才 校园招聘 面向所有校园人才，提供多种招聘项目，无论你在哪个年级，都能找到合适岗位 工作兼职 美团生态内灵活就业岗位，有骑手、分拣员、司机、推广员等，全职兼职都有 产品和服务 美团 大众点评 美团外卖 美团闪购 美团买药 Keeta 快驴进货 小象超市 快乐猴 美团美食 美团酒店 美团门票 美团休闲娱乐 美团 丽人 美团单车 美团 配送 美团 无人车 美团 无人机 美团 餐饮系统 美团支付 美团简介 MEITUAN 美团官网 我们的科技 企业社会责任 工作在美团 MEITUAN 人才成长 人文关怀 文化活动 员工公益 常见问题 查看更多 【社招】美团的社招招聘流程是什么？ 【社招】填写简历时有哪些注意事项？ 【校招】本次校招面向哪些同学开放？ 【校招】招聘职位的工作地点在哪儿？ 公告 查看更多 2026年春季校园招聘行程介绍 2026/02/27 美团2026届北斗计划正式启动 2025/05/21 一起成长，一起更好 Grow Together, Better Together 美团 | @2026 美团版权所有 京ICP备10211739号 京公网安备 11000002002052号 | 隐私政策 招聘意见反馈：zhaopin@meituan.com 关注我们",
+        "sections": [
+          {
+            "heading": "",
+            "text": "首页 北斗计划 社会招聘 校园招聘 美团赛事 了解美团 Global Careers 登录 一起成长，一起更好 Grow Together, Better Together 北斗计划 面向全球顶尖校园科技人才的招聘项目，诚邀各技术领域的优秀同学加入 社会招聘 面向有一定工作经验的优秀人才 校园招聘 面向所有校园人才，提供多种招聘项目，无论你在哪个年级，都能找到合适岗位 工作兼职 美团生态内灵活就业岗位，有骑手、分拣员、司机、推广员等，全职兼职都有 产品和服务 美团 大众点评 美团外卖 美团闪购 美团买药 Keeta 快驴进货 小象超市 快乐猴 美团美食 美团酒店 美团门票 美团休闲娱乐 美团 丽人 美团单车 美团 配送 美团 无人车 美团 无人机 美团 餐饮系统 美团支付 美团简介 MEITUAN 美团官网 我们的科技 企业社会责任 工作在美团 MEITUAN 人才成长 完整的方法论，多元的业务落地场景和顶尖的团队，帮助你在实践中学习，成为更好的自己！ 了解详情 人文关怀 时刻关心你的工作体验与生活状态，希望你的每一天都丰富而美好！ 了解详情 文化活动 与你一起走过每个重要节日，一起庆祝你的每个人生里程碑，一起让生活更好！ 了解详情 员工公益 美团人相信，每个人都可以做一点好事，在工作中也有机会做公益。 了解详情 常见问题 查看更多 【社招】美团的社招招聘流程是什么？ 【社招】填写",
+            "links": [
+              {
+                "text": "",
+                "href": "https://zhaopin.meituan.com/web/home"
+              },
+              {
+                "text": "首页",
+                "href": "https://zhaopin.meituan.com/web/home"
+              },
+              {
+                "text": "北斗计划",
+                "href": "https://zhaopin.meituan.com/web/beidouprogram"
+              },
+              {
+                "text": "社会招聘",
+                "href": "https://zhaopin.meituan.com/web/social"
+              },
+              {
+                "text": "校园招聘",
+                "href": "https://zhaopin.meituan.com/web/campus"
+              },
+              {
+                "text": "美团赛事",
+                "href": "https://zhaopin.meituan.com/web/competition"
+              }
+            ]
+          },
+          {
+            "heading": "",
+            "text": "首页 北斗计划 社会招聘 校园招聘 美团赛事 了解美团 Global Careers 登录",
+            "links": [
+              {
+                "text": "",
+                "href": "https://zhaopin.meituan.com/web/home"
+              },
+              {
+                "text": "首页",
+                "href": "https://zhaopin.meituan.com/web/home"
+              },
+              {
+                "text": "北斗计划",
+                "href": "https://zhaopin.meituan.com/web/beidouprogram"
+              },
+              {
+                "text": "社会招聘",
+                "href": "https://zhaopin.meituan.com/web/social"
+              },
+              {
+                "text": "校园招聘",
+                "href": "https://zhaopin.meituan.com/web/campus"
+              },
+              {
+                "text": "美团赛事",
+                "href": "https://zhaopin.meituan.com/web/competition"
+              }
+            ]
+          },
+          {
+            "heading": "",
+            "text": "首页 北斗计划 社会招聘 校园招聘 美团赛事 了解美团 Global Careers 登录",
+            "links": [
+              {
+                "text": "",
+                "href": "https://zhaopin.meituan.com/web/home"
+              },
+              {
+                "text": "首页",
+                "href": "https://zhaopin.meituan.com/web/home"
+              },
+              {
+                "text": "北斗计划",
+                "href": "https://zhaopin.meituan.com/web/beidouprogram"
+              },
+              {
+                "text": "社会招聘",
+                "href": "https://zhaopin.meituan.com/web/social"
+              },
+              {
+                "text": "校园招聘",
+                "href": "https://zhaopin.meituan.com/web/campus"
+              },
+              {
+                "text": "美团赛事",
+                "href": "https://zhaopin.meituan.com/web/competition"
+              }
+            ]
+          },
+          {
+            "heading": "",
+            "text": "首页 北斗计划 社会招聘 校园招聘 美团赛事 了解美团",
+            "links": [
+              {
+                "text": "首页",
+                "href": "https://zhaopin.meituan.com/web/home"
+              },
+              {
+                "text": "北斗计划",
+                "href": "https://zhaopin.meituan.com/web/beidouprogram"
+              },
+              {
+                "text": "社会招聘",
+                "href": "https://zhaopin.meituan.com/web/social"
+              },
+              {
+                "text": "校园招聘",
+                "href": "https://zhaopin.meituan.com/web/campus"
+              },
+              {
+                "text": "美团赛事",
+                "href": "https://zhaopin.meituan.com/web/competition"
+              },
+              {
+                "text": "了解美团",
+                "href": "https://zhaopin.meituan.com/web/about/ourTeam?bg=BG005"
+              }
+            ]
+          },
+          {
+            "heading": "",
+            "text": "一起成长，一起更好 Grow Together, Better Together 北斗计划 面向全球顶尖校园科技人才的招聘项目，诚邀各技术领域的优秀同学加入 社会招聘 面向有一定工作经验的优秀人才 校园招聘 面向所有校园人才，提供多种招聘项目，无论你在哪个年级，都能找到合适岗位 工作兼职 美团生态内灵活就业岗位，有骑手、分拣员、司机、推广员等，全职兼职都有 产品和服务 美团 大众点评 美团外卖 美团闪购 美团买药 Keeta 快驴进货 小象超市 快乐猴 美团美食 美团酒店 美团门票 美团休闲娱乐 美团 丽人 美团单车 美团 配送 美团 无人车 美团 无人机 美团 餐饮系统 美团支付 美团简介 MEITUAN 美团官网 我们的科技 企业社会责任 工作在美团 MEITUAN 人才成长 完整的方法论，多元的业务落地场景和顶尖的团队，帮助你在实践中学习，成为更好的自己！ 了解详情 人文关怀 时刻关心你的工作体验与生活状态，希望你的每一天都丰富而美好！ 了解详情 文化活动 与你一起走过每个重要节日，一起庆祝你的每个人生里程碑，一起让生活更好！ 了解详情 员工公益 美团人相信，每个人都可以做一点好事，在工作中也有机会做公益。 了解详情 常见问题 查看更多 【社招】美团的社招招聘流程是什么？ 【社招】填写简历时有哪些注意事项？ 【校招】本次校招面向哪些同学开放？ 【校招】招聘职位的工作地点在哪儿",
+            "links": [
+              {
+                "text": "北斗计划 面向全球顶尖校园科技人才的招聘项目，诚邀各技术领域的优秀同学加入",
+                "href": "https://zhaopin.meituan.com/web/beidou"
+              },
+              {
+                "text": "社会招聘 面向有一定工作经验的优秀人才",
+                "href": "https://zhaopin.meituan.com/web/social"
+              },
+              {
+                "text": "校园招聘 面向所有校园人才，提供多种招聘项目，无论你在哪个年级，都能找到合适岗位",
+                "href": "https://zhaopin.meituan.com/web/campus"
+              },
+              {
+                "text": "工作兼职 美团生态内灵活就业岗位，有骑手、分拣员、司机、推广员等，全职兼职都有",
+                "href": "https://zhaopin.meituan.com/web/home"
+              },
+              {
+                "text": "常见问题 查看更多",
+                "href": "https://zhaopin.meituan.com/web/question/social"
+              },
+              {
+                "text": "【社招】美团的社招招聘流程是什么？",
+                "href": "https://zhaopin.meituan.com/web/question/social?anchorId=81"
+              }
+            ]
+          },
+          {
+            "heading": "",
+            "text": "一起成长，一起更好 Grow Together, Better Together 北斗计划 面向全球顶尖校园科技人才的招聘项目，诚邀各技术领域的优秀同学加入 社会招聘 面向有一定工作经验的优秀人才 校园招聘 面向所有校园人才，提供多种招聘项目，无论你在哪个年级，都能找到合适岗位 工作兼职 美团生态内灵活就业岗位，有骑手、分拣员、司机、推广员等，全职兼职都有 产品和服务 美团 大众点评 美团外卖 美团闪购 美团买药 Keeta 快驴进货 小象超市 快乐猴 美团美食 美团酒店 美团门票 美团休闲娱乐 美团 丽人 美团单车 美团 配送 美团 无人车 美团 无人机 美团 餐饮系统 美团支付 美团简介 MEITUAN 美团官网 我们的科技 企业社会责任 工作在美团 MEITUAN 人才成长 完整的方法论，多元的业务落地场景和顶尖的团队，帮助你在实践中学习，成为更好的自己！ 了解详情 人文关怀 时刻关心你的工作体验与生活状态，希望你的每一天都丰富而美好！ 了解详情 文化活动 与你一起走过每个重要节日，一起庆祝你的每个人生里程碑，一起让生活更好！ 了解详情 员工公益 美团人相信，每个人都可以做一点好事，在工作中也有机会做公益。 了解详情 常见问题 查看更多 【社招】美团的社招招聘流程是什么？ 【社招】填写简历时有哪些注意事项？ 【校招】本次校招面向哪些同学开放？ 【校招】招聘职位的工作地点在哪儿",
+            "links": [
+              {
+                "text": "北斗计划 面向全球顶尖校园科技人才的招聘项目，诚邀各技术领域的优秀同学加入",
+                "href": "https://zhaopin.meituan.com/web/beidou"
+              },
+              {
+                "text": "社会招聘 面向有一定工作经验的优秀人才",
+                "href": "https://zhaopin.meituan.com/web/social"
+              },
+              {
+                "text": "校园招聘 面向所有校园人才，提供多种招聘项目，无论你在哪个年级，都能找到合适岗位",
+                "href": "https://zhaopin.meituan.com/web/campus"
+              },
+              {
+                "text": "工作兼职 美团生态内灵活就业岗位，有骑手、分拣员、司机、推广员等，全职兼职都有",
+                "href": "https://zhaopin.meituan.com/web/home"
+              },
+              {
+                "text": "常见问题 查看更多",
+                "href": "https://zhaopin.meituan.com/web/question/social"
+              },
+              {
+                "text": "【社招】美团的社招招聘流程是什么？",
+                "href": "https://zhaopin.meituan.com/web/question/social?anchorId=81"
+              }
+            ]
+          },
+          {
+            "heading": "",
+            "text": "一起成长，一起更好 Grow Together, Better Together 北斗计划 面向全球顶尖校园科技人才的招聘项目，诚邀各技术领域的优秀同学加入 社会招聘 面向有一定工作经验的优秀人才 校园招聘 面向所有校园人才，提供多种招聘项目，无论你在哪个年级，都能找到合适岗位 工作兼职 美团生态内灵活就业岗位，有骑手、分拣员、司机、推广员等，全职兼职都有",
+            "links": [
+              {
+                "text": "北斗计划 面向全球顶尖校园科技人才的招聘项目，诚邀各技术领域的优秀同学加入",
+                "href": "https://zhaopin.meituan.com/web/beidou"
+              },
+              {
+                "text": "社会招聘 面向有一定工作经验的优秀人才",
+                "href": "https://zhaopin.meituan.com/web/social"
+              },
+              {
+                "text": "校园招聘 面向所有校园人才，提供多种招聘项目，无论你在哪个年级，都能找到合适岗位",
+                "href": "https://zhaopin.meituan.com/web/campus"
+              },
+              {
+                "text": "工作兼职 美团生态内灵活就业岗位，有骑手、分拣员、司机、推广员等，全职兼职都有",
+                "href": "https://zhaopin.meituan.com/web/home"
+              }
+            ]
+          },
+          {
+            "heading": "",
+            "text": "一起成长，一起更好 Grow Together, Better Together",
+            "links": []
+          },
+          {
+            "heading": "",
+            "text": "一起成长，一起更好 Grow Together, Better Together",
+            "links": []
+          },
+          {
+            "heading": "",
+            "text": "北斗计划 面向全球顶尖校园科技人才的招聘项目，诚邀各技术领域的优秀同学加入 社会招聘 面向有一定工作经验的优秀人才 校园招聘 面向所有校园人才，提供多种招聘项目，无论你在哪个年级，都能找到合适岗位 工作兼职 美团生态内灵活就业岗位，有骑手、分拣员、司机、推广员等，全职兼职都有",
+            "links": [
+              {
+                "text": "北斗计划 面向全球顶尖校园科技人才的招聘项目，诚邀各技术领域的优秀同学加入",
+                "href": "https://zhaopin.meituan.com/web/beidou"
+              },
+              {
+                "text": "社会招聘 面向有一定工作经验的优秀人才",
+                "href": "https://zhaopin.meituan.com/web/social"
+              },
+              {
+                "text": "校园招聘 面向所有校园人才，提供多种招聘项目，无论你在哪个年级，都能找到合适岗位",
+                "href": "https://zhaopin.meituan.com/web/campus"
+              },
+              {
+                "text": "工作兼职 美团生态内灵活就业岗位，有骑手、分拣员、司机、推广员等，全职兼职都有",
+                "href": "https://zhaopin.meituan.com/web/home"
+              }
+            ]
+          },
+          {
+            "heading": "",
+            "text": "产品和服务 美团 大众点评 美团外卖 美团闪购 美团买药 Keeta 快驴进货 小象超市 快乐猴 美团美食 美团酒店 美团门票 美团休闲娱乐 美团 丽人 美团单车 美团 配送 美团 无人车 美团 无人机 美团 餐饮系统 美团支付",
+            "links": []
+          },
+          {
+            "heading": "",
+            "text": "产品和服务 美团 大众点评 美团外卖 美团闪购 美团买药 Keeta 快驴进货 小象超市 快乐猴 美团美食 美团酒店 美团门票 美团休闲娱乐 美团 丽人 美团单车 美团 配送 美团 无人车 美团 无人机 美团 餐饮系统 美团支付",
+            "links": []
+          }
+        ],
+        "interactive_elements": [
+          {
+            "tag": "a",
+            "role": "",
+            "text": "",
+            "href": "https://zhaopin.meituan.com/web/home",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "首页",
+            "href": "https://zhaopin.meituan.com/web/home",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "北斗计划",
+            "href": "https://zhaopin.meituan.com/web/beidouprogram",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "社会招聘",
+            "href": "https://zhaopin.meituan.com/web/social",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "校园招聘",
+            "href": "https://zhaopin.meituan.com/web/campus",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "美团赛事",
+            "href": "https://zhaopin.meituan.com/web/competition",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "了解美团",
+            "href": "https://zhaopin.meituan.com/web/about/ourTeam?bg=BG005",
+            "visible": true
+          },
+          {
+            "tag": "button",
+            "role": "",
+            "text": "Global Careers",
+            "href": "",
+            "visible": true
+          },
+          {
+            "tag": "button",
+            "role": "",
+            "text": "登录",
+            "href": "",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "北斗计划 面向全球顶尖校园科技人才的招聘项目，诚邀各技术领域的优秀同学加入",
+            "href": "https://zhaopin.meituan.com/web/beidou",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "社会招聘 面向有一定工作经验的优秀人才",
+            "href": "https://zhaopin.meituan.com/web/social",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "校园招聘 面向所有校园人才，提供多种招聘项目，无论你在哪个年级，都能找到合适岗位",
+            "href": "https://zhaopin.meituan.com/web/campus",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "工作兼职 美团生态内灵活就业岗位，有骑手、分拣员、司机、推广员等，全职兼职都有",
+            "href": "https://zhaopin.meituan.com/web/home",
+            "visible": true
+          },
+          {
+            "tag": "button",
+            "role": "",
+            "text": "了解详情",
+            "href": "",
+            "visible": false
+          },
+          {
+            "tag": "button",
+            "role": "",
+            "text": "了解详情",
+            "href": "",
+            "visible": false
+          },
+          {
+            "tag": "button",
+            "role": "",
+            "text": "了解详情",
+            "href": "",
+            "visible": false
+          },
+          {
+            "tag": "button",
+            "role": "",
+            "text": "了解详情",
+            "href": "",
+            "visible": false
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "常见问题 查看更多",
+            "href": "https://zhaopin.meituan.com/web/question/social",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "【社招】美团的社招招聘流程是什么？",
+            "href": "https://zhaopin.meituan.com/web/question/social?anchorId=81",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "【社招】填写简历时有哪些注意事项？",
+            "href": "https://zhaopin.meituan.com/web/question/social?anchorId=85",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "【校招】本次校招面向哪些同学开放？",
+            "href": "https://zhaopin.meituan.com/web/question/campus?anchorId=777823541682",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "【校招】招聘职位的工作地点在哪儿？",
+            "href": "https://zhaopin.meituan.com/web/question/campus?anchorId=777823541683",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "公告 查看更多",
+            "href": "https://zhaopin.meituan.com/web/question/announcement",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "美团",
+            "href": "https://www.meituan.com/",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "京ICP备10211739号",
+            "href": "https://beian.miit.gov.cn/",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "京公网安备 11000002002052号",
+            "href": "http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11000002002052",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "隐私政策",
+            "href": "https://rules-center.meituan.com/rules-detail/2",
+            "visible": true
+          }
+        ],
+        "links": [
+          "https://zhaopin.meituan.com/web/home",
+          "https://zhaopin.meituan.com/web/beidouprogram",
+          "https://zhaopin.meituan.com/web/social",
+          "https://zhaopin.meituan.com/web/campus",
+          "https://zhaopin.meituan.com/web/competition",
+          "https://zhaopin.meituan.com/web/about/ourTeam?bg=BG005",
+          "https://zhaopin.meituan.com/web/beidou",
+          "https://zhaopin.meituan.com/web/question/social",
+          "https://zhaopin.meituan.com/web/question/social?anchorId=81",
+          "https://zhaopin.meituan.com/web/question/social?anchorId=85",
+          "https://zhaopin.meituan.com/web/question/campus?anchorId=777823541682",
+          "https://zhaopin.meituan.com/web/question/campus?anchorId=777823541683",
+          "https://zhaopin.meituan.com/web/question/announcement",
+          "https://www.meituan.com/",
+          "https://beian.miit.gov.cn/",
+          "http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11000002002052"
+        ]
+      }
     },
     {
-      "company": "商汤科技",
-      "page_url": "https://www.sensetime.com/cn/join-us/campus-recruitment",
-      "site_type": "html",
-      "channel_status": "open",
-      "date_candidates": [
-        "2020-07-20"
-      ],
-      "error": ""
-    },
-    {
-      "company": "旷视科技",
-      "page_url": "https://www.megvii.com/",
-      "site_type": "html",
-      "channel_status": "open",
-      "date_candidates": [
-        "2025-07-16"
-      ],
-      "error": ""
-    },
-    {
-      "company": "科大讯飞",
-      "page_url": "https://iflytek.zhiye.com:443",
-      "site_type": "html",
-      "channel_status": "unknown",
-      "date_candidates": [],
-      "error": ""
-    },
-    {
-      "company": "大疆创新",
-      "page_url": "https://we.dji.com/zh-CN/campus",
-      "site_type": "html",
-      "channel_status": "open",
-      "date_candidates": [
-        "2026-05-09"
-      ],
-      "error": ""
-    },
-    {
-      "company": "联想集团",
-      "page_url": "https://talent.lenovo.com.cn/campus",
-      "site_type": "html",
-      "channel_status": "unknown",
-      "date_candidates": [],
-      "error": ""
-    },
-    {
-      "company": "荣耀",
-      "page_url": "https://career.hihonor.com/SU60ee766f0dcad412cc41103a/pb/school.html",
-      "site_type": "html",
-      "channel_status": "unknown",
-      "date_candidates": [],
-      "error": "HTTPSConnectionPool(host='career.hihonor.com', port=443): Max retries exceeded with url: /SU60ee766f0dcad412cc41103a/pb/school.html (Caused by NameResolutionError(\"HTTPSConnection(host='career.hihonor.com', port=443): Failed to resolve 'career.hihonor.com' ([Errno -2] Name or service not known)\"))"
-    },
-    {
-      "company": "OPPO",
-      "page_url": "https://careers.oppo.com/campus",
-      "site_type": "html",
-      "channel_status": "unknown",
-      "date_candidates": [],
-      "error": ""
-    },
-    {
-      "company": "vivo",
-      "page_url": "https://hr.vivo.com/wt/vivo/web/index/campus",
-      "site_type": "html",
-      "channel_status": "unknown",
-      "date_candidates": [],
-      "error": ""
-    },
-    {
-      "company": "海康威视",
-      "page_url": "https://campus.hikvision.com/",
-      "site_type": "html",
-      "channel_status": "unknown",
-      "date_candidates": [],
-      "error": "HTTPSConnectionPool(host='campus.hikvision.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"HTTPSConnection(host='campus.hikvision.com', port=443): Failed to resolve 'campus.hikvision.com' ([Errno -2] Name or service not known)\"))"
-    },
-    {
-      "company": "大华股份",
-      "page_url": "https://dahua.zhiye.com/campus",
-      "site_type": "html",
-      "channel_status": "unknown",
-      "date_candidates": [],
-      "error": ""
-    },
-    {
-      "company": "蔚来",
-      "page_url": "https://nio.jobs.feishu.cn/campus",
-      "site_type": "html",
-      "channel_status": "unknown",
-      "date_candidates": [],
-      "error": ""
-    },
-    {
-      "company": "理想汽车",
-      "page_url": "https://www.lixiang.com/careers/campus.html",
-      "site_type": "html",
-      "channel_status": "unknown",
-      "date_candidates": [],
-      "error": "404 Client Error: Not Found for url: https://www.lixiang.com/careers/campus.html"
-    },
-    {
-      "company": "小鹏汽车",
-      "page_url": "https://xiaopeng.jobs.feishu.cn/campus",
-      "site_type": "html",
-      "channel_status": "unknown",
-      "date_candidates": [],
-      "error": ""
-    },
-    {
-      "company": "地平线机器人",
-      "page_url": "https://horizonrobotics.jobs.feishu.cn/campus",
-      "site_type": "html",
-      "channel_status": "unknown",
-      "date_candidates": [],
-      "error": "404 Client Error: Not Found for url: https://horizonrobotics.jobs.feishu.cn/campus"
-    },
-    {
-      "company": "第四范式",
-      "page_url": "https://4paradigm.jobs.feishu.cn/campus",
-      "site_type": "html",
-      "channel_status": "unknown",
-      "date_candidates": [],
-      "error": "404 Client Error: Not Found for url: https://4paradigm.jobs.feishu.cn/campus"
+      "company": "快手",
+      "page_url": "https://zhaopin.kuaishou.cn/#/official/index/",
+      "observation": {
+        "page_url": "https://zhaopin.kuaishou.cn/#/official/index/",
+        "title": "快手招聘",
+        "headings": [],
+        "visible_text_excerpt": "社会招聘 日常实习 校园招聘 关于快手 注册/登录 Copyright © 2023 北京快手科技有限公司 All Rights Reserved. 京ICP备15023266号-4京公网安备11010802021190号",
+        "sections": [
+          {
+            "heading": "",
+            "text": "社会招聘 日常实习 校园招聘 关于快手 注册/登录 抱歉，您的浏览器不支持内嵌视频 Copyright © 2023 北京快手科技有限公司 All Rights Reserved. 京ICP备15023266号-4 京公网安备11010802021190号",
+            "links": [
+              {
+                "text": "",
+                "href": "https://zhaopin.kuaishou.cn/#/official/index/"
+              },
+              {
+                "text": "社会招聘",
+                "href": "https://zhaopin.kuaishou.cn/#/official/social/"
+              },
+              {
+                "text": "日常实习",
+                "href": "https://zhaopin.kuaishou.cn/#/official/trainee/"
+              },
+              {
+                "text": "校园招聘",
+                "href": "https://campus.kuaishou.cn/recruit/campus/e/#/campus/index/"
+              },
+              {
+                "text": "关于快手",
+                "href": "https://zhaopin.kuaishou.cn/#/official/jianghu/"
+              },
+              {
+                "text": "注册/登录",
+                "href": "https://zhaopin.kuaishou.cn/#/official/login/"
+              }
+            ]
+          },
+          {
+            "heading": "",
+            "text": "社会招聘 日常实习 校园招聘 关于快手 注册/登录 抱歉，您的浏览器不支持内嵌视频 Copyright © 2023 北京快手科技有限公司 All Rights Reserved. 京ICP备15023266号-4 京公网安备11010802021190号",
+            "links": [
+              {
+                "text": "",
+                "href": "https://zhaopin.kuaishou.cn/#/official/index/"
+              },
+              {
+                "text": "社会招聘",
+                "href": "https://zhaopin.kuaishou.cn/#/official/social/"
+              },
+              {
+                "text": "日常实习",
+                "href": "https://zhaopin.kuaishou.cn/#/official/trainee/"
+              },
+              {
+                "text": "校园招聘",
+                "href": "https://campus.kuaishou.cn/recruit/campus/e/#/campus/index/"
+              },
+              {
+                "text": "关于快手",
+                "href": "https://zhaopin.kuaishou.cn/#/official/jianghu/"
+              },
+              {
+                "text": "注册/登录",
+                "href": "https://zhaopin.kuaishou.cn/#/official/login/"
+              }
+            ]
+          },
+          {
+            "heading": "",
+            "text": "抱歉，您的浏览器不支持内嵌视频 Copyright © 2023 北京快手科技有限公司 All Rights Reserved. 京ICP备15023266号-4 京公网安备11010802021190号",
+            "links": [
+              {
+                "text": "京ICP备15023266号-4",
+                "href": "https://beian.miit.gov.cn/#/Integrated/recordQuery"
+              },
+              {
+                "text": "京公网安备11010802021190号",
+                "href": "http://www.beian.gov.cn/portal/registerSystemInfo"
+              }
+            ]
+          }
+        ],
+        "interactive_elements": [
+          {
+            "tag": "a",
+            "role": "",
+            "text": "",
+            "href": "https://zhaopin.kuaishou.cn/#/official/index/",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "社会招聘",
+            "href": "https://zhaopin.kuaishou.cn/#/official/social/",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "日常实习",
+            "href": "https://zhaopin.kuaishou.cn/#/official/trainee/",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "校园招聘",
+            "href": "https://campus.kuaishou.cn/recruit/campus/e/#/campus/index/",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "关于快手",
+            "href": "https://zhaopin.kuaishou.cn/#/official/jianghu/",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "注册/登录",
+            "href": "https://zhaopin.kuaishou.cn/#/official/login/",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "京ICP备15023266号-4",
+            "href": "https://beian.miit.gov.cn/#/Integrated/recordQuery",
+            "visible": true
+          },
+          {
+            "tag": "a",
+            "role": "",
+            "text": "京公网安备11010802021190号",
+            "href": "http://www.beian.gov.cn/portal/registerSystemInfo",
+            "visible": true
+          }
+        ],
+        "links": [
+          "https://zhaopin.kuaishou.cn/#/official/index/",
+          "https://zhaopin.kuaishou.cn/#/official/social/",
+          "https://zhaopin.kuaishou.cn/#/official/trainee/",
+          "https://campus.kuaishou.cn/recruit/campus/e/#/campus/index/",
+          "https://zhaopin.kuaishou.cn/#/official/jianghu/",
+          "https://zhaopin.kuaishou.cn/#/official/login/",
+          "https://beian.miit.gov.cn/#/Integrated/recordQuery",
+          "http://www.beian.gov.cn/portal/registerSystemInfo"
+        ]
+      }
     }
   ],
   "latest_date_request": [
@@ -411,7 +1705,7 @@
     },
     {
       "role": "user",
-      "content": "岗位：AI应用开发工程师\n页面证据：{\"company\":\"阿里巴巴集团\",\"page_url\":\"https://talent.alibaba.com/\",\"title\":\"阿里巴巴集团招聘官网\",\"text\":\"阿里巴巴集团招聘官网\",\"links\":[]}\n没有明确日期就返回 false 和下一跳；有明确日期就返回 true 并输出 latest_posted_at。"
+      "content": "岗位：\n页面证据：{\"company\":\"百度\",\"page_url\":\"about:blank\",\"title\":\"\",\"text\":\"\",\"links\":[]}\n没有明确日期就返回 false 和下一跳；有明确日期就返回 true 并输出 latest_posted_at。"
     }
   ],
   "channel_status_request": [
@@ -421,7 +1715,7 @@
     },
     {
       "role": "user",
-      "content": "岗位：AI应用开发工程师\n页面证据：{\"company\":\"阿里巴巴集团\",\"page_url\":\"https://talent.alibaba.com/\",\"title\":\"阿里巴巴集团招聘官网\",\"text\":\"阿里巴巴集团招聘官网\",\"links\":[]}\n如果当前页面没有明确开放或关闭信号，就把 is_sufficient 设为 false，并只从 links 里返回下一跳；如果有明确证据，就把 is_sufficient 设为 true，并只输出当前页面里能明确支持的 channel_status。"
+      "content": "岗位：\n页面证据：{\"company\":\"百度\",\"page_url\":\"about:blank\",\"title\":\"\",\"text\":\"\",\"links\":[]}\n如果当前页面没有明确开放或关闭信号，就把 is_sufficient 设为 false，并只从 links 里返回下一跳；如果有明确证据，就把 is_sufficient 设为 true，并只输出当前页面里能明确支持的 channel_status。"
     }
   ]
 }

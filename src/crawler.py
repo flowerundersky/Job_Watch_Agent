@@ -150,126 +150,57 @@ def crawl_url(
     user_agent: str = "JobWatchAgent/2.0",
 ) -> CrawledPage:
     try:
-        response = requests.get(
+        rendered = _render_page_with_playwright(
             recruitment_url,
-            timeout=timeout_seconds,
-            headers={"User-Agent": user_agent},
+            timeout_seconds=timeout_seconds,
+            user_agent=user_agent,
+            max_links=max_links_per_page,
         )
-        response.raise_for_status()
-        html = response.text
-        content_type = response.headers.get("Content-Type", "").lower()
-
-        if "json" in content_type or html.lstrip().startswith(("{", "[")):
-            payload = response.json() if "json" in content_type else json.loads(html)
-            text = normalize_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")))
-            date_candidates = _extract_date_candidates_from_text(text)
-            channel_status = _extract_channel_status(text, date_candidates)
-            return CrawledPage(
-                company=company,
-                recruitment_url=recruitment_url,
-                page_url=response.url,
-                site_type="api",
-                channel_status=channel_status,
-                title="",
-                text=text[:max_crawl_chars],
-                date_candidates=date_candidates,
-                links=[],
-            )
-
-        base_soup = BeautifulSoup(html, "html.parser")
-        api_urls = _probe_api_urls(base_soup, response.url, html)
-        if api_urls:
-            api_date_candidates = _extract_date_candidates_from_api(
-                api_urls,
-                timeout_seconds=timeout_seconds,
-                user_agent=user_agent,
-            )
-            if api_date_candidates:
-                title = _extract_title(base_soup)
-                text = normalize_text(base_soup.get_text("\n", strip=True))[:max_crawl_chars]
-                links = _extract_links(base_soup, response.url, max_links=max_links_per_page)
-                channel_status = _extract_channel_status(text, api_date_candidates)
-                return CrawledPage(
-                    company=company,
-                    recruitment_url=recruitment_url,
-                    page_url=response.url,
-                    site_type="api",
-                    channel_status=channel_status,
-                    title=title,
-                    text=text,
-                    date_candidates=api_date_candidates,
-                    links=links,
-                )
-
-        rendered_html = _render_with_playwright(response.url, timeout_seconds=timeout_seconds, user_agent=user_agent)
-        if rendered_html:
-            soup = BeautifulSoup(rendered_html, "html.parser")
-            title = _extract_title(soup)
-            text = normalize_text(soup.get_text("\n", strip=True))[:max_crawl_chars]
-            links = _extract_links(soup, response.url, max_links=max_links_per_page)
-            date_candidates = _extract_date_candidates(soup, text)
-            if not date_candidates:
-                date_candidates = _extract_date_candidates_from_links(
-                    links,
-                    timeout_seconds=timeout_seconds,
-                    user_agent=user_agent,
-                )
-            channel_status = _extract_channel_status(text, date_candidates)
-            return CrawledPage(
-                company=company,
-                recruitment_url=recruitment_url,
-                page_url=response.url,
-                site_type="playwright",
-                channel_status=channel_status,
-                title=title,
-                text=text,
-                date_candidates=date_candidates,
-                links=links,
-            )
-
-        soup = base_soup
-        title = _extract_title(soup)
-        text = normalize_text(soup.get_text("\n", strip=True))[:max_crawl_chars]
-        links = _extract_links(soup, response.url, max_links=max_links_per_page)
+        html = str(rendered.get("html", ""))
+        final_url = str(rendered.get("url") or recruitment_url)
+        soup = BeautifulSoup(html, "html.parser")
+        title = str(rendered.get("title") or _extract_title(soup))
+        text = normalize_text(str(rendered.get("visible_text") or soup.get_text("\n", strip=True)))[:max_crawl_chars]
+        links = _merge_links(
+            rendered.get("links", []),
+            _extract_links(soup, final_url, max_links=max_links_per_page),
+            max_links=max_links_per_page,
+        )
         date_candidates = _extract_date_candidates(soup, text)
-        if not date_candidates:
-            date_candidates = _extract_date_candidates_from_links(
-                links,
-                timeout_seconds=timeout_seconds,
-                user_agent=user_agent,
-            )
-        if api_urls and not date_candidates:
-            api_date_candidates = _extract_date_candidates_from_api(
-                api_urls,
-                timeout_seconds=timeout_seconds,
-                user_agent=user_agent,
-            )
-            for candidate_text in api_date_candidates:
-                if candidate_text not in date_candidates:
-                    date_candidates.append(candidate_text)
         channel_status = _extract_channel_status(text, date_candidates)
+        observation = _build_page_observation(
+            soup,
+            page_url=final_url,
+            title=title,
+            visible_text=text,
+            links=links,
+            browser_elements=rendered.get("elements", []),
+            max_links=max_links_per_page,
+        )
         return CrawledPage(
             company=company,
             recruitment_url=recruitment_url,
-            page_url=response.url,
-            site_type="html",
+            page_url=final_url,
+            site_type="playwright",
             channel_status=channel_status,
             title=title,
             text=text,
             date_candidates=date_candidates,
             links=links,
+            observation=observation,
         )
     except Exception as exc:  # noqa: BLE001
         return CrawledPage(
             company=company,
             recruitment_url=recruitment_url,
             page_url=recruitment_url,
-            site_type="html",
+            site_type="playwright",
             channel_status="unknown",
             title="",
             text="",
             date_candidates=[],
             links=[],
+            observation={},
             error=str(exc),
         )
 
@@ -495,22 +426,184 @@ def _extract_channel_status(text: str, date_candidates: list[str]) -> str:
     return "unknown"
 
 
-def _render_with_playwright(url: str, *, timeout_seconds: int, user_agent: str) -> str:
+def _render_page_with_playwright(
+    url: str,
+    *,
+    timeout_seconds: int,
+    user_agent: str,
+    max_links: int,
+) -> dict[str, Any]:
     try:
         from playwright.sync_api import sync_playwright
-    except Exception:  # noqa: BLE001
-        return ""
+    except Exception as exc:  # noqa: BLE001
+        raise RuntimeError("Playwright is not available") from exc
 
-    try:
-        with sync_playwright() as playwright:
-            browser = playwright.chromium.launch(headless=True)
-            page = browser.new_page(user_agent=user_agent)
-            page.goto(url, wait_until="networkidle", timeout=timeout_seconds * 1000)
-            content = page.content()
+    with sync_playwright() as playwright:
+        browser = playwright.chromium.launch(headless=True)
+        page = browser.new_page(user_agent=user_agent)
+        try:
+            page.goto(url, wait_until="domcontentloaded", timeout=timeout_seconds * 1000)
+            try:
+                page.wait_for_load_state("networkidle", timeout=min(timeout_seconds * 1000, 8000))
+            except Exception:  # noqa: BLE001
+                pass
+            html = page.content()
+            visible_text = page.locator("body").inner_text(timeout=3000) if page.locator("body").count() else ""
+            elements = page.evaluate(
+                """
+                (limit) => Array.from(
+                  document.querySelectorAll('a,button,[role="button"],input[type="button"],input[type="submit"]')
+                ).slice(0, limit).map((el) => {
+                  const rect = el.getBoundingClientRect();
+                  const style = window.getComputedStyle(el);
+                  return {
+                    tag: el.tagName.toLowerCase(),
+                    role: el.getAttribute('role') || '',
+                    text: (el.innerText || el.value || el.getAttribute('aria-label') || el.title || '').trim(),
+                    href: el.href || el.getAttribute('href') || '',
+                    visible: !!(rect.width || rect.height) && style.visibility !== 'hidden' && style.display !== 'none'
+                  };
+                }).filter((item) => item.text || item.href)
+                """,
+                max_links * 2,
+            )
+            links = [
+                str(item.get("href", "")).strip()
+                for item in elements
+                if isinstance(item, dict) and str(item.get("href", "")).strip()
+            ]
+            return {
+                "url": page.url,
+                "title": page.title(),
+                "html": html,
+                "visible_text": visible_text,
+                "links": links[:max_links],
+                "elements": elements,
+            }
+        finally:
             browser.close()
-            return content
+
+
+def _render_with_playwright(url: str, *, timeout_seconds: int, user_agent: str) -> str:
+    try:
+        rendered = _render_page_with_playwright(
+            url,
+            timeout_seconds=timeout_seconds,
+            user_agent=user_agent,
+            max_links=20,
+        )
     except Exception:  # noqa: BLE001
         return ""
+    return str(rendered.get("html", ""))
+
+
+def _merge_links(primary: Any, secondary: list[str], *, max_links: int) -> list[str]:
+    links: list[str] = []
+    for raw_link in [*list(primary or []), *secondary]:
+        link = str(raw_link).strip()
+        if link and link not in links:
+            links.append(link)
+        if len(links) >= max_links:
+            break
+    return links
+
+
+def _build_page_observation(
+    soup: BeautifulSoup,
+    *,
+    page_url: str,
+    title: str,
+    visible_text: str,
+    links: list[str],
+    browser_elements: Any,
+    max_links: int,
+) -> dict[str, Any]:
+    headings = _collect_headings(soup)
+    elements = _normalize_browser_elements(browser_elements, max_items=max_links * 2)
+    return {
+        "page_url": page_url,
+        "title": title,
+        "headings": headings[:20],
+        "visible_text_excerpt": visible_text[:1200],
+        "sections": _collect_section_observations(soup, page_url, max_sections=12, max_links_per_section=6),
+        "interactive_elements": elements,
+        "links": links[:max_links],
+    }
+
+
+def _collect_headings(soup: BeautifulSoup) -> list[str]:
+    headings: list[str] = []
+    for node in soup.select("h1,h2,h3,h4,[role='heading']"):
+        text = normalize_text(node.get_text(" ", strip=True))
+        if text and text not in headings:
+            headings.append(text)
+    return headings
+
+
+def _collect_section_observations(
+    soup: BeautifulSoup,
+    page_url: str,
+    *,
+    max_sections: int,
+    max_links_per_section: int,
+) -> list[dict[str, Any]]:
+    sections: list[dict[str, Any]] = []
+    candidates = soup.select("main,section,article,nav,header,footer")
+    if not candidates:
+        candidates = soup.select("div")
+
+    for node in candidates:
+        text = normalize_text(node.get_text(" ", strip=True))
+        if len(text) < 20:
+            continue
+        heading_node = node.select_one("h1,h2,h3,h4,[role='heading']")
+        heading = normalize_text(heading_node.get_text(" ", strip=True)) if heading_node else ""
+        section_links = []
+        for anchor in node.find_all("a", href=True):
+            label = normalize_text(anchor.get_text(" ", strip=True) or anchor.get("aria-label", "") or anchor.get("title", ""))
+            href = urljoin(page_url, anchor["href"])
+            if not label and not href:
+                continue
+            item = {"text": label, "href": href}
+            if item not in section_links:
+                section_links.append(item)
+            if len(section_links) >= max_links_per_section:
+                break
+        sections.append(
+            {
+                "heading": heading,
+                "text": text[:600],
+                "links": section_links,
+            }
+        )
+        if len(sections) >= max_sections:
+            break
+    return sections
+
+
+def _normalize_browser_elements(elements: Any, *, max_items: int) -> list[dict[str, Any]]:
+    if not isinstance(elements, list):
+        return []
+    normalized: list[dict[str, Any]] = []
+    for item in elements:
+        if not isinstance(item, dict):
+            continue
+        text = normalize_text(str(item.get("text", "")))
+        href = str(item.get("href", "")).strip()
+        if not text and not href:
+            continue
+        normalized.append(
+            {
+                "tag": str(item.get("tag", "")),
+                "role": str(item.get("role", "")),
+                "text": text[:120],
+                "href": href,
+                "visible": bool(item.get("visible")),
+            }
+        )
+        if len(normalized) >= max_items:
+            break
+    return normalized
 
 
 def _resolve_search_url(href: str) -> str:

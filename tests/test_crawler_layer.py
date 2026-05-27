@@ -60,7 +60,22 @@ def test_crawler_can_crawl_selected_company_pages() -> None:
                         "site_type": page.site_type,
                         "channel_status": page.channel_status,
                         "date_candidates": page.date_candidates[:1],
+                        "observation_summary": {
+                            "title": page.observation.get("title", ""),
+                            "heading_count": len(page.observation.get("headings", [])),
+                            "section_count": len(page.observation.get("sections", [])),
+                            "interactive_element_count": len(page.observation.get("interactive_elements", [])),
+                            "link_count": len(page.observation.get("links", [])),
+                        },
                         "error": page.error,
+                    }
+                    for page in pages
+                ],
+                "dom_observations": [
+                    {
+                        "company": page.company,
+                        "page_url": page.page_url,
+                        "observation": page.observation,
                     }
                     for page in pages
                 ],
@@ -110,6 +125,7 @@ def _has_useful_crawl_result(page: object) -> bool:
             getattr(page, "title")
             or getattr(page, "text")
             or getattr(page, "links")
+            or getattr(page, "observation")
             or getattr(page, "date_candidates")
         )
     )

@@ -31,6 +31,7 @@ class CrawledPage:
     text: str = ""
     date_candidates: list[str] = field(default_factory=list)
     links: list[str] = field(default_factory=list)
+    observation: dict[str, Any] = field(default_factory=dict)
     next_hops: list[str] = field(default_factory=list)
     visited_urls: list[str] = field(default_factory=list)
     decision_reason: str = ""

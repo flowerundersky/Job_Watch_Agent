@@ -1,11 +1,12 @@
 job_role: 大语言模型应用开发工程师        #填写你的招聘岗位
 company_filters: "优先中文招聘网站"  #这个字段里面可以添加任意文本作为筛选条件，模型会尽量满足这些条件
-top_x: 10
+top_x: 3
 model_backend:
   backend: openai_compatible
-
-  api_base_url: "你的url"
-  api_key: "你的key"
+  api_base_url: "https://www.tokenrouter.tech/v1"
+  api_key: "sk-m61odK2EZm8eFJNKj9DpzC0ZTHJ7XHHeuzsB7GYWG6ZX5Smv"
+  # api_base_url: "你的url"
+  # api_key: "你的key"
   model: "gpt-5.5"
   timeout_seconds: 60
   temperature: 0.2
