@@ -1,208 +1,90 @@
 {
   "metadata": {
     "job_role": "大语言模型应用开发工程师",
-    "top_x": 10,
-    "summary": "job=大语言模型应用开发工程师; companies=7; latest=2026-05-26; status=未知"
+    "top_x": 3,
+    "summary": "job=大语言模型应用开发工程师; companies=3; latest=未识别; status=开启"
   },
   "selection": {
     "selected_companies": [
       {
         "rank": 1,
         "name": "百度",
-        "recruitment_url": "https://talent.baidu.com/"
+        "recruitment_url": "https://talent.baidu.com/jobs/social-list"
       },
       {
         "rank": 2,
-        "name": "阿里巴巴集团",
+        "name": "阿里巴巴",
         "recruitment_url": "https://talent.alibaba.com/"
       },
       {
         "rank": 3,
-        "name": "字节跳动",
-        "recruitment_url": "https://jobs.bytedance.com/zh/"
-      },
-      {
-        "rank": 4,
-        "name": "华为",
-        "recruitment_url": "https://career.huawei.com/"
-      },
-      {
-        "rank": 5,
-        "name": "京东",
-        "recruitment_url": "https://zhaopin.jd.com/"
-      },
-      {
-        "rank": 6,
-        "name": "美团",
-        "recruitment_url": "https://zhaopin.meituan.com/"
-      },
-      {
-        "rank": 7,
-        "name": "快手",
-        "recruitment_url": "https://zhaopin.kuaishou.cn/"
+        "name": "腾讯",
+        "recruitment_url": "https://careers.tencent.com/"
       }
     ],
-    "missing_companies": [
-      {
-        "rank": 3,
-        "name": "腾讯",
-        "recruitment_url": "https://join.qq.com/",
-        "reason": "",
-        "missing_reason": "url not campus-like"
-      },
-      {
-        "rank": 9,
-        "name": "科大讯飞",
-        "recruitment_url": "https://iflytek.zhiye.com/",
-        "reason": "",
-        "missing_reason": "url not campus-like"
-      },
-      {
-        "rank": 10,
-        "name": "商汤科技",
-        "recruitment_url": "https://sensetime.zhiye.com/",
-        "reason": "",
-        "missing_reason": "url not campus-like"
-      },
-      {
-        "rank": 8,
-        "missing_reason": "not filled after retries"
-      },
-      {
-        "rank": 9,
-        "missing_reason": "not filled after retries"
-      },
-      {
-        "rank": 10,
-        "missing_reason": "not filled after retries"
-      }
-    ]
+    "missing_companies": []
   },
   "crawl": {
     "pages": [
       {
         "company": "百度",
-        "page_url": "https://talent.baidu.com/static/index.html#/recruitHelp",
+        "page_url": "about:blank",
         "date": [],
-        "site_type": "html",
+        "site_type": "playwright",
         "channel_status": "unknown",
         "error": ""
       },
       {
-        "company": "阿里巴巴集团",
-        "page_url": "https://talent.alibaba.com/",
-        "date": [],
-        "site_type": "html",
-        "channel_status": "unknown",
-        "error": ""
-      },
-      {
-        "company": "字节跳动",
-        "page_url": "https://jobs.bytedance.com/zh/",
-        "date": [],
-        "site_type": "html",
-        "channel_status": "unknown",
-        "error": "404 Client Error: Not Found for url: https://jobs.bytedance.com/zh/"
-      },
-      {
-        "company": "华为",
-        "page_url": "https://career.huawei.com/reccampportal/",
-        "date": [],
-        "site_type": "html",
-        "channel_status": "unknown",
-        "error": ""
-      },
-      {
-        "company": "京东",
-        "page_url": "https://zhaopin.jd.com/home;jsessionid=30746289A2BB15EE657DB4966FDDEE70.s1",
+        "company": "阿里巴巴",
+        "page_url": "https://campus-talent.alibaba.com/campus/index",
         "date": [
-          "2026-05-26"
+          "2026.11-20"
         ],
-        "site_type": "html",
+        "site_type": "playwright",
         "channel_status": "open",
         "error": ""
       },
       {
-        "company": "美团",
-        "page_url": "https://zhaopin.meituan.com/web/home",
+        "company": "腾讯",
+        "page_url": "javascript:void(0)",
         "date": [],
-        "site_type": "html",
+        "site_type": "playwright",
         "channel_status": "unknown",
-        "error": ""
-      },
-      {
-        "company": "快手",
-        "page_url": "https://zhaopin.kuaishou.cn/",
-        "date": [],
-        "site_type": "html",
-        "channel_status": "unknown",
-        "error": ""
+        "error": "Page.goto: net::ERR_ABORTED at javascript:void(0)\nCall log:\n  - navigating to \"javascript:void(0)\", waiting until \"domcontentloaded\"\n"
       },
       {
         "company": "百度",
-        "page_url": "https://talent.baidu.com/static/index.html#/recruitHelp",
+        "page_url": "about:blank",
         "date": [],
-        "site_type": "html",
+        "site_type": "playwright",
         "channel_status": "unknown",
         "error": ""
       },
       {
-        "company": "阿里巴巴集团",
-        "page_url": "https://talent.alibaba.com/",
-        "date": [],
-        "site_type": "html",
-        "channel_status": "unknown",
-        "error": ""
-      },
-      {
-        "company": "字节跳动",
-        "page_url": "https://jobs.bytedance.com/zh/",
-        "date": [],
-        "site_type": "html",
-        "channel_status": "unknown",
-        "error": "404 Client Error: Not Found for url: https://jobs.bytedance.com/zh/"
-      },
-      {
-        "company": "华为",
-        "page_url": "https://career.huawei.com/reccampportal/",
-        "date": [],
-        "site_type": "html",
-        "channel_status": "unknown",
-        "error": ""
-      },
-      {
-        "company": "京东",
-        "page_url": "https://zhaopin.jd.com/home",
+        "company": "阿里巴巴",
+        "page_url": "https://campus-talent.alibaba.com/campus/index",
         "date": [
-          "2026-05-26"
+          "2026.11-20"
         ],
-        "site_type": "html",
-        "channel_status": "unknown",
+        "site_type": "playwright",
+        "channel_status": "open",
         "error": ""
       },
       {
-        "company": "美团",
-        "page_url": "https://zhaopin.meituan.com/web/home",
+        "company": "腾讯",
+        "page_url": "javascript:void(0)",
         "date": [],
-        "site_type": "html",
+        "site_type": "playwright",
         "channel_status": "unknown",
-        "error": ""
-      },
-      {
-        "company": "快手",
-        "page_url": "https://zhaopin.kuaishou.cn/",
-        "date": [],
-        "site_type": "html",
-        "channel_status": "unknown",
-        "error": ""
+        "error": "Page.goto: net::ERR_ABORTED at javascript:void(0)\nCall log:\n  - navigating to \"javascript:void(0)\", waiting until \"domcontentloaded\"\n"
       }
     ]
   },
   "analysis": {
     "job_role": "大语言模型应用开发工程师",
-    "latest_company": "京东",
-    "latest_posted_at": "2026-05-26",
-    "channel_status": "unknown",
+    "latest_company": "百度",
+    "latest_posted_at": "",
+    "channel_status": "open",
     "confidence": "high"
   },
   "changes": {
@@ -210,229 +92,81 @@
     "updated": true,
     "status_changed": true,
     "latest_changed": true,
-    "updated_companies": [
-      {
-        "company": "华为",
-        "previous_date": [
-          "2026.05.11"
-        ],
-        "current_date": [],
-        "previous_status": "open",
-        "current_status": "unknown"
-      },
-      {
-        "company": "京东",
-        "previous_date": [
-          "2026-05-26"
-        ],
-        "current_date": [
-          "2026-05-26"
-        ],
-        "previous_status": "unknown",
-        "current_status": "open"
-      },
-      {
-        "company": "华为",
-        "previous_date": [
-          "2026.05.11"
-        ],
-        "current_date": [],
-        "previous_status": "open",
-        "current_status": "unknown"
-      }
-    ]
+    "updated_companies": []
   },
   "structure_note": "selection=公司筛选结果; crawl=爬取页面结果; analysis=最终判断",
   "job_role": "大语言模型应用开发工程师",
-  "top_x": 10,
+  "top_x": 3,
   "selected_companies": [
     {
       "rank": 1,
       "name": "百度",
-      "recruitment_url": "https://talent.baidu.com/"
+      "recruitment_url": "https://talent.baidu.com/jobs/social-list"
     },
     {
       "rank": 2,
-      "name": "阿里巴巴集团",
+      "name": "阿里巴巴",
       "recruitment_url": "https://talent.alibaba.com/"
     },
     {
       "rank": 3,
-      "name": "字节跳动",
-      "recruitment_url": "https://jobs.bytedance.com/zh/"
-    },
-    {
-      "rank": 4,
-      "name": "华为",
-      "recruitment_url": "https://career.huawei.com/"
-    },
-    {
-      "rank": 5,
-      "name": "京东",
-      "recruitment_url": "https://zhaopin.jd.com/"
-    },
-    {
-      "rank": 6,
-      "name": "美团",
-      "recruitment_url": "https://zhaopin.meituan.com/"
-    },
-    {
-      "rank": 7,
-      "name": "快手",
-      "recruitment_url": "https://zhaopin.kuaishou.cn/"
-    }
-  ],
-  "missing_companies": [
-    {
-      "rank": 3,
       "name": "腾讯",
-      "recruitment_url": "https://join.qq.com/",
-      "reason": "",
-      "missing_reason": "url not campus-like"
-    },
-    {
-      "rank": 9,
-      "name": "科大讯飞",
-      "recruitment_url": "https://iflytek.zhiye.com/",
-      "reason": "",
-      "missing_reason": "url not campus-like"
-    },
-    {
-      "rank": 10,
-      "name": "商汤科技",
-      "recruitment_url": "https://sensetime.zhiye.com/",
-      "reason": "",
-      "missing_reason": "url not campus-like"
-    },
-    {
-      "rank": 8,
-      "missing_reason": "not filled after retries"
-    },
-    {
-      "rank": 9,
-      "missing_reason": "not filled after retries"
-    },
-    {
-      "rank": 10,
-      "missing_reason": "not filled after retries"
+      "recruitment_url": "https://careers.tencent.com/"
     }
   ],
+  "missing_companies": [],
   "crawled_pages": [
     {
       "company": "百度",
-      "page_url": "https://talent.baidu.com/static/index.html#/recruitHelp",
+      "page_url": "about:blank",
       "date": [],
-      "site_type": "html",
+      "site_type": "playwright",
       "channel_status": "unknown",
       "error": ""
     },
     {
-      "company": "阿里巴巴集团",
-      "page_url": "https://talent.alibaba.com/",
-      "date": [],
-      "site_type": "html",
-      "channel_status": "unknown",
-      "error": ""
-    },
-    {
-      "company": "字节跳动",
-      "page_url": "https://jobs.bytedance.com/zh/",
-      "date": [],
-      "site_type": "html",
-      "channel_status": "unknown",
-      "error": "404 Client Error: Not Found for url: https://jobs.bytedance.com/zh/"
-    },
-    {
-      "company": "华为",
-      "page_url": "https://career.huawei.com/reccampportal/",
-      "date": [],
-      "site_type": "html",
-      "channel_status": "unknown",
-      "error": ""
-    },
-    {
-      "company": "京东",
-      "page_url": "https://zhaopin.jd.com/home;jsessionid=30746289A2BB15EE657DB4966FDDEE70.s1",
+      "company": "阿里巴巴",
+      "page_url": "https://campus-talent.alibaba.com/campus/index",
       "date": [
-        "2026-05-26"
+        "2026.11-20"
       ],
-      "site_type": "html",
+      "site_type": "playwright",
       "channel_status": "open",
       "error": ""
     },
     {
-      "company": "美团",
-      "page_url": "https://zhaopin.meituan.com/web/home",
+      "company": "腾讯",
+      "page_url": "javascript:void(0)",
       "date": [],
-      "site_type": "html",
+      "site_type": "playwright",
       "channel_status": "unknown",
-      "error": ""
-    },
-    {
-      "company": "快手",
-      "page_url": "https://zhaopin.kuaishou.cn/",
-      "date": [],
-      "site_type": "html",
-      "channel_status": "unknown",
-      "error": ""
+      "error": "Page.goto: net::ERR_ABORTED at javascript:void(0)\nCall log:\n  - navigating to \"javascript:void(0)\", waiting until \"domcontentloaded\"\n"
     },
     {
       "company": "百度",
-      "page_url": "https://talent.baidu.com/static/index.html#/recruitHelp",
+      "page_url": "about:blank",
       "date": [],
-      "site_type": "html",
+      "site_type": "playwright",
       "channel_status": "unknown",
       "error": ""
     },
     {
-      "company": "阿里巴巴集团",
-      "page_url": "https://talent.alibaba.com/",
-      "date": [],
-      "site_type": "html",
-      "channel_status": "unknown",
-      "error": ""
-    },
-    {
-      "company": "字节跳动",
-      "page_url": "https://jobs.bytedance.com/zh/",
-      "date": [],
-      "site_type": "html",
-      "channel_status": "unknown",
-      "error": "404 Client Error: Not Found for url: https://jobs.bytedance.com/zh/"
-    },
-    {
-      "company": "华为",
-      "page_url": "https://career.huawei.com/reccampportal/",
-      "date": [],
-      "site_type": "html",
-      "channel_status": "unknown",
-      "error": ""
-    },
-    {
-      "company": "京东",
-      "page_url": "https://zhaopin.jd.com/home",
+      "company": "阿里巴巴",
+      "page_url": "https://campus-talent.alibaba.com/campus/index",
       "date": [
-        "2026-05-26"
+        "2026.11-20"
       ],
-      "site_type": "html",
-      "channel_status": "unknown",
+      "site_type": "playwright",
+      "channel_status": "open",
       "error": ""
     },
     {
-      "company": "美团",
-      "page_url": "https://zhaopin.meituan.com/web/home",
+      "company": "腾讯",
+      "page_url": "javascript:void(0)",
       "date": [],
-      "site_type": "html",
+      "site_type": "playwright",
       "channel_status": "unknown",
-      "error": ""
-    },
-    {
-      "company": "快手",
-      "page_url": "https://zhaopin.kuaishou.cn/",
-      "date": [],
-      "site_type": "html",
-      "channel_status": "unknown",
-      "error": ""
+      "error": "Page.goto: net::ERR_ABORTED at javascript:void(0)\nCall log:\n  - navigating to \"javascript:void(0)\", waiting until \"domcontentloaded\"\n"
     }
   ]
 }

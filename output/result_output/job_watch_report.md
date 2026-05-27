@@ -1,48 +1,39 @@
 # Job Watch Report
 
 - 岗位：大语言模型应用开发工程师
-- 公司数：10
-- 最新公司：京东
-- 最新日期：2026-05-26
-- 通道状态：未知
+- 公司数：3
+- 最新公司：百度
+- 最新日期：未识别
+- 通道状态：开启
 - 置信度：high
 
 ## 公司
-- 1. 百度 | https://talent.baidu.com/
-- 2. 阿里巴巴集团 | https://talent.alibaba.com/
-- 3. 字节跳动 | https://jobs.bytedance.com/zh/
-- 4. 华为 | https://career.huawei.com/
-- 5. 京东 | https://zhaopin.jd.com/
-- 6. 美团 | https://zhaopin.meituan.com/
-- 7. 快手 | https://zhaopin.kuaishou.cn/
+- 1. 百度 | https://talent.baidu.com/jobs/social-list
+- 2. 阿里巴巴 | https://talent.alibaba.com/
+- 3. 腾讯 | https://careers.tencent.com/
 
 ## 页面
-- 百度 | https://talent.baidu.com/static/index.html#/recruitHelp | html | 未知
-- 阿里巴巴集团 | https://talent.alibaba.com/ | html | 未知
-- 字节跳动 | https://jobs.bytedance.com/zh/ | html | 未知
-  - 错误：404 Client Error: Not Found for url: https://jobs.bytedance.com/zh/
-- 华为 | https://career.huawei.com/reccampportal/ | html | 未知
-- 京东 | https://zhaopin.jd.com/home;jsessionid=30746289A2BB15EE657DB4966FDDEE70.s1 | html | 开启
-  - 日期：2026-05-26
-- 美团 | https://zhaopin.meituan.com/web/home | html | 未知
-- 快手 | https://zhaopin.kuaishou.cn/ | html | 未知
-- 百度 | https://talent.baidu.com/static/index.html#/recruitHelp | html | 未知
-- 阿里巴巴集团 | https://talent.alibaba.com/ | html | 未知
-- 字节跳动 | https://jobs.bytedance.com/zh/ | html | 未知
-  - 错误：404 Client Error: Not Found for url: https://jobs.bytedance.com/zh/
-- 华为 | https://career.huawei.com/reccampportal/ | html | 未知
-- 京东 | https://zhaopin.jd.com/home | html | 未知
-  - 日期：2026-05-26, 2026-05
-- 美团 | https://zhaopin.meituan.com/web/home | html | 未知
-- 快手 | https://zhaopin.kuaishou.cn/ | html | 未知
+- 百度 | about:blank | playwright | 未知
+- 阿里巴巴 | https://campus-talent.alibaba.com/campus/index | playwright | 开启
+  - 日期：2026.11-20, 2026.11, 2027.10
+- 腾讯 | javascript:void(0) | playwright | 未知
+  - 错误：Page.goto: net::ERR_ABORTED at javascript:void(0)
+Call log:
+  - navigating to "javascript:void(0)", waiting until "domcontentloaded"
+
+- 百度 | about:blank | playwright | 未知
+- 阿里巴巴 | https://campus-talent.alibaba.com/campus/index | playwright | 开启
+  - 日期：2026.11-20, 2026.11, 2027.10
+- 腾讯 | javascript:void(0) | playwright | 未知
+  - 错误：Page.goto: net::ERR_ABORTED at javascript:void(0)
+Call log:
+  - navigating to "javascript:void(0)", waiting until "domcontentloaded"
+
 
 ## 变化
 - 有历史快照：是
 - 最近日期是否变化：是
 - 通道状态是否变化：是
-- 华为 | 开启 -> 未知
-- 京东 | 未知 -> 开启
-- 华为 | 开启 -> 未知
 
 ## 结果
-job=大语言模型应用开发工程师; companies=7; latest=2026-05-26; status=未知
+job=大语言模型应用开发工程师; companies=3; latest=未识别; status=开启

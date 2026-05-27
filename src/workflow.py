@@ -204,9 +204,7 @@ class JobWatchWorkflow:
                         self.config.job_role,
                         candidate.name,
                         page.page_url,
-                        page.title,
-                        page.text,
-                        page.links,
+                        page.observation,
                     )
                 )
             )
@@ -248,9 +246,7 @@ class JobWatchWorkflow:
                         self.config.job_role,
                         candidate.name,
                         page.page_url,
-                        page.title,
-                        page.text,
-                        page.links,
+                        page.observation,
                     )
                 )
             )

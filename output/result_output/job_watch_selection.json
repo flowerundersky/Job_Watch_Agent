@@ -4,73 +4,19 @@
       {
         "rank": 1,
         "name": "百度",
-        "recruitment_url": "https://talent.baidu.com/"
+        "recruitment_url": "https://talent.baidu.com/jobs/social-list"
       },
       {
         "rank": 2,
-        "name": "阿里巴巴集团",
+        "name": "阿里巴巴",
         "recruitment_url": "https://talent.alibaba.com/"
       },
       {
         "rank": 3,
-        "name": "字节跳动",
-        "recruitment_url": "https://jobs.bytedance.com/zh/"
-      },
-      {
-        "rank": 4,
-        "name": "华为",
-        "recruitment_url": "https://career.huawei.com/"
-      },
-      {
-        "rank": 5,
-        "name": "京东",
-        "recruitment_url": "https://zhaopin.jd.com/"
-      },
-      {
-        "rank": 6,
-        "name": "美团",
-        "recruitment_url": "https://zhaopin.meituan.com/"
-      },
-      {
-        "rank": 7,
-        "name": "快手",
-        "recruitment_url": "https://zhaopin.kuaishou.cn/"
+        "name": "腾讯",
+        "recruitment_url": "https://careers.tencent.com/"
       }
     ]
   },
-  "missing": [
-    {
-      "rank": 3,
-      "name": "腾讯",
-      "recruitment_url": "https://join.qq.com/",
-      "reason": "",
-      "missing_reason": "url not campus-like"
-    },
-    {
-      "rank": 9,
-      "name": "科大讯飞",
-      "recruitment_url": "https://iflytek.zhiye.com/",
-      "reason": "",
-      "missing_reason": "url not campus-like"
-    },
-    {
-      "rank": 10,
-      "name": "商汤科技",
-      "recruitment_url": "https://sensetime.zhiye.com/",
-      "reason": "",
-      "missing_reason": "url not campus-like"
-    },
-    {
-      "rank": 8,
-      "missing_reason": "not filled after retries"
-    },
-    {
-      "rank": 9,
-      "missing_reason": "not filled after retries"
-    },
-    {
-      "rank": 10,
-      "missing_reason": "not filled after retries"
-    }
-  ]
+  "missing": []
 }
