@@ -140,6 +140,140 @@ def crawl_company_pages(
     return pages
 
 
+def crawl_url(
+    company: str,
+    recruitment_url: str,
+    *,
+    timeout_seconds: int = 15,
+    max_crawl_chars: int = 12000,
+    max_links_per_page: int = 20,
+    user_agent: str = "JobWatchAgent/2.0",
+) -> CrawledPage:
+    try:
+        response = requests.get(
+            recruitment_url,
+            timeout=timeout_seconds,
+            headers={"User-Agent": user_agent},
+        )
+        response.raise_for_status()
+        html = response.text
+        content_type = response.headers.get("Content-Type", "").lower()
+
+        if "json" in content_type or html.lstrip().startswith(("{", "[")):
+            payload = response.json() if "json" in content_type else json.loads(html)
+            text = normalize_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")))
+            date_candidates = _extract_date_candidates_from_text(text)
+            channel_status = _extract_channel_status(text, date_candidates)
+            return CrawledPage(
+                company=company,
+                recruitment_url=recruitment_url,
+                page_url=response.url,
+                site_type="api",
+                channel_status=channel_status,
+                title="",
+                text=text[:max_crawl_chars],
+                date_candidates=date_candidates,
+                links=[],
+            )
+
+        base_soup = BeautifulSoup(html, "html.parser")
+        api_urls = _probe_api_urls(base_soup, response.url, html)
+        if api_urls:
+            api_date_candidates = _extract_date_candidates_from_api(
+                api_urls,
+                timeout_seconds=timeout_seconds,
+                user_agent=user_agent,
+            )
+            if api_date_candidates:
+                title = _extract_title(base_soup)
+                text = normalize_text(base_soup.get_text("\n", strip=True))[:max_crawl_chars]
+                links = _extract_links(base_soup, response.url, max_links=max_links_per_page)
+                channel_status = _extract_channel_status(text, api_date_candidates)
+                return CrawledPage(
+                    company=company,
+                    recruitment_url=recruitment_url,
+                    page_url=response.url,
+                    site_type="api",
+                    channel_status=channel_status,
+                    title=title,
+                    text=text,
+                    date_candidates=api_date_candidates,
+                    links=links,
+                )
+
+        rendered_html = _render_with_playwright(response.url, timeout_seconds=timeout_seconds, user_agent=user_agent)
+        if rendered_html:
+            soup = BeautifulSoup(rendered_html, "html.parser")
+            title = _extract_title(soup)
+            text = normalize_text(soup.get_text("\n", strip=True))[:max_crawl_chars]
+            links = _extract_links(soup, response.url, max_links=max_links_per_page)
+            date_candidates = _extract_date_candidates(soup, text)
+            if not date_candidates:
+                date_candidates = _extract_date_candidates_from_links(
+                    links,
+                    timeout_seconds=timeout_seconds,
+                    user_agent=user_agent,
+                )
+            channel_status = _extract_channel_status(text, date_candidates)
+            return CrawledPage(
+                company=company,
+                recruitment_url=recruitment_url,
+                page_url=response.url,
+                site_type="playwright",
+                channel_status=channel_status,
+                title=title,
+                text=text,
+                date_candidates=date_candidates,
+                links=links,
+            )
+
+        soup = base_soup
+        title = _extract_title(soup)
+        text = normalize_text(soup.get_text("\n", strip=True))[:max_crawl_chars]
+        links = _extract_links(soup, response.url, max_links=max_links_per_page)
+        date_candidates = _extract_date_candidates(soup, text)
+        if not date_candidates:
+            date_candidates = _extract_date_candidates_from_links(
+                links,
+                timeout_seconds=timeout_seconds,
+                user_agent=user_agent,
+            )
+        if api_urls and not date_candidates:
+            api_date_candidates = _extract_date_candidates_from_api(
+                api_urls,
+                timeout_seconds=timeout_seconds,
+                user_agent=user_agent,
+            )
+            for candidate_text in api_date_candidates:
+                if candidate_text not in date_candidates:
+                    date_candidates.append(candidate_text)
+        channel_status = _extract_channel_status(text, date_candidates)
+        return CrawledPage(
+            company=company,
+            recruitment_url=recruitment_url,
+            page_url=response.url,
+            site_type="html",
+            channel_status=channel_status,
+            title=title,
+            text=text,
+            date_candidates=date_candidates,
+            links=links,
+        )
+    except Exception as exc:  # noqa: BLE001
+        return CrawledPage(
+            company=company,
+            recruitment_url=recruitment_url,
+            page_url=recruitment_url,
+            site_type="html",
+            channel_status="unknown",
+            title="",
+            text="",
+            date_candidates=[],
+            links=[],
+            error=str(exc),
+        )
+
+
 def load_company_candidates_from_selection(path: Path) -> list[CompanyCandidate]:
     payload = json.loads(path.read_text(encoding="utf-8"))
     raw_candidates = _extract_candidates_from_selection_payload(payload)
@@ -174,7 +308,12 @@ def load_company_candidates_from_selection(path: Path) -> list[CompanyCandidate]
 
 
 def _extract_candidates_from_selection_payload(payload: dict[str, Any]) -> list[Any]:
-    for key in ("selected_companies", "candidates", "companies"):
+    selection = payload.get("selection")
+    if isinstance(selection, dict):
+        value = selection.get("selected_companies")
+        if isinstance(value, list):
+            return value
+    for key in ("selected", "selected_companies", "candidates", "companies"):
         value = payload.get(key)
         if isinstance(value, list):
             return value
@@ -196,60 +335,14 @@ def crawl_company_page(
     max_links_per_page: int = 20,
     user_agent: str = "JobWatchAgent/2.0",
 ) -> CrawledPage:
-    try:
-        response = requests.get(
-            candidate.recruitment_url,
-            timeout=timeout_seconds,
-            headers={"User-Agent": user_agent},
-        )
-        response.raise_for_status()
-        html = response.text
-        rendered_html = _render_with_playwright(response.url, timeout_seconds=timeout_seconds, user_agent=user_agent)
-        if rendered_html:
-            html = rendered_html
-
-        soup = BeautifulSoup(html, "html.parser")
-        title = _extract_title(soup)
-        text = normalize_text(soup.get_text("\n", strip=True))[:max_crawl_chars]
-        links = _extract_links(soup, response.url, max_links=max_links_per_page)
-        date_candidates = _extract_date_candidates(soup, text)
-        site_type = _detect_site_type(soup, text, links)
-        if site_type == "api":
-            api_date_candidates = _extract_date_candidates_from_api(links, timeout_seconds=timeout_seconds, user_agent=user_agent)
-            for candidate_text in api_date_candidates:
-                if candidate_text not in date_candidates:
-                    date_candidates.append(candidate_text)
-        if not date_candidates:
-            date_candidates = _extract_date_candidates_from_links(
-                links,
-                timeout_seconds=timeout_seconds,
-                user_agent=user_agent,
-            )
-        channel_status = _extract_channel_status(text, date_candidates)
-        return CrawledPage(
-            company=candidate.name,
-            recruitment_url=candidate.recruitment_url,
-            page_url=response.url,
-            site_type=site_type,
-            channel_status=channel_status,
-            title=title,
-            text=text,
-            date_candidates=date_candidates,
-            links=links,
-        )
-    except Exception as exc:  # noqa: BLE001
-        return CrawledPage(
-            company=candidate.name,
-            recruitment_url=candidate.recruitment_url,
-            page_url=candidate.recruitment_url,
-            site_type="html",
-            channel_status="unknown",
-            title="",
-            text="",
-            date_candidates=[],
-            links=[],
-            error=str(exc),
-        )
+    return crawl_url(
+        candidate.name,
+        candidate.recruitment_url,
+        timeout_seconds=timeout_seconds,
+        max_crawl_chars=max_crawl_chars,
+        max_links_per_page=max_links_per_page,
+        user_agent=user_agent,
+    )
 
 
 def _extract_title(soup: BeautifulSoup) -> str:
@@ -353,6 +446,34 @@ def _extract_date_candidates_from_text(text: str) -> list[str]:
             if match not in candidates:
                 candidates.append(match)
     return candidates
+
+
+def _probe_api_urls(soup: BeautifulSoup, base_url: str, html: str) -> list[str]:
+    api_urls: list[str] = []
+
+    def _append(raw_url: str) -> None:
+        if not raw_url:
+            return
+        resolved = urljoin(base_url, raw_url.strip())
+        if _looks_like_api_endpoint(resolved) and resolved not in api_urls:
+            api_urls.append(resolved)
+
+    for tag in soup.find_all(True):
+        for attr in ("href", "src", "data-url", "data-api", "data-endpoint", "data-fetch-url", "data-json"):
+            value = tag.get(attr)
+            if isinstance(value, str):
+                _append(value)
+
+    for match in re.findall(r"https?://[^\"'\s<>]+", html):
+        _append(match)
+
+    return api_urls
+
+
+def _looks_like_api_endpoint(url: str) -> bool:
+    parsed = urlparse(url)
+    target = f"{parsed.netloc}{parsed.path}{parsed.query}".lower()
+    return any(hint in target for hint in API_HINTS)
 
 
 def _detect_site_type(soup: BeautifulSoup, text: str, links: list[str]) -> str:

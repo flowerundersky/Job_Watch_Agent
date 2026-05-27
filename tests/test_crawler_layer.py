@@ -8,6 +8,7 @@ import pytest
 
 from src.crawler import crawl_company_pages, load_company_candidates_from_selection
 from src.models import CompanyCandidate
+from src.prompt import build_channel_status_messages, build_latest_date_messages
 
 
 SELECTION_PATHS = (
@@ -23,7 +24,12 @@ def test_crawler_can_crawl_selected_company_pages() -> None:
     if selection_path is None:
         pytest.skip("Run the selection stage first to generate crawlable company candidates")
 
-    crawl_limit = int(os.getenv("JOB_WATCH_CRAWLER_TEST_LIMIT", "3"))
+    selection_payload = json.loads(selection_path.read_text(encoding="utf-8"))
+    selection_section = selection_payload.get("selection") if isinstance(selection_payload, dict) else {}
+    job_role = str(selection_payload.get("job_role", "")) if isinstance(selection_payload, dict) else ""
+    top_x = int(selection_payload.get("top_x", len(candidates))) if isinstance(selection_payload, dict) else len(candidates)
+
+    crawl_limit = int(os.getenv("JOB_WATCH_CRAWLER_TEST_LIMIT", "30"))
     selected_candidates = candidates[: max(1, crawl_limit)]
     pages = crawl_company_pages(
         selected_candidates,
@@ -37,7 +43,9 @@ def test_crawler_can_crawl_selected_company_pages() -> None:
         json.dumps(
             {
                 "selection_source": str(selection_path),
-                "requested_candidates": [
+                "job_role": job_role,
+                "top_x": top_x,
+                "selected_companies": [
                     {
                         "rank": candidate.rank,
                         "name": candidate.name,
@@ -49,20 +57,32 @@ def test_crawler_can_crawl_selected_company_pages() -> None:
                     {
                         "company": page.company,
                         "page_url": page.page_url,
+                        "site_type": page.site_type,
+                        "channel_status": page.channel_status,
                         "date_candidates": page.date_candidates[:1],
                         "error": page.error,
                     }
                     for page in pages
                 ],
-                "summary": {
-                    "requested_count": len(selected_candidates),
-                    "crawled_count": len(pages),
-                    "success_count": sum(1 for page in pages if not page.error),
-                    "error_count": sum(1 for page in pages if page.error),
-                },
+                "latest_date_request": build_latest_date_messages(
+                    job_role,
+                    selected_candidates[0].name if selected_candidates else "",
+                    pages[0].page_url if pages else "",
+                    pages[0].title if pages else "",
+                    pages[0].text if pages else "",
+                    pages[0].links if pages else [],
+                ),
+                "channel_status_request": build_channel_status_messages(
+                    job_role,
+                    selected_candidates[0].name if selected_candidates else "",
+                    pages[0].page_url if pages else "",
+                    pages[0].title if pages else "",
+                    pages[0].text if pages else "",
+                    pages[0].links if pages else [],
+                ),
             },
             ensure_ascii=False,
-            separators=(",", ":"),
+            indent=2,
         ),
         encoding="utf-8",
     )

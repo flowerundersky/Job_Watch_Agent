@@ -13,7 +13,7 @@ import requests
 
 from .config import ModelBackendSettings
 from .crawler import search_company_candidates
-from .models import AnalysisResult, CompanyCandidate, CrawledPage
+from .models import CompanyCandidate
 
 
 logger = logging.getLogger(__name__)
@@ -64,9 +64,16 @@ class HeuristicBackend:
     timeout_seconds: int
 
     def chat(self, messages: Sequence[dict[str, str]]) -> str:
+        system_text = " \n".join(
+            str(message.get("content", ""))
+            for message in messages
+            if message.get("role") == "system"
+        )
         last_user = _last_user_message(messages)
-        if "抓取到的招聘页面" in last_user or "最近一次招聘信息" in last_user:
-            return json.dumps(self._analyze(last_user), ensure_ascii=False, indent=2)
+        if "latest_posted_at" in system_text or "招聘信息最新发布日期" in system_text or "时间 agent" in system_text:
+            return json.dumps(self._latest_date_agent(last_user), ensure_ascii=False, indent=2)
+        if "channel_status" in system_text or "校园招聘通道" in system_text or "通道 agent" in system_text:
+            return json.dumps(self._channel_status_agent(last_user), ensure_ascii=False, indent=2)
         return json.dumps(self._select(last_user), ensure_ascii=False, indent=2)
 
     def _select(self, prompt_text: str) -> dict[str, Any]:
@@ -87,14 +94,81 @@ class HeuristicBackend:
             "companies": [candidate.to_dict() for candidate in candidates],
         }
 
-    def _analyze(self, prompt_text: str) -> dict[str, Any]:
+    def _latest_date_agent(self, prompt_text: str) -> dict[str, Any]:
         job_role = _extract_after_label(prompt_text, "岗位") or "招聘岗位"
-        company_payload = _extract_json_list(prompt_text, "第一阶段公司结果")
-        page_payload = _extract_json_list(prompt_text, "抓取到的招聘页面")
-        candidates = [CompanyCandidate(**item) for item in company_payload if isinstance(item, dict)]
-        pages = [CrawledPage(**item) for item in page_payload if isinstance(item, dict)]
-        result = analyze_latest_posting(job_role, candidates, pages)
-        return result.to_dict()
+        payload = _extract_json_object(prompt_text, "页面证据")
+        title = str(payload.get("title", ""))
+        text = str(payload.get("text", ""))
+        links = [str(item).strip() for item in payload.get("links", []) if str(item).strip()]
+        compact = f"{title} {text}".lower()
+        candidates = self._extract_date_candidates(compact)
+        if candidates:
+            latest_posted_at = candidates[0]
+            return {
+                "job_role": job_role,
+                "is_sufficient": True,
+                "reason": "页面已包含明确日期信号",
+                "next_hops": [],
+                "latest_company": str(payload.get("company", "")),
+                "latest_posted_at": latest_posted_at,
+                "confidence": "high",
+            }
+        return {
+            "job_role": job_role,
+            "is_sufficient": False,
+            "reason": "页面没有明确日期，需要继续看下一跳",
+            "next_hops": links[:2],
+            "latest_company": str(payload.get("company", "")),
+            "latest_posted_at": "",
+            "confidence": "low",
+        }
+
+    def _channel_status_agent(self, prompt_text: str) -> dict[str, Any]:
+        job_role = _extract_after_label(prompt_text, "岗位") or "招聘岗位"
+        payload = _extract_json_object(prompt_text, "页面证据")
+        title = str(payload.get("title", ""))
+        text = str(payload.get("text", ""))
+        links = [str(item).strip() for item in payload.get("links", []) if str(item).strip()]
+        compact = f"{title} {text}".lower()
+        if any(keyword in compact for keyword in ("已结束", "停止招聘", "暂停招聘", "已关闭", "招聘结束", "未开启")):
+            return {
+                "job_role": job_role,
+                "is_sufficient": True,
+                "reason": "页面已包含明确关闭信号",
+                "next_hops": [],
+                "channel_status": "closed",
+                "confidence": "high",
+            }
+        if any(keyword in compact for keyword in ("校招进行中", "校招开启", "校园招聘", "招聘中", "正在招聘", "开放投递", "开启投递")):
+            return {
+                "job_role": job_role,
+                "is_sufficient": True,
+                "reason": "页面已包含明确开启信号",
+                "next_hops": [],
+                "channel_status": "open",
+                "confidence": "high",
+            }
+        return {
+            "job_role": job_role,
+            "is_sufficient": False,
+            "reason": "页面没有明确开放或关闭信号，需要继续看下一跳",
+            "next_hops": links[:2],
+            "channel_status": "unknown",
+            "confidence": "low",
+        }
+
+    def _extract_date_candidates(self, text: str) -> list[str]:
+        candidates: list[str] = []
+        for pattern in (
+            r"\d{4}[-/.]\d{1,2}[-/.]\d{1,2}",
+            r"\d{4}年\d{1,2}月\d{1,2}日?",
+            r"\d{4}[-/.]\d{1,2}",
+            r"\d{1,2}月\d{1,2}日",
+        ):
+            for match in re.findall(pattern, text):
+                if match not in candidates:
+                    candidates.append(match)
+        return candidates
 
 
 def create_backend(settings: ModelBackendSettings) -> ModelBackend:
@@ -115,64 +189,6 @@ def _normalize_openai_endpoint(base_url: str) -> str:
     return f"{normalized}/v1/chat/completions"
 
 
-def analyze_latest_posting(
-    job_role: str,
-    selected_companies: Sequence[CompanyCandidate],
-    crawled_pages: Sequence[CrawledPage],
-) -> AnalysisResult:
-    latest_company = ""
-    latest_posted_at = ""
-    latest_channel_status = "unknown"
-    best_score = -1
-
-    for page in crawled_pages:
-        score, posted_at = _score_page(page)
-        if score > best_score:
-            best_score = score
-            latest_company = page.company
-            latest_posted_at = posted_at
-            latest_channel_status = page.channel_status or "unknown"
-
-    if not latest_company and selected_companies:
-        latest_company = selected_companies[0].name
-
-    confidence = "high" if latest_posted_at else "low"
-
-    return AnalysisResult(
-        job_role=job_role,
-        latest_company=latest_company,
-        latest_posted_at=latest_posted_at,
-        channel_status=latest_channel_status,
-        confidence=confidence,
-    )
-
-
-def _score_page(page: CrawledPage) -> tuple[int, str]:
-    best = ""
-    best_score = -1
-    for candidate in page.date_candidates:
-        score = _date_score(candidate)
-        if score > best_score:
-            best_score = score
-            best = candidate
-    return best_score, best
-
-
-def _date_score(value: str) -> int:
-    compact = value.strip()
-    if not compact:
-        return -1
-    if re.search(r"\d{4}[-/.]\d{1,2}[-/.]\d{1,2}", compact):
-        return 5
-    if re.search(r"\d{4}年\d{1,2}月\d{1,2}日?", compact):
-        return 5
-    if re.search(r"\d{4}[-/.]\d{1,2}", compact):
-        return 4
-    if re.search(r"\d{1,2}月\d{1,2}日", compact):
-        return 3
-    return 1
-
-
 def _last_user_message(messages: Sequence[dict[str, str]]) -> str:
     for message in reversed(messages):
         if message.get("role") in {"user", "human"}:
@@ -186,19 +202,19 @@ def _extract_after_label(text: str, label: str) -> str:
     return match.group(1).splitlines()[0].strip() if match else ""
 
 
-def _extract_json_list(text: str, label: str) -> list[dict[str, Any]]:
+def _extract_json_object(text: str, label: str) -> dict[str, Any]:
     marker = f"{label}："
     start = text.find(marker)
     if start == -1:
-        return []
+        return {}
     remainder = text[start + len(marker):].lstrip()
-    first_bracket = remainder.find("[")
-    if first_bracket == -1:
-        return []
-    json_text = remainder[first_bracket:]
+    first_brace = remainder.find("{")
+    if first_brace == -1:
+        return {}
+    json_text = remainder[first_brace:]
     decoder = json.JSONDecoder()
     try:
         parsed, _ = decoder.raw_decode(json_text)
     except json.JSONDecodeError:
-        return []
-    return parsed if isinstance(parsed, list) else []
+        return {}
+    return parsed if isinstance(parsed, dict) else {}

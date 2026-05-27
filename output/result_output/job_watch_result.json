@@ -1,102 +1,46 @@
 {
-  "job_role": "前端工程师",
-  "top_x": 3,
-  "selected_companies": [
+  "companies": [
     {
-      "rank": 1,
-      "name": "字节跳动",
-      "recruitment_url": "https://jobs.bytedance.com/",
-      "reason": "内置兜底：字节跳动 的技术岗位招聘页适合检索前端相关职位",
-      "raw": {
-        "rank": 1,
-        "name": "字节跳动",
-        "recruitment_url": "https://jobs.bytedance.com/",
-        "reason": "内置兜底：字节跳动 的技术岗位招聘页适合检索前端相关职位",
-        "raw": {
-          "query": "前端工程师 招聘 官网",
-          "fallback": true
-        }
-      }
+      "company": "百度",
+      "website": "https://talent.baidu.com/static/index.html#/recruitHelp",
+      "latest_posted_at": "",
+      "channel_status": "unknown"
     },
     {
-      "rank": 2,
-      "name": "腾讯",
-      "recruitment_url": "https://careers.tencent.com/",
-      "reason": "内置兜底：腾讯 的技术岗位招聘页适合检索前端相关职位",
-      "raw": {
-        "rank": 2,
-        "name": "腾讯",
-        "recruitment_url": "https://careers.tencent.com/",
-        "reason": "内置兜底：腾讯 的技术岗位招聘页适合检索前端相关职位",
-        "raw": {
-          "query": "前端工程师 招聘 官网",
-          "fallback": true
-        }
-      }
+      "company": "阿里巴巴集团",
+      "website": "https://talent.alibaba.com/",
+      "latest_posted_at": "",
+      "channel_status": "unknown"
     },
-    {
-      "rank": 3,
-      "name": "阿里巴巴",
-      "recruitment_url": "https://talent.alibaba.com/",
-      "reason": "内置兜底：阿里巴巴 的技术岗位招聘页适合检索前端相关职位",
-      "raw": {
-        "rank": 3,
-        "name": "阿里巴巴",
-        "recruitment_url": "https://talent.alibaba.com/",
-        "reason": "内置兜底：阿里巴巴 的技术岗位招聘页适合检索前端相关职位",
-        "raw": {
-          "query": "前端工程师 招聘 官网",
-          "fallback": true
-        }
-      }
-    }
-  ],
-  "crawled_pages": [
     {
       "company": "字节跳动",
-      "recruitment_url": "https://jobs.bytedance.com/",
-      "page_url": "https://jobs.bytedance.com/",
-      "title": "",
-      "text": "",
-      "date_candidates": [],
-      "links": [],
-      "error": ""
+      "website": "https://jobs.bytedance.com/zh/",
+      "latest_posted_at": "",
+      "channel_status": "unknown"
     },
     {
-      "company": "腾讯",
-      "recruitment_url": "https://careers.tencent.com/",
-      "page_url": "https://careers.tencent.com/",
-      "title": "首页 | 腾讯招聘",
-      "text": "首页 | 腾讯招聘",
-      "date_candidates": [],
-      "links": [],
-      "error": ""
+      "company": "华为",
+      "website": "https://career.huawei.com/reccampportal/",
+      "latest_posted_at": "",
+      "channel_status": "unknown"
     },
     {
-      "company": "阿里巴巴",
-      "recruitment_url": "https://talent.alibaba.com/",
-      "page_url": "https://talent.alibaba.com/",
-      "title": "阿里巴巴集团招聘官网",
-      "text": "阿里巴巴集团招聘官网",
-      "date_candidates": [],
-      "links": [],
-      "error": ""
+      "company": "京东",
+      "website": "https://zhaopin.jd.com/home;jsessionid=30746289A2BB15EE657DB4966FDDEE70.s1",
+      "latest_posted_at": "2026-05-26",
+      "channel_status": "open"
+    },
+    {
+      "company": "美团",
+      "website": "https://zhaopin.meituan.com/web/home",
+      "latest_posted_at": "",
+      "channel_status": "unknown"
+    },
+    {
+      "company": "快手",
+      "website": "https://zhaopin.kuaishou.cn/",
+      "latest_posted_at": "",
+      "channel_status": "unknown"
     }
-  ],
-  "analysis": {
-    "job_role": "前端工程师",
-    "latest_company": "字节跳动",
-    "latest_posted_at": "",
-    "evidence": "",
-    "summary": "岗位 前端工程师 的招聘官网抓取完成，共分析 3 家公司，识别到最近一次招聘信息为 未识别。",
-    "confidence": "low",
-    "raw_output": "{\n  \"job_role\": \"前端工程师\",\n  \"latest_company\": \"字节跳动\",\n  \"latest_posted_at\": \"\",\n  \"evidence\": \"\",\n  \"summary\": \"岗位 前端工程师 的招聘官网抓取完成，共分析 3 家公司，识别到最近一次招聘信息为 未识别。\",\n  \"confidence\": \"low\",\n  \"raw_output\": \"\"\n}"
-  },
-  "raw_selection_output": "{\n  \"job_role\": \"前端工程师\",\n  \"top_x\": 3,\n  \"companies\": [\n    {\n      \"rank\": 1,\n      \"name\": \"字节跳动\",\n      \"recruitment_url\": \"https://jobs.bytedance.com/\",\n      \"reason\": \"内置兜底：字节跳动 的技术岗位招聘页适合检索前端相关职位\",\n      \"raw\": {\n        \"query\": \"前端工程师 招聘 官网\",\n        \"fallback\": true\n      }\n    },\n    {\n      \"rank\": 2,\n      \"name\": \"腾讯\",\n      \"recruitment_url\": \"https://careers.tencent.com/\",\n      \"reason\": \"内置兜底：腾讯 的技术岗位招聘页适合检索前端相关职位\",\n      \"raw\": {\n        \"query\": \"前端工程师 招聘 官网\",\n        \"fallback\": true\n      }\n    },\n    {\n      \"rank\": 3,\n      \"name\": \"阿里巴巴\",\n      \"recruitment_url\": \"https://talent.alibaba.com/\",\n      \"reason\": \"内置兜底：阿里巴巴 的技术岗位招聘页适合检索前端相关职位\",\n      \"raw\": {\n        \"query\": \"前端工程师 招聘 官网\",\n        \"fallback\": true\n      }\n    }\n  ]\n}",
-  "raw_analysis_output": "{\n  \"job_role\": \"前端工程师\",\n  \"latest_company\": \"字节跳动\",\n  \"latest_posted_at\": \"\",\n  \"evidence\": \"\",\n  \"summary\": \"岗位 前端工程师 的招聘官网抓取完成，共分析 3 家公司，识别到最近一次招聘信息为 未识别。\",\n  \"confidence\": \"low\",\n  \"raw_output\": \"\"\n}",
-  "report_path": "output/job_watch_report.md",
-  "result_path": "output/job_watch_result.json",
-  "snapshot_path": "output/job_watch_snapshot.json",
-  "summary": "job=前端工程师; companies=3; crawled=3; latest=字节跳动; posted_at=未识别",
-  "error": ""
+  ]
 }

@@ -7,11 +7,12 @@ from src.config import load_config
 from src.workflow import JobWatchWorkflow
 
 
-def main(argv: list[str] | None = None) -> int:
-    arguments = list(sys.argv[1:] if argv is None else argv)
-    config_path = Path(arguments[0]) if arguments else Path("config.yaml")
+DEFAULT_CONFIG_PATH = Path(__file__).with_name("config.yaml")
 
-    config = load_config(config_path)
+
+def main(argv: list[str] | None = None) -> int:
+    arguments = sys.argv[1:] if argv is None else argv
+    config = load_config(Path(arguments[0]) if arguments else DEFAULT_CONFIG_PATH)
     workflow = JobWatchWorkflow(config)
     result = workflow.run()
 

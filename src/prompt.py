@@ -13,18 +13,18 @@ def build_company_selection_messages(job_role: str, top_x: int, company_filters:
             "role": "system",
             "content": (
                 f"你是一个根据岗位名称和筛选条件搜索公司网站的助手。"
-                f"我是一名快要毕业的大学生，想要了解哪些公司可能正在招聘某个岗位的员工和实习生，以及这些公司的校园招聘官网入口。"
-                f"你的任务是根据岗位名称和筛选条件选出最可能发布此岗位的 {top_x} 家公司和该公司的校园招聘官网入口。"
-                f"recruitment_url里输出的是公司的校园招聘网站入口。只输出 JSON。"
+                f"我是一名快要毕业的大学生，想要了解哪些公司可能正在招聘某个岗位的员工和实习生，以及这些公司的招聘官网入口。"
+                f"你的任务是根据岗位名称和筛选条件选出会发布此岗位的 {top_x} 家公司和该公司的招聘官网入口。"
+                f"recruitment_url里输出的是公司的招聘网站入口。只输出 JSON。只输出恰好 {top_x} 家公司的信息。如果找不到足够的公司，返回空数组，不要编造。"
                 f"输出的格式：{{\"job_role\":\"...\",\"top_x\":{top_x},\"companies\":[{{\"name\":\"...\",\"recruitment_url\":\"https://...\"}}]}}"
-                f"最后达到的目标是帮助我快速锁定目标公司的校园招聘官网。"
+                f"最后达到的目标是帮助我快速锁定目标公司的招聘官网。"
             ),
         },
         {
             "role": "user",
             "content": (
                 f"岗位：{job_role}\n数量：{top_x}{filter_text}\n公司最好具备的条件：{company_filters}\n"
-                f"请返回最可能发布“{job_role}”招聘信息的前 {top_x} 家公司及其校招官网入口。"
+                f"请返回最可能发布“{job_role}”招聘信息的前 {top_x} 家公司及其招聘官网入口。"
             ),
         },
     ]
@@ -54,46 +54,73 @@ def build_company_selection_retry_message(
     ]
 
 
-def build_analysis_messages(
+def build_latest_date_messages(
     job_role: str,
-    selected_companies: list[dict[str, Any]],
-    crawled_pages: list[dict[str, Any]],
+    company_name: str,
+    page_url: str,
+    title: str,
+    text: str,
+    links: list[str],
 ) -> list[dict[str, str]]:
-
-    def _compact_company(item: dict[str, Any]) -> dict[str, Any]:
-        return {
-            "n": str(item.get("name") or item.get("company") or "").strip(),
-            "u": str(item.get("recruitment_url") or item.get("url") or "").strip(),
-        }
-
-    def _compact_page(item: dict[str, Any]) -> dict[str, Any]:
-        return {
-            "c": str(item.get("company") or "").strip(),
-            "u": str(item.get("page_url") or item.get("recruitment_url") or "").strip(),
-            "d": list(item.get("date_candidates") or [])[:3],
-            "s": str(item.get("site_type") or "").strip(),
-            "t": str(item.get("channel_status") or "").strip(),
-            "e": str(item.get("error") or "").strip(),
-        }
-
-    compact_companies = [_compact_company(item) for item in selected_companies]
-    compact_pages = [_compact_page(item) for item in crawled_pages]
-
+    evidence = {
+        "company": company_name,
+        "page_url": page_url,
+        "title": title,
+        "text": text[:2400],
+        "links": links[:20],
+    }
     return [
         {
             "role": "system",
             "content": (
-                "根据抓取结果判断最近一次招聘发布时间和通道状态。不要补充未抓取到的信息，不要臆造。"
-                "只输出 JSON："
-                "{\"job_role\":\"...\",\"latest_company\":\"...\",\"latest_posted_at\":\"...\",\"channel_status\":\"open|closed|unknown\",\"confidence\":\"high|medium|low\"}"
+                "你是时间 agent。你只做两件事：判断当前页面是否足够提取最新发布日期；不够就从给定 links 里选下一跳。"
+                "只依据当前页面已经出现的信息，不跳出给定 links。只输出 JSON："
+                "{\"is_sufficient\":true|false,\"reason\":\"...\",\"next_hops\":[\"https://...\"],\"latest_company\":\"...\",\"latest_posted_at\":\"...\",\"confidence\":\"high|medium|low\"}"
             ),
         },
         {
             "role": "user",
             "content": (
                 f"岗位：{job_role}\n"
-                f"公司：{json.dumps(compact_companies, ensure_ascii=False, separators=(',', ':'))}\n"
-                f"页面：{json.dumps(compact_pages, ensure_ascii=False, separators=(',', ':'))}"
+                f"页面证据：{json.dumps(evidence, ensure_ascii=False, separators=(',', ':'))}\n"
+                "没有明确日期就返回 false 和下一跳；有明确日期就返回 true 并输出 latest_posted_at。"
+            ),
+        },
+    ]
+
+
+def build_channel_status_messages(
+    job_role: str,
+    company_name: str,
+    page_url: str,
+    title: str,
+    text: str,
+    links: list[str],
+) -> list[dict[str, str]]:
+    evidence = {
+        "company": company_name,
+        "page_url": page_url,
+        "title": title,
+        "text": text[:2400],
+        "links": links[:20],
+    }
+    return [
+        {
+            "role": "system",
+            "content": (
+                "你是通道 agent。"
+                "你只做两件事：判断当前页面是否足以判断校园招聘通道；不够就从给定 links 里选下一跳。"
+                "只能依据页面里明确出现的开放或关闭信号判断，不能因为有日期、岗位名称或公司名就推断开启。只输出 JSON："
+                "{\"is_sufficient\":true|false,\"reason\":\"...\",\"next_hops\":[\"https://...\"],\"channel_status\":\"open|closed|unknown\",\"confidence\":\"high|medium|low\"}"
+            ),
+        },
+        {
+            "role": "user",
+            "content": (
+                f"岗位：{job_role}\n"
+                f"页面证据：{json.dumps(evidence, ensure_ascii=False, separators=(',', ':'))}\n"
+                "如果当前页面没有明确开放或关闭信号，就把 is_sufficient 设为 false，并只从 links 里返回下一跳；"
+                "如果有明确证据，就把 is_sufficient 设为 true，并只输出当前页面里能明确支持的 channel_status。"
             ),
         },
     ]

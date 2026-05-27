@@ -21,12 +21,19 @@ class CrawledPage:
     company: str
     recruitment_url: str
     page_url: str
+    task_type: str = ""
     site_type: str = "html"
     channel_status: str = "unknown"
+    latest_posted_at: str = ""
+    decision_confidence: str = "low"
+    is_sufficient: bool = False
     title: str = ""
     text: str = ""
     date_candidates: list[str] = field(default_factory=list)
     links: list[str] = field(default_factory=list)
+    next_hops: list[str] = field(default_factory=list)
+    visited_urls: list[str] = field(default_factory=list)
+    decision_reason: str = ""
     error: str = ""
 
     def to_dict(self) -> dict[str, Any]:

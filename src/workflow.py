@@ -4,21 +4,29 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor
 from typing import Any, TypedDict
 
 from langgraph.graph import END, START, StateGraph
 
 from .config import AppConfig
-from .crawler import crawl_company_pages
-from .model import OpenAICompatibleBackend, analyze_latest_posting, create_backend
+from .crawler import crawl_company_page, crawl_url
+from .model import OpenAICompatibleBackend, create_backend
 from .models import AnalysisResult, CompanyCandidate, CrawledPage, WorkflowResult
-from .prompt import build_analysis_messages, build_company_selection_messages, build_company_selection_retry_message, extract_json_object
+from .prompt import (
+    build_channel_status_messages,
+    build_company_selection_messages,
+    build_company_selection_retry_message,
+    build_latest_date_messages,
+    extract_json_object,
+)
 
 
 class WorkflowState(TypedDict, total=False):
     selected_candidates: list[CompanyCandidate]
     missing_candidates: list[dict[str, Any]]
-    crawled_pages: list[CrawledPage]
+    date_crawled_pages: list[CrawledPage]
+    channel_crawled_pages: list[CrawledPage]
     analysis: AnalysisResult
     changes: dict[str, Any]
     result: WorkflowResult
@@ -53,6 +61,7 @@ class JobWatchWorkflow:
     def _graph_select_companies(self, state: WorkflowState) -> dict[str, Any]:
         selection = self._select_companies_with_missing()
         self._write_selection_output(selection["selected"], selection["missing"])
+        print("公司筛选已完成")
         return {
             "selected_candidates": selection["selected"],
             "missing_candidates": selection["missing"],
@@ -60,24 +69,29 @@ class JobWatchWorkflow:
 
     def _graph_crawl_pages(self, state: WorkflowState) -> dict[str, Any]:
         selected_candidates = state["selected_candidates"]
-        crawled_pages = crawl_company_pages(
-            selected_candidates,
-            timeout_seconds=self.config.runtime.timeout_seconds,
-            max_crawl_chars=self.config.runtime.max_crawl_chars,
-            max_links_per_page=self.config.runtime.max_links_per_page,
-        )
-        return {"crawled_pages": crawled_pages}
+        print("开始抓取页面")
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            date_future = executor.submit(self._crawl_time_pages, selected_candidates)
+            channel_future = executor.submit(self._crawl_channel_pages, selected_candidates)
+            date_pages = date_future.result()
+            channel_pages = channel_future.result()
+        return {
+            "date_crawled_pages": date_pages,
+            "channel_crawled_pages": channel_pages,
+        }
 
     def _graph_analyze(self, state: WorkflowState) -> dict[str, Any]:
-        selected_candidates = state["selected_candidates"]
-        crawled_pages = state["crawled_pages"]
-        analysis = self._analyze_latest_posting(selected_candidates, crawled_pages)
+        date_pages = state.get("date_crawled_pages", [])
+        channel_pages = state.get("channel_crawled_pages", [])
+        analysis = self._combine_agent_results(date_pages, channel_pages)
         return {"analysis": analysis}
 
     def _graph_persist(self, state: WorkflowState) -> dict[str, Any]:
         selected_candidates = state["selected_candidates"]
         missing_candidates = state.get("missing_candidates", [])
-        crawled_pages = state["crawled_pages"]
+        date_pages = state.get("date_crawled_pages", [])
+        channel_pages = state.get("channel_crawled_pages", [])
+        crawled_pages = [*date_pages, *channel_pages]
         analysis = state["analysis"]
         changes = self._build_changes(crawled_pages, analysis)
         result = WorkflowResult(
@@ -95,6 +109,7 @@ class JobWatchWorkflow:
         )
 
         self._write_outputs(result)
+        print("结果已生成")
         return {"result": result, "changes": changes}
 
     def _select_companies(self) -> list[CompanyCandidate]:
@@ -133,31 +148,141 @@ class JobWatchWorkflow:
         missing = self._finalize_missing_candidates(selected, missing_candidates)
         return {"selected": selected, "missing": missing}
 
-    def _analyze_latest_posting(
-        self,
-        selected_companies: list[CompanyCandidate],
-        crawled_pages: list[CrawledPage],
-    ) -> AnalysisResult:
-        if isinstance(self.backend, OpenAICompatibleBackend):
-            raw_output = self.backend.chat(
-                build_analysis_messages(
-                    self.config.job_role,
-                    [candidate.to_dict() for candidate in selected_companies],
-                    [page.to_dict() for page in crawled_pages],
+    def _combine_agent_results(self, date_pages: list[CrawledPage], channel_pages: list[CrawledPage]) -> AnalysisResult:
+        latest_company = ""
+        latest_posted_at = ""
+        latest_confidence = "low"
+        for page in date_pages:
+            if page.latest_posted_at and not latest_posted_at:
+                latest_company = page.company
+                latest_posted_at = page.latest_posted_at
+                latest_confidence = page.decision_confidence or "low"
+        if not latest_company and date_pages:
+            latest_company = date_pages[0].company
+
+        channel_status = "unknown"
+        channel_confidence = "low"
+        for page in channel_pages:
+            if page.channel_status in {"open", "closed"}:
+                channel_status = page.channel_status
+                channel_confidence = page.decision_confidence or "high"
+                break
+
+        confidence = latest_confidence if latest_confidence != "low" else channel_confidence
+        return AnalysisResult(
+            job_role=self.config.job_role,
+            latest_company=latest_company,
+            latest_posted_at=latest_posted_at,
+            channel_status=channel_status,
+            confidence=confidence,
+        )
+
+    def _crawl_time_pages(self, candidates: list[CompanyCandidate]) -> list[CrawledPage]:
+        return [self._crawl_time_agent(candidate) for candidate in candidates]
+
+    def _crawl_channel_pages(self, candidates: list[CompanyCandidate]) -> list[CrawledPage]:
+        return [self._crawl_channel_agent(candidate) for candidate in candidates]
+
+    def _crawl_time_agent(self, candidate: CompanyCandidate) -> CrawledPage:
+        visited_urls: list[str] = []
+        current_url = candidate.recruitment_url
+        final_page: CrawledPage | None = None
+
+        for _ in range(3):
+            page = crawl_url(
+                candidate.name,
+                current_url,
+                timeout_seconds=self.config.runtime.timeout_seconds,
+                max_crawl_chars=self.config.runtime.max_crawl_chars,
+                max_links_per_page=self.config.runtime.max_links_per_page,
+            )
+            print(f"公司 {candidate.name} 时间 agent 已爬取页面: {page.page_url}")
+            visited_urls.append(page.page_url)
+            decision = extract_json_object(
+                self.backend.chat(
+                    build_latest_date_messages(
+                        self.config.job_role,
+                        candidate.name,
+                        page.page_url,
+                        page.title,
+                        page.text,
+                        page.links,
+                    )
                 )
             )
-            payload = extract_json_object(raw_output)
-            analysis = AnalysisResult(
-                job_role=str(payload.get("job_role", self.config.job_role)),
-                latest_company=str(payload.get("latest_company", "")),
-                latest_posted_at=str(payload.get("latest_posted_at", "")),
-                channel_status=str(payload.get("channel_status", "unknown")),
-                confidence=str(payload.get("confidence", "low")),
-            )
-            return analysis
+            page.is_sufficient = bool(decision.get("is_sufficient"))
+            page.decision_reason = str(decision.get("reason", "")).strip()
+            page.next_hops = self._normalize_next_hops(page.links, decision.get("next_hops", []), page.page_url)
+            page.visited_urls = list(visited_urls)
+            page.task_type = "date"
+            page.latest_posted_at = str(decision.get("latest_posted_at", "")).strip()
+            page.decision_confidence = str(decision.get("confidence", "low")).strip() or "low"
+            page.date_candidates = [page.latest_posted_at] if page.latest_posted_at else list(page.date_candidates)
+            final_page = page
+            if page.is_sufficient or not page.next_hops:
+                break
+            current_url = page.next_hops[0]
 
-        analysis = analyze_latest_posting(self.config.job_role, selected_companies, crawled_pages)
-        return analysis
+        latest_posted_at = final_page.latest_posted_at if final_page else ""
+        print(f"公司 {candidate.name} 时间 agent 已完成，最新发布日期: {latest_posted_at or '未找到'}")
+        return final_page or crawl_company_page(candidate)
+
+    def _crawl_channel_agent(self, candidate: CompanyCandidate) -> CrawledPage:
+        visited_urls: list[str] = []
+        current_url = candidate.recruitment_url
+        final_page: CrawledPage | None = None
+
+        for _ in range(3):
+            page = crawl_url(
+                candidate.name,
+                current_url,
+                timeout_seconds=self.config.runtime.timeout_seconds,
+                max_crawl_chars=self.config.runtime.max_crawl_chars,
+                max_links_per_page=self.config.runtime.max_links_per_page,
+            )
+            print(f"公司 {candidate.name} 通道 agent 已爬取页面: {page.page_url}")
+            visited_urls.append(page.page_url)
+            decision = extract_json_object(
+                self.backend.chat(
+                    build_channel_status_messages(
+                        self.config.job_role,
+                        candidate.name,
+                        page.page_url,
+                        page.title,
+                        page.text,
+                        page.links,
+                    )
+                )
+            )
+            page.is_sufficient = bool(decision.get("is_sufficient"))
+            page.decision_reason = str(decision.get("reason", "")).strip()
+            page.next_hops = self._normalize_next_hops(page.links, decision.get("next_hops", []), page.page_url)
+            page.visited_urls = list(visited_urls)
+            page.task_type = "channel"
+            page.channel_status = str(decision.get("channel_status", page.channel_status or "unknown")).strip() or "unknown"
+            page.decision_confidence = str(decision.get("confidence", "low")).strip() or "low"
+            final_page = page
+            if page.is_sufficient or not page.next_hops:
+                break
+            current_url = page.next_hops[0]
+
+        channel_status = final_page.channel_status if final_page else "unknown"
+        print(f"公司 {candidate.name} 通道 agent 已完成，通道状态: {channel_status}")
+        return final_page or crawl_company_page(candidate)
+
+    @staticmethod
+    def _normalize_next_hops(available_links: list[str], recommended_links: Any, page_url: str) -> list[str]:
+        available = {link.strip() for link in available_links if isinstance(link, str) and link.strip()}
+        normalized: list[str] = []
+        if not isinstance(recommended_links, list):
+            return normalized
+        for item in recommended_links:
+            link = str(item).strip()
+            if not link or link == page_url:
+                continue
+            if link in available and link not in normalized:
+                normalized.append(link)
+        return normalized[:3]
 
     def _parse_company_candidates(self, payload: dict[str, Any]) -> tuple[list[CompanyCandidate], list[dict[str, Any]]]:
         raw_companies = payload.get("companies", [])
@@ -347,53 +472,110 @@ class JobWatchWorkflow:
         return payload if isinstance(payload, dict) else {}
 
     def _write_outputs(self, result: WorkflowResult) -> None:
-        snapshot_payload = {
-            "job_role": result.job_role,
-            "top_x": result.top_x,
-            "selected_companies": [self._compact_candidate(candidate) for candidate in result.selected_companies],
-            "missing_companies": result.missing_companies,
-            "crawled_pages": [self._compact_page(page) for page in result.crawled_pages],
-            "analysis": {
-                "job_role": result.analysis.job_role,
-                "latest_company": result.analysis.latest_company,
-                "latest_posted_at": result.analysis.latest_posted_at,
-                "channel_status": result.analysis.channel_status,
-                "confidence": result.analysis.confidence,
-            },
-            "changes": result.changes,
+        selected_companies = [self._compact_candidate(candidate) for candidate in result.selected_companies]
+        crawled_pages = [self._compact_page(page) for page in result.crawled_pages]
+        analysis_payload = {
+            "job_role": result.analysis.job_role,
+            "latest_company": result.analysis.latest_company,
+            "latest_posted_at": result.analysis.latest_posted_at,
+            "channel_status": result.analysis.channel_status,
+            "confidence": result.analysis.confidence,
         }
-        payload = {
+        metadata_payload = {
             "job_role": result.job_role,
             "top_x": result.top_x,
-            "selected_companies": [self._compact_candidate(candidate) for candidate in result.selected_companies],
+            "summary": result.summary,
+        }
+        selection_payload = {
+            "selected_companies": selected_companies,
             "missing_companies": result.missing_companies,
-            "crawled_pages": [self._compact_page(page) for page in result.crawled_pages],
-            "analysis": {
-                "job_role": result.analysis.job_role,
-                "latest_company": result.analysis.latest_company,
-                "latest_posted_at": result.analysis.latest_posted_at,
-                "channel_status": result.analysis.channel_status,
-                "confidence": result.analysis.confidence,
-            },
+        }
+        crawl_payload = {
+            "pages": crawled_pages,
+        }
+        paths_payload = {
             "report_path": result.report_path,
             "result_path": result.result_path,
             "snapshot_path": result.snapshot_path,
-            "summary": result.summary,
-            "changes": result.changes,
-            "error": result.error,
         }
+        snapshot_payload = {
+            "metadata": metadata_payload,
+            "selection": selection_payload,
+            "crawl": crawl_payload,
+            "analysis": analysis_payload,
+            "changes": result.changes,
+            "structure_note": "selection=公司筛选结果; crawl=爬取页面结果; analysis=最终判断",
+            # Backward-compatible top-level fields.
+            "job_role": result.job_role,
+            "top_x": result.top_x,
+            "selected_companies": selected_companies,
+            "missing_companies": result.missing_companies,
+            "crawled_pages": crawled_pages,
+        }
+        payload = self._build_result_payload(result.selected_companies, result.crawled_pages)
         Path(result.result_path).parent.mkdir(parents=True, exist_ok=True)
         Path(result.snapshot_path).parent.mkdir(parents=True, exist_ok=True)
         Path(result.report_path).parent.mkdir(parents=True, exist_ok=True)
         Path(result.result_path).write_text(
-            json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
+            json.dumps(payload, ensure_ascii=False, indent=2),
             encoding="utf-8",
         )
         Path(result.snapshot_path).write_text(
-            json.dumps(snapshot_payload, ensure_ascii=False, separators=(",", ":")),
+            json.dumps(snapshot_payload, ensure_ascii=False, indent=2),
             encoding="utf-8",
         )
         Path(result.report_path).write_text(self._render_markdown(result), encoding="utf-8")
+
+    def _build_result_payload(
+        self,
+        selected_companies: list[CompanyCandidate],
+        crawled_pages: list[CrawledPage],
+    ) -> dict[str, Any]:
+        pages_by_company: dict[str, dict[str, Any]] = {}
+        for page in crawled_pages:
+            key = page.company.strip().lower()
+            record = pages_by_company.setdefault(
+                key,
+                {
+                    "company": page.company,
+                    "website": "",
+                    "latest_posted_at": "",
+                    "channel_status": "unknown",
+                },
+            )
+            if page.page_url and not record["website"]:
+                record["website"] = page.page_url
+            if page.latest_posted_at and not record["latest_posted_at"]:
+                record["latest_posted_at"] = page.latest_posted_at
+            if page.channel_status in {"open", "closed"}:
+                record["channel_status"] = page.channel_status
+
+        companies: list[dict[str, Any]] = []
+        for candidate in selected_companies:
+            key = candidate.name.strip().lower()
+            record = pages_by_company.get(
+                key,
+                {
+                    "company": candidate.name,
+                    "website": candidate.recruitment_url,
+                    "latest_posted_at": "",
+                    "channel_status": "unknown",
+                },
+            )
+            if not record.get("website"):
+                record = {**record, "website": candidate.recruitment_url}
+            companies.append(
+                {
+                    "company": record.get("company", candidate.name),
+                    "website": record.get("website", candidate.recruitment_url),
+                    "latest_posted_at": record.get("latest_posted_at", ""),
+                    "channel_status": record.get("channel_status", "unknown"),
+                }
+            )
+
+        return {
+            "companies": companies,
+        }
 
     def _write_selection_output(
         self,
@@ -404,13 +586,13 @@ class JobWatchWorkflow:
         self.config.selection_path.write_text(
             json.dumps(
                 {
-                    "job_role": self.config.job_role,
-                    "top_x": self.config.top_x,
-                    "selected_companies": [self._compact_candidate(candidate) for candidate in selected_candidates],
-                    "missing_companies": missing_candidates,
+                    "selection": {
+                        "selected_companies": [self._compact_candidate(candidate) for candidate in selected_candidates],
+                    },
+                    "missing": missing_candidates,
                 },
                 ensure_ascii=False,
-                separators=(",", ":"),
+                indent=2,
             ),
             encoding="utf-8",
         )
