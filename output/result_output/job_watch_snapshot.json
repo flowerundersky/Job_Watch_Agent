@@ -2,14 +2,14 @@
   "metadata": {
     "job_role": "大语言模型应用开发工程师",
     "top_x": 3,
-    "summary": "job=大语言模型应用开发工程师; companies=3; latest=未识别; status=开启"
+    "summary": "job=大语言模型应用开发工程师; companies=3; period=未识别; status=开启"
   },
   "selection": {
     "selected_companies": [
       {
         "rank": 1,
         "name": "百度",
-        "recruitment_url": "https://talent.baidu.com/jobs/social-list"
+        "recruitment_url": "https://talent.baidu.com/"
       },
       {
         "rank": 2,
@@ -28,15 +28,23 @@
     "pages": [
       {
         "company": "百度",
-        "page_url": "about:blank",
+        "page_url": "http://campus.baidu.com/#/project?id=31&rowOrder=5",
+        "recruitment_period": "",
+        "application_start": "",
+        "application_deadline": "",
+        "period_evidence": "",
         "date": [],
         "site_type": "playwright",
-        "channel_status": "unknown",
+        "channel_status": "open",
         "error": ""
       },
       {
         "company": "阿里巴巴",
         "page_url": "https://campus-talent.alibaba.com/campus/index",
+        "recruitment_period": "",
+        "application_start": "",
+        "application_deadline": "",
+        "period_evidence": "",
         "date": [
           "2026.11-20"
         ],
@@ -46,15 +54,25 @@
       },
       {
         "company": "腾讯",
-        "page_url": "javascript:void(0)",
-        "date": [],
+        "page_url": "https://careers.tencent.com/",
+        "recruitment_period": "",
+        "application_start": "",
+        "application_deadline": "",
+        "period_evidence": "",
+        "date": [
+          "11月11日"
+        ],
         "site_type": "playwright",
-        "channel_status": "unknown",
-        "error": "Page.goto: net::ERR_ABORTED at javascript:void(0)\nCall log:\n  - navigating to \"javascript:void(0)\", waiting until \"domcontentloaded\"\n"
+        "channel_status": "open",
+        "error": ""
       },
       {
         "company": "百度",
-        "page_url": "about:blank",
+        "page_url": "http://campus.baidu.com/#/project?id=31&rowOrder=5",
+        "recruitment_period": "",
+        "application_start": "",
+        "application_deadline": "",
+        "period_evidence": "",
         "date": [],
         "site_type": "playwright",
         "channel_status": "unknown",
@@ -63,6 +81,10 @@
       {
         "company": "阿里巴巴",
         "page_url": "https://campus-talent.alibaba.com/campus/index",
+        "recruitment_period": "",
+        "application_start": "",
+        "application_deadline": "",
+        "period_evidence": "",
         "date": [
           "2026.11-20"
         ],
@@ -72,16 +94,27 @@
       },
       {
         "company": "腾讯",
-        "page_url": "javascript:void(0)",
-        "date": [],
+        "page_url": "https://careers.tencent.com/",
+        "recruitment_period": "",
+        "application_start": "",
+        "application_deadline": "",
+        "period_evidence": "",
+        "date": [
+          "11月11日"
+        ],
         "site_type": "playwright",
         "channel_status": "unknown",
-        "error": "Page.goto: net::ERR_ABORTED at javascript:void(0)\nCall log:\n  - navigating to \"javascript:void(0)\", waiting until \"domcontentloaded\"\n"
+        "error": ""
       }
     ]
   },
   "analysis": {
     "job_role": "大语言模型应用开发工程师",
+    "period_company": "百度",
+    "recruitment_period": "",
+    "application_start": "",
+    "application_deadline": "",
+    "period_evidence": "",
     "latest_company": "百度",
     "latest_posted_at": "",
     "channel_status": "open",
@@ -90,9 +123,72 @@
   "changes": {
     "has_previous": true,
     "updated": true,
-    "status_changed": true,
+    "status_changed": false,
     "latest_changed": true,
-    "updated_companies": []
+    "period_changed": true,
+    "deadline_changed": true,
+    "updated_companies": [
+      {
+        "company": "百度",
+        "previous_period": "",
+        "current_period": "",
+        "previous_deadline": "",
+        "current_deadline": "",
+        "previous_status": "unknown",
+        "current_status": "open"
+      },
+      {
+        "company": "阿里巴巴",
+        "previous_period": "",
+        "current_period": "",
+        "previous_deadline": "",
+        "current_deadline": "",
+        "previous_status": "open",
+        "current_status": "open"
+      },
+      {
+        "company": "腾讯",
+        "previous_period": "",
+        "current_period": "",
+        "previous_deadline": "",
+        "current_deadline": "",
+        "previous_status": "unknown",
+        "current_status": "open"
+      },
+      {
+        "company": "百度",
+        "previous_period": "",
+        "current_period": "",
+        "previous_deadline": "",
+        "current_deadline": "",
+        "previous_status": "unknown",
+        "current_status": "unknown"
+      },
+      {
+        "company": "阿里巴巴",
+        "previous_period": "",
+        "current_period": "",
+        "previous_deadline": "",
+        "current_deadline": "",
+        "previous_status": "open",
+        "current_status": "open"
+      },
+      {
+        "company": "腾讯",
+        "previous_period": "",
+        "current_period": "",
+        "previous_deadline": "",
+        "current_deadline": "",
+        "previous_status": "unknown",
+        "current_status": "unknown"
+      }
+    ]
+  },
+  "paths": {
+    "report_path": "output/result_output/job_watch_report.md",
+    "result_path": "output/result_output/job_watch_result.json",
+    "snapshot_path": "output/result_output/job_watch_snapshot.json",
+    "trace_path": "output/result_output/job_watch_trace.md"
   },
   "structure_note": "selection=公司筛选结果; crawl=爬取页面结果; analysis=最终判断",
   "job_role": "大语言模型应用开发工程师",
@@ -101,7 +197,7 @@
     {
       "rank": 1,
       "name": "百度",
-      "recruitment_url": "https://talent.baidu.com/jobs/social-list"
+      "recruitment_url": "https://talent.baidu.com/"
     },
     {
       "rank": 2,
@@ -118,15 +214,23 @@
   "crawled_pages": [
     {
       "company": "百度",
-      "page_url": "about:blank",
+      "page_url": "http://campus.baidu.com/#/project?id=31&rowOrder=5",
+      "recruitment_period": "",
+      "application_start": "",
+      "application_deadline": "",
+      "period_evidence": "",
       "date": [],
       "site_type": "playwright",
-      "channel_status": "unknown",
+      "channel_status": "open",
       "error": ""
     },
     {
       "company": "阿里巴巴",
       "page_url": "https://campus-talent.alibaba.com/campus/index",
+      "recruitment_period": "",
+      "application_start": "",
+      "application_deadline": "",
+      "period_evidence": "",
       "date": [
         "2026.11-20"
       ],
@@ -136,15 +240,25 @@
     },
     {
       "company": "腾讯",
-      "page_url": "javascript:void(0)",
-      "date": [],
+      "page_url": "https://careers.tencent.com/",
+      "recruitment_period": "",
+      "application_start": "",
+      "application_deadline": "",
+      "period_evidence": "",
+      "date": [
+        "11月11日"
+      ],
       "site_type": "playwright",
-      "channel_status": "unknown",
-      "error": "Page.goto: net::ERR_ABORTED at javascript:void(0)\nCall log:\n  - navigating to \"javascript:void(0)\", waiting until \"domcontentloaded\"\n"
+      "channel_status": "open",
+      "error": ""
     },
     {
       "company": "百度",
-      "page_url": "about:blank",
+      "page_url": "http://campus.baidu.com/#/project?id=31&rowOrder=5",
+      "recruitment_period": "",
+      "application_start": "",
+      "application_deadline": "",
+      "period_evidence": "",
       "date": [],
       "site_type": "playwright",
       "channel_status": "unknown",
@@ -153,6 +267,10 @@
     {
       "company": "阿里巴巴",
       "page_url": "https://campus-talent.alibaba.com/campus/index",
+      "recruitment_period": "",
+      "application_start": "",
+      "application_deadline": "",
+      "period_evidence": "",
       "date": [
         "2026.11-20"
       ],
@@ -162,11 +280,17 @@
     },
     {
       "company": "腾讯",
-      "page_url": "javascript:void(0)",
-      "date": [],
+      "page_url": "https://careers.tencent.com/",
+      "recruitment_period": "",
+      "application_start": "",
+      "application_deadline": "",
+      "period_evidence": "",
+      "date": [
+        "11月11日"
+      ],
       "site_type": "playwright",
       "channel_status": "unknown",
-      "error": "Page.goto: net::ERR_ABORTED at javascript:void(0)\nCall log:\n  - navigating to \"javascript:void(0)\", waiting until \"domcontentloaded\"\n"
+      "error": ""
     }
   ]
 }

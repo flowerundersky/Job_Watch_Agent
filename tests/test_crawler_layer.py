@@ -8,7 +8,7 @@ import pytest
 
 from src.crawler import crawl_company_pages, load_company_candidates_from_selection
 from src.models import CompanyCandidate
-from src.prompt import build_channel_status_messages, build_latest_date_messages
+from src.prompt import build_channel_status_messages, build_recruitment_period_messages
 
 
 SELECTION_PATHS = (
@@ -58,14 +58,17 @@ def test_crawler_can_crawl_selected_company_pages() -> None:
                         "company": page.company,
                         "page_url": page.page_url,
                         "site_type": page.site_type,
+                        "recruitment_period": page.recruitment_period,
+                        "application_start": page.application_start,
+                        "application_deadline": page.application_deadline,
                         "channel_status": page.channel_status,
                         "date_candidates": page.date_candidates[:1],
                         "observation_summary": {
                             "title": page.observation.get("title", ""),
                             "heading_count": len(page.observation.get("headings", [])),
                             "section_count": len(page.observation.get("sections", [])),
-                            "interactive_element_count": len(page.observation.get("interactive_elements", [])),
-                            "link_count": len(page.observation.get("links", [])),
+                            "menu_count": len(page.observation.get("menus", [])),
+                            "action_count": len(page.observation.get("actions", [])),
                         },
                         "error": page.error,
                     }
@@ -79,7 +82,7 @@ def test_crawler_can_crawl_selected_company_pages() -> None:
                     }
                     for page in pages
                 ],
-                "latest_date_request": build_latest_date_messages(
+                "recruitment_period_request": build_recruitment_period_messages(
                     job_role,
                     selected_candidates[0].name if selected_candidates else "",
                     pages[0].page_url if pages else "",

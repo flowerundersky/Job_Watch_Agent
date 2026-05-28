@@ -24,6 +24,10 @@ class CrawledPage:
     task_type: str = ""
     site_type: str = "html"
     channel_status: str = "unknown"
+    recruitment_period: str = ""
+    application_start: str = ""
+    application_deadline: str = ""
+    period_evidence: str = ""
     latest_posted_at: str = ""
     decision_confidence: str = "low"
     is_sufficient: bool = False
@@ -33,7 +37,11 @@ class CrawledPage:
     links: list[str] = field(default_factory=list)
     observation: dict[str, Any] = field(default_factory=dict)
     next_hops: list[str] = field(default_factory=list)
+    selected_menu: str = ""
+    selected_action_type: str = ""
+    action_chain: list[dict[str, Any]] = field(default_factory=list)
     visited_urls: list[str] = field(default_factory=list)
+    trace_steps: list[dict[str, Any]] = field(default_factory=list)
     decision_reason: str = ""
     error: str = ""
 
@@ -43,11 +51,16 @@ class CrawledPage:
 
 @dataclass(slots=True)
 class AnalysisResult:
-    job_role: str
-    latest_company: str
-    latest_posted_at: str
-    channel_status: str
-    confidence: str
+    job_role: str = ""
+    period_company: str = ""
+    recruitment_period: str = ""
+    application_start: str = ""
+    application_deadline: str = ""
+    period_evidence: str = ""
+    latest_company: str = ""
+    latest_posted_at: str = ""
+    channel_status: str = "unknown"
+    confidence: str = "low"
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)

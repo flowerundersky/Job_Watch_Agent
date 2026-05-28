@@ -20,6 +20,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"report: {result.report_path}")
     print(f"result: {result.result_path}")
     print(f"snapshot: {result.snapshot_path}")
+    print(f"trace: {config.trace_path}")
     return 0
 
 

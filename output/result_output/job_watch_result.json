@@ -2,21 +2,33 @@
   "companies": [
     {
       "company": "百度",
-      "website": "about:blank",
+      "website": "http://campus.baidu.com/#/project?id=31&rowOrder=5",
+      "recruitment_period": "",
+      "application_start": "",
+      "application_deadline": "",
+      "period_evidence": "",
       "latest_posted_at": "",
-      "channel_status": "unknown"
+      "channel_status": "open"
     },
     {
       "company": "阿里巴巴",
       "website": "https://campus-talent.alibaba.com/campus/index",
+      "recruitment_period": "",
+      "application_start": "",
+      "application_deadline": "",
+      "period_evidence": "",
       "latest_posted_at": "",
       "channel_status": "open"
     },
     {
       "company": "腾讯",
-      "website": "javascript:void(0)",
+      "website": "https://careers.tencent.com/",
+      "recruitment_period": "",
+      "application_start": "",
+      "application_deadline": "",
+      "period_evidence": "",
       "latest_posted_at": "",
-      "channel_status": "unknown"
+      "channel_status": "open"
     }
   ]
 }

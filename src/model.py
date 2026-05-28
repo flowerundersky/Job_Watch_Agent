@@ -70,8 +70,21 @@ class HeuristicBackend:
             if message.get("role") == "system"
         )
         last_user = _last_user_message(messages)
-        if "latest_posted_at" in system_text or "招聘信息最新发布日期" in system_text or "时间 agent" in system_text:
-            return json.dumps(self._latest_date_agent(last_user), ensure_ascii=False, indent=2)
+        if "点击链路选择" in system_text or "hover_targets" in system_text:
+            payload = _extract_json_object(last_user, "悬停证据")
+            hover_targets = payload.get("hover_targets") if isinstance(payload.get("hover_targets"), list) else []
+            return json.dumps(
+                {"next_action": self._select_target([item for item in hover_targets if isinstance(item, dict)]), "reason": "选择最相关的悬停目标"},
+                ensure_ascii=False,
+                indent=2,
+            )
+        if (
+            "recruitment_period" in system_text
+            or "官方招聘活动时间安排" in system_text
+            or "时间 agent" in system_text
+            or "latest_posted_at" in system_text
+        ):
+            return json.dumps(self._recruitment_period_agent(last_user), ensure_ascii=False, indent=2)
         if "channel_status" in system_text or "校园招聘通道" in system_text or "通道 agent" in system_text:
             return json.dumps(self._channel_status_agent(last_user), ensure_ascii=False, indent=2)
         return json.dumps(self._select(last_user), ensure_ascii=False, indent=2)
@@ -94,48 +107,72 @@ class HeuristicBackend:
             "companies": [candidate.to_dict() for candidate in candidates],
         }
 
-    def _latest_date_agent(self, prompt_text: str) -> dict[str, Any]:
+    def _recruitment_period_agent(self, prompt_text: str) -> dict[str, Any]:
         job_role = _extract_after_label(prompt_text, "岗位") or "招聘岗位"
         payload = _extract_json_object(prompt_text, "页面证据")
-        title = str(payload.get("title", ""))
-        text = str(payload.get("text", ""))
-        links = [str(item).strip() for item in payload.get("links", []) if str(item).strip()]
+        observation = payload.get("observation") if isinstance(payload.get("observation"), dict) else {}
+        title = str(observation.get("title") or payload.get("title", ""))
+        text = " ".join(
+            [
+                str(observation.get("content") or observation.get("visible_text_excerpt", "")),
+                str(payload.get("text", "")),
+                json.dumps(observation.get("sections", []), ensure_ascii=False),
+            ]
+        )
+        menus = observation.get("menus") if isinstance(observation.get("menus"), list) else []
+        actions = observation.get("actions") if isinstance(observation.get("actions"), list) else []
+        click_targets = self._click_targets(menus, actions)
         compact = f"{title} {text}".lower()
         candidates = self._extract_date_candidates(compact)
-        if candidates:
-            latest_posted_at = candidates[0]
+        if candidates and any(keyword in compact for keyword in ("报名", "投递", "网申", "截止", "时间", "日程", "流程", "批次")):
+            recruitment_period = " - ".join(candidates[:2]) if len(candidates) >= 2 else candidates[0]
             return {
                 "job_role": job_role,
                 "is_sufficient": True,
-                "reason": "页面已包含明确日期信号",
-                "next_hops": [],
-                "latest_company": str(payload.get("company", "")),
-                "latest_posted_at": latest_posted_at,
+                "reason": "页面已包含官方招聘活动时间安排信号",
+                "next_action": {"type": "", "text": ""},
+                "period_company": str(payload.get("company", "")),
+                "recruitment_period": recruitment_period,
+                "application_start": candidates[0] if len(candidates) >= 2 else "",
+                "application_deadline": candidates[-1],
+                "period_evidence": "页面包含报名/投递/网申/截止/流程等时间安排语义",
                 "confidence": "high",
             }
         return {
             "job_role": job_role,
             "is_sufficient": False,
-            "reason": "页面没有明确日期，需要继续看下一跳",
-            "next_hops": links[:2],
-            "latest_company": str(payload.get("company", "")),
-            "latest_posted_at": "",
+            "reason": "页面没有明确招聘时间段或投递截止时间，需要继续看下一跳",
+            "next_action": self._select_target(click_targets),
+            "period_company": str(payload.get("company", "")),
+            "recruitment_period": "",
+            "application_start": "",
+            "application_deadline": "",
+            "period_evidence": "",
             "confidence": "low",
         }
 
     def _channel_status_agent(self, prompt_text: str) -> dict[str, Any]:
         job_role = _extract_after_label(prompt_text, "岗位") or "招聘岗位"
         payload = _extract_json_object(prompt_text, "页面证据")
-        title = str(payload.get("title", ""))
-        text = str(payload.get("text", ""))
-        links = [str(item).strip() for item in payload.get("links", []) if str(item).strip()]
+        observation = payload.get("observation") if isinstance(payload.get("observation"), dict) else {}
+        title = str(observation.get("title") or payload.get("title", ""))
+        text = " ".join(
+            [
+                str(observation.get("content") or observation.get("visible_text_excerpt", "")),
+                str(payload.get("text", "")),
+                json.dumps(observation.get("sections", []), ensure_ascii=False),
+            ]
+        )
+        menus = observation.get("menus") if isinstance(observation.get("menus"), list) else []
+        actions = observation.get("actions") if isinstance(observation.get("actions"), list) else []
+        click_targets = self._click_targets(menus, actions)
         compact = f"{title} {text}".lower()
         if any(keyword in compact for keyword in ("已结束", "停止招聘", "暂停招聘", "已关闭", "招聘结束", "未开启")):
             return {
                 "job_role": job_role,
                 "is_sufficient": True,
                 "reason": "页面已包含明确关闭信号",
-                "next_hops": [],
+                "next_action": {"type": "", "text": ""},
                 "channel_status": "closed",
                 "confidence": "high",
             }
@@ -144,7 +181,7 @@ class HeuristicBackend:
                 "job_role": job_role,
                 "is_sufficient": True,
                 "reason": "页面已包含明确开启信号",
-                "next_hops": [],
+                "next_action": {"type": "", "text": ""},
                 "channel_status": "open",
                 "confidence": "high",
             }
@@ -152,10 +189,31 @@ class HeuristicBackend:
             "job_role": job_role,
             "is_sufficient": False,
             "reason": "页面没有明确开放或关闭信号，需要继续看下一跳",
-            "next_hops": links[:2],
+            "next_action": self._select_target(click_targets),
             "channel_status": "unknown",
             "confidence": "low",
         }
+
+    @staticmethod
+    def _click_targets(menus: list[Any], actions: list[Any]) -> list[dict[str, str]]:
+        targets: list[dict[str, str]] = []
+        for target_type, items in (("menu", menus), ("action", actions)):
+            for item in items:
+                if not isinstance(item, dict):
+                    continue
+                text = str(item.get("text", "")).strip()
+                if text:
+                    targets.append({"type": target_type, "text": text})
+        return targets
+
+    @staticmethod
+    def _select_target(targets: list[dict[str, str]]) -> dict[str, str]:
+        preferred = ("校园招聘", "校招", "实习就业", "实习", "招聘动态", "招聘公告", "报名", "投递", "职位", "查看岗位")
+        for keyword in preferred:
+            for target in targets:
+                if keyword in target["text"]:
+                    return target
+        return targets[0] if targets else {"type": "", "text": ""}
 
     def _extract_date_candidates(self, text: str) -> list[str]:
         candidates: list[str] = []

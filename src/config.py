@@ -11,12 +11,15 @@ import yaml
 class RuntimeSettings:
     output_dir: Path = Path("output")
     timeout_seconds: int = 15
+    browser_name: str = "firefox"
+    render_retries: int = 2
     max_crawl_chars: int = 12000
     max_links_per_page: int = 20
     report_filename: str = "result_output/job_watch_report.md"
     result_filename: str = "result_output/job_watch_result.json"
     snapshot_filename: str = "result_output/job_watch_snapshot.json"
     selection_filename: str = "result_output/job_watch_selection.json"
+    trace_filename: str = "result_output/job_watch_trace.md"
 
 
 @dataclass(slots=True)
@@ -54,6 +57,10 @@ class AppConfig:
     def selection_path(self) -> Path:
         return self.runtime.output_dir / self.runtime.selection_filename
 
+    @property
+    def trace_path(self) -> Path:
+        return self.runtime.output_dir / self.runtime.trace_filename
+
 
 def _read_yaml(path: Path) -> dict[str, Any]:
     if not path.exists():
@@ -67,12 +74,15 @@ def _to_runtime_settings(data: dict[str, Any] | None) -> RuntimeSettings:
     return RuntimeSettings(
         output_dir=Path(data.get("output_dir", "output")),
         timeout_seconds=int(data.get("timeout_seconds", 15)),
+        browser_name=str(data.get("browser_name", "firefox")),
+        render_retries=int(data.get("render_retries", 2)),
         max_crawl_chars=int(data.get("max_crawl_chars", 12000)),
         max_links_per_page=int(data.get("max_links_per_page", 20)),
         report_filename=str(data.get("report_filename", "result_output/job_watch_report.md")),
         result_filename=str(data.get("result_filename", "result_output/job_watch_result.json")),
         snapshot_filename=str(data.get("snapshot_filename", "result_output/job_watch_snapshot.json")),
         selection_filename=str(data.get("selection_filename", "result_output/job_watch_selection.json")),
+        trace_filename=str(data.get("trace_filename", "result_output/job_watch_trace.md")),
     )
 
 

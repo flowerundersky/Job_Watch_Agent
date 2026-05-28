@@ -14,5 +14,8 @@ model_backend:
 runtime:
   output_dir: output
   timeout_seconds: 30
+  browser_name: firefox
+  render_retries: 2
   max_crawl_chars: 12000
   max_links_per_page: 20
+  trace_filename: result_output/job_watch_trace.md

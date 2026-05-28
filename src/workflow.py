@@ -10,14 +10,15 @@ from typing import Any, TypedDict
 from langgraph.graph import END, START, StateGraph
 
 from .config import AppConfig
-from .crawler import crawl_company_page, crawl_url
+from .crawler import crawl_company_page, crawl_url, resolve_click_target_to_url
 from .model import OpenAICompatibleBackend, create_backend
 from .models import AnalysisResult, CompanyCandidate, CrawledPage, WorkflowResult
 from .prompt import (
     build_channel_status_messages,
+    build_click_target_messages,
     build_company_selection_messages,
     build_company_selection_retry_message,
-    build_latest_date_messages,
+    build_recruitment_period_messages,
     extract_json_object,
 )
 
@@ -149,16 +150,24 @@ class JobWatchWorkflow:
         return {"selected": selected, "missing": missing}
 
     def _combine_agent_results(self, date_pages: list[CrawledPage], channel_pages: list[CrawledPage]) -> AnalysisResult:
-        latest_company = ""
-        latest_posted_at = ""
-        latest_confidence = "low"
+        period_company = ""
+        recruitment_period = ""
+        application_start = ""
+        application_deadline = ""
+        period_evidence = ""
+        period_confidence = "low"
         for page in date_pages:
-            if page.latest_posted_at and not latest_posted_at:
-                latest_company = page.company
-                latest_posted_at = page.latest_posted_at
-                latest_confidence = page.decision_confidence or "low"
-        if not latest_company and date_pages:
-            latest_company = date_pages[0].company
+            if (page.recruitment_period or page.application_deadline or page.application_start) and not (
+                recruitment_period or application_deadline or application_start
+            ):
+                period_company = page.company
+                recruitment_period = page.recruitment_period
+                application_start = page.application_start
+                application_deadline = page.application_deadline
+                period_evidence = page.period_evidence
+                period_confidence = page.decision_confidence or "low"
+        if not period_company and date_pages:
+            period_company = date_pages[0].company
 
         channel_status = "unknown"
         channel_confidence = "low"
@@ -168,11 +177,16 @@ class JobWatchWorkflow:
                 channel_confidence = page.decision_confidence or "high"
                 break
 
-        confidence = latest_confidence if latest_confidence != "low" else channel_confidence
+        confidence = period_confidence if period_confidence != "low" else channel_confidence
         return AnalysisResult(
             job_role=self.config.job_role,
-            latest_company=latest_company,
-            latest_posted_at=latest_posted_at,
+            period_company=period_company,
+            recruitment_period=recruitment_period,
+            application_start=application_start,
+            application_deadline=application_deadline,
+            period_evidence=period_evidence,
+            latest_company=period_company,
+            latest_posted_at=recruitment_period or application_deadline or application_start,
             channel_status=channel_status,
             confidence=confidence,
         )
@@ -187,76 +201,131 @@ class JobWatchWorkflow:
         visited_urls: list[str] = []
         current_url = candidate.recruitment_url
         final_page: CrawledPage | None = None
+        trace_steps: list[dict[str, Any]] = []
 
-        for _ in range(3):
+        for hop_index in range(1, 4):
             page = crawl_url(
                 candidate.name,
                 current_url,
                 timeout_seconds=self.config.runtime.timeout_seconds,
+                browser_name=self.config.runtime.browser_name,
+                render_retries=self.config.runtime.render_retries,
                 max_crawl_chars=self.config.runtime.max_crawl_chars,
                 max_links_per_page=self.config.runtime.max_links_per_page,
             )
             print(f"公司 {candidate.name} 时间 agent 已爬取页面: {page.page_url}")
             visited_urls.append(page.page_url)
-            decision = extract_json_object(
-                self.backend.chat(
-                    build_latest_date_messages(
-                        self.config.job_role,
-                        candidate.name,
-                        page.page_url,
-                        page.observation,
-                    )
+            raw_model_output = self.backend.chat(
+                build_recruitment_period_messages(
+                    self.config.job_role,
+                    candidate.name,
+                    page.page_url,
+                    page.observation,
                 )
             )
+            decision = extract_json_object(raw_model_output)
             page.is_sufficient = bool(decision.get("is_sufficient"))
             page.decision_reason = str(decision.get("reason", "")).strip()
-            page.next_hops = self._normalize_next_hops(page.links, decision.get("next_hops", []), page.page_url)
+            next_action = {} if page.is_sufficient else self._normalize_next_action(page.observation, decision)
+            page.selected_menu = str(next_action.get("text", ""))
+            page.selected_action_type = str(next_action.get("type", ""))
+            resolved_action = {} if page.is_sufficient else self._resolve_next_action(page.page_url, next_action, "period")
+            page.next_hops = [str(resolved_action.get("url", ""))] if resolved_action.get("url") else []
+            page.action_chain = list(resolved_action.get("chain", [])) if isinstance(resolved_action.get("chain"), list) else []
             page.visited_urls = list(visited_urls)
-            page.task_type = "date"
-            page.latest_posted_at = str(decision.get("latest_posted_at", "")).strip()
+            page.task_type = "period"
+            page.recruitment_period = str(decision.get("recruitment_period", "")).strip()
+            page.application_start = str(decision.get("application_start", "")).strip()
+            page.application_deadline = str(decision.get("application_deadline", "")).strip()
+            page.period_evidence = str(decision.get("period_evidence", "")).strip()
+            page.latest_posted_at = str(
+                decision.get("latest_posted_at")
+                or page.recruitment_period
+                or page.application_deadline
+                or page.application_start
+                or ""
+            ).strip()
             page.decision_confidence = str(decision.get("confidence", "low")).strip() or "low"
             page.date_candidates = [page.latest_posted_at] if page.latest_posted_at else list(page.date_candidates)
+            trace_steps.append(
+                self._build_trace_step(
+                    candidate=candidate,
+                    page=page,
+                    task_type="period",
+                    hop_index=hop_index,
+                    requested_url=current_url,
+                    raw_model_output=raw_model_output,
+                    decision=decision,
+                )
+            )
+            page.trace_steps = list(trace_steps)
             final_page = page
             if page.is_sufficient or not page.next_hops:
                 break
             current_url = page.next_hops[0]
 
-        latest_posted_at = final_page.latest_posted_at if final_page else ""
-        print(f"公司 {candidate.name} 时间 agent 已完成，最新发布日期: {latest_posted_at or '未找到'}")
-        return final_page or crawl_company_page(candidate)
+        recruitment_period = final_page.recruitment_period if final_page else ""
+        print(f"公司 {candidate.name} 时间 agent 已完成，招聘时间段: {recruitment_period or '未找到'}")
+        return final_page or crawl_company_page(
+            candidate,
+            timeout_seconds=self.config.runtime.timeout_seconds,
+            browser_name=self.config.runtime.browser_name,
+            render_retries=self.config.runtime.render_retries,
+            max_crawl_chars=self.config.runtime.max_crawl_chars,
+            max_links_per_page=self.config.runtime.max_links_per_page,
+        )
 
     def _crawl_channel_agent(self, candidate: CompanyCandidate) -> CrawledPage:
         visited_urls: list[str] = []
         current_url = candidate.recruitment_url
         final_page: CrawledPage | None = None
+        trace_steps: list[dict[str, Any]] = []
 
-        for _ in range(3):
+        for hop_index in range(1, 4):
             page = crawl_url(
                 candidate.name,
                 current_url,
                 timeout_seconds=self.config.runtime.timeout_seconds,
+                browser_name=self.config.runtime.browser_name,
+                render_retries=self.config.runtime.render_retries,
                 max_crawl_chars=self.config.runtime.max_crawl_chars,
                 max_links_per_page=self.config.runtime.max_links_per_page,
             )
             print(f"公司 {candidate.name} 通道 agent 已爬取页面: {page.page_url}")
             visited_urls.append(page.page_url)
-            decision = extract_json_object(
-                self.backend.chat(
-                    build_channel_status_messages(
-                        self.config.job_role,
-                        candidate.name,
-                        page.page_url,
-                        page.observation,
-                    )
+            raw_model_output = self.backend.chat(
+                build_channel_status_messages(
+                    self.config.job_role,
+                    candidate.name,
+                    page.page_url,
+                    page.observation,
                 )
             )
+            decision = extract_json_object(raw_model_output)
             page.is_sufficient = bool(decision.get("is_sufficient"))
             page.decision_reason = str(decision.get("reason", "")).strip()
-            page.next_hops = self._normalize_next_hops(page.links, decision.get("next_hops", []), page.page_url)
+            next_action = {} if page.is_sufficient else self._normalize_next_action(page.observation, decision)
+            page.selected_menu = str(next_action.get("text", ""))
+            page.selected_action_type = str(next_action.get("type", ""))
+            resolved_action = {} if page.is_sufficient else self._resolve_next_action(page.page_url, next_action, "channel")
+            page.next_hops = [str(resolved_action.get("url", ""))] if resolved_action.get("url") else []
+            page.action_chain = list(resolved_action.get("chain", [])) if isinstance(resolved_action.get("chain"), list) else []
             page.visited_urls = list(visited_urls)
             page.task_type = "channel"
             page.channel_status = str(decision.get("channel_status", page.channel_status or "unknown")).strip() or "unknown"
             page.decision_confidence = str(decision.get("confidence", "low")).strip() or "low"
+            trace_steps.append(
+                self._build_trace_step(
+                    candidate=candidate,
+                    page=page,
+                    task_type="channel",
+                    hop_index=hop_index,
+                    requested_url=current_url,
+                    raw_model_output=raw_model_output,
+                    decision=decision,
+                )
+            )
+            page.trace_steps = list(trace_steps)
             final_page = page
             if page.is_sufficient or not page.next_hops:
                 break
@@ -264,7 +333,14 @@ class JobWatchWorkflow:
 
         channel_status = final_page.channel_status if final_page else "unknown"
         print(f"公司 {candidate.name} 通道 agent 已完成，通道状态: {channel_status}")
-        return final_page or crawl_company_page(candidate)
+        return final_page or crawl_company_page(
+            candidate,
+            timeout_seconds=self.config.runtime.timeout_seconds,
+            browser_name=self.config.runtime.browser_name,
+            render_retries=self.config.runtime.render_retries,
+            max_crawl_chars=self.config.runtime.max_crawl_chars,
+            max_links_per_page=self.config.runtime.max_links_per_page,
+        )
 
     @staticmethod
     def _normalize_next_hops(available_links: list[str], recommended_links: Any, page_url: str) -> list[str]:
@@ -279,6 +355,137 @@ class JobWatchWorkflow:
             if link in available and link not in normalized:
                 normalized.append(link)
         return normalized[:3]
+
+    @staticmethod
+    def _normalize_next_menu(observation: dict[str, Any], decision: dict[str, Any]) -> str:
+        menus = observation.get("menus") if isinstance(observation.get("menus"), list) else []
+        menu_texts = [
+            str(item.get("text", "")).strip()
+            for item in menus
+            if isinstance(item, dict) and str(item.get("text", "")).strip()
+        ]
+        raw_menu = str(decision.get("next_menu") or "").strip()
+        if raw_menu in menu_texts:
+            return raw_menu
+        for menu_text in menu_texts:
+            if raw_menu and (raw_menu in menu_text or menu_text in raw_menu):
+                return menu_text
+        return ""
+
+    def _normalize_next_action(self, observation: dict[str, Any], decision: dict[str, Any]) -> dict[str, str]:
+        next_action = decision.get("next_action")
+        if not isinstance(next_action, dict):
+            legacy_menu = self._normalize_next_menu(observation, decision)
+            return {"type": "menu", "text": legacy_menu} if legacy_menu else {}
+
+        raw_type = str(next_action.get("type") or "").strip().lower()
+        raw_text = str(next_action.get("text") or "").strip()
+        candidates = self._observation_click_targets(observation)
+        for candidate in candidates:
+            if candidate["type"] == raw_type and candidate["text"] == raw_text:
+                return candidate
+        for candidate in candidates:
+            if raw_text and candidate["type"] == raw_type and (raw_text in candidate["text"] or candidate["text"] in raw_text):
+                return candidate
+        for candidate in candidates:
+            if raw_text and (raw_text in candidate["text"] or candidate["text"] in raw_text):
+                return candidate
+        return {}
+
+    @staticmethod
+    def _observation_click_targets(observation: dict[str, Any]) -> list[dict[str, str]]:
+        targets: list[dict[str, str]] = []
+        for target_type, key in (("menu", "menus"), ("action", "actions")):
+            items = observation.get(key) if isinstance(observation.get(key), list) else []
+            for item in items:
+                if not isinstance(item, dict):
+                    continue
+                text = str(item.get("text") or "").strip()
+                if not text:
+                    continue
+                target = {"type": target_type, "text": text}
+                if target not in targets:
+                    targets.append(target)
+        return targets
+
+    def _resolve_next_action(self, page_url: str, target: dict[str, str], task_type: str) -> dict[str, Any]:
+        if not target.get("text"):
+            return {}
+        return resolve_click_target_to_url(
+            page_url,
+            target,
+            lambda parent, hover_targets: self._choose_hover_target(parent, hover_targets, task_type),
+            timeout_seconds=self.config.runtime.timeout_seconds,
+            browser_name=self.config.runtime.browser_name,
+            render_retries=self.config.runtime.render_retries,
+        )
+
+    def _choose_hover_target(self, parent: dict[str, str], hover_targets: list[dict[str, str]], task_type: str) -> dict[str, str]:
+        if not hover_targets:
+            return {}
+        raw_output = self.backend.chat(
+            build_click_target_messages(
+                task_type,
+                str(parent.get("company", "")),
+                parent,
+                hover_targets,
+            )
+        )
+        try:
+            decision = extract_json_object(raw_output)
+        except Exception:  # noqa: BLE001
+            return hover_targets[0]
+        next_action = decision.get("next_action")
+        if not isinstance(next_action, dict):
+            return hover_targets[0]
+        normalized = {"type": str(next_action.get("type") or "").strip(), "text": str(next_action.get("text") or "").strip()}
+        for target in hover_targets:
+            if target == normalized:
+                return target
+        for target in hover_targets:
+            if normalized["text"] and (normalized["text"] in target["text"] or target["text"] in normalized["text"]):
+                return target
+        return hover_targets[0]
+
+    def _build_trace_step(
+        self,
+        *,
+        candidate: CompanyCandidate,
+        page: CrawledPage,
+        task_type: str,
+        hop_index: int,
+        requested_url: str,
+        raw_model_output: str,
+        decision: dict[str, Any],
+    ) -> dict[str, Any]:
+        return {
+            "company": candidate.name,
+            "rank": candidate.rank,
+            "task_type": task_type,
+            "hop_index": hop_index,
+            "requested_url": requested_url,
+            "page_url": page.page_url,
+            "site_type": page.site_type,
+            "title": page.title,
+            "observation": page.observation,
+            "text_excerpt": page.text[:1200],
+            "recruitment_period": page.recruitment_period,
+            "application_start": page.application_start,
+            "application_deadline": page.application_deadline,
+            "period_evidence": page.period_evidence,
+            "date_candidates": page.date_candidates[:5],
+            "error": page.error,
+            "raw_model_output": raw_model_output.strip(),
+            "decision": decision,
+            "selected_menu": page.selected_menu,
+            "selected_action_type": page.selected_action_type,
+            "action_chain": page.action_chain,
+            "next_hops": page.next_hops,
+            "selected_next_hop": page.next_hops[0] if page.next_hops else "",
+            "is_sufficient": page.is_sufficient,
+            "decision_reason": page.decision_reason,
+            "confidence": page.decision_confidence,
+        }
 
     def _parse_company_candidates(self, payload: dict[str, Any]) -> tuple[list[CompanyCandidate], list[dict[str, Any]]]:
         raw_companies = payload.get("companies", [])
@@ -402,7 +609,8 @@ class JobWatchWorkflow:
     ) -> str:
         return (
             f"job={self.config.job_role}; companies={len(selected_candidates)}; "
-            f"latest={analysis.latest_posted_at or '未识别'}; status={self._status_display(analysis.channel_status)}"
+            f"period={analysis.recruitment_period or analysis.application_deadline or '未识别'}; "
+            f"status={self._status_display(analysis.channel_status)}"
         )
 
     def _build_changes(self, crawled_pages: list[CrawledPage], analysis: AnalysisResult) -> dict[str, Any]:
@@ -421,24 +629,34 @@ class JobWatchWorkflow:
             previous_page = previous_pages.get(str(page.get("company") or "").strip().lower())
             if not previous_page:
                 continue
-            if page.get("date") != previous_page.get("date") or page.get("channel_status") != previous_page.get("channel_status"):
+            if (
+                page.get("recruitment_period") != previous_page.get("recruitment_period")
+                or page.get("application_deadline") != previous_page.get("application_deadline")
+                or page.get("channel_status") != previous_page.get("channel_status")
+            ):
                 updated_companies.append(
                     {
                         "company": page.get("company", ""),
-                        "previous_date": previous_page.get("date", []),
-                        "current_date": page.get("date", []),
+                        "previous_period": previous_page.get("recruitment_period", ""),
+                        "current_period": page.get("recruitment_period", ""),
+                        "previous_deadline": previous_page.get("application_deadline", ""),
+                        "current_deadline": page.get("application_deadline", ""),
                         "previous_status": previous_page.get("channel_status", "unknown"),
                         "current_status": page.get("channel_status", "unknown"),
                     }
                 )
 
-        latest_changed = previous_snapshot.get("analysis", {}).get("latest_posted_at") != analysis.latest_posted_at
+        previous_analysis = previous_snapshot.get("analysis", {})
+        period_changed = previous_analysis.get("recruitment_period") != analysis.recruitment_period
+        deadline_changed = previous_analysis.get("application_deadline") != analysis.application_deadline
         status_changed = previous_snapshot.get("analysis", {}).get("channel_status") != analysis.channel_status
         return {
             "has_previous": True,
-            "updated": bool(updated_companies or latest_changed),
+            "updated": bool(updated_companies or period_changed or deadline_changed),
             "status_changed": status_changed,
-            "latest_changed": latest_changed,
+            "latest_changed": period_changed or deadline_changed,
+            "period_changed": period_changed,
+            "deadline_changed": deadline_changed,
             "updated_companies": updated_companies,
         }
 
@@ -450,6 +668,11 @@ class JobWatchWorkflow:
             "crawled_pages": [self._compact_page(page) for page in crawled_pages],
             "analysis": {
                 "job_role": analysis.job_role,
+                "period_company": analysis.period_company,
+                "recruitment_period": analysis.recruitment_period,
+                "application_start": analysis.application_start,
+                "application_deadline": analysis.application_deadline,
+                "period_evidence": analysis.period_evidence,
                 "latest_company": analysis.latest_company,
                 "latest_posted_at": analysis.latest_posted_at,
                 "channel_status": analysis.channel_status,
@@ -472,6 +695,11 @@ class JobWatchWorkflow:
         crawled_pages = [self._compact_page(page) for page in result.crawled_pages]
         analysis_payload = {
             "job_role": result.analysis.job_role,
+            "period_company": result.analysis.period_company,
+            "recruitment_period": result.analysis.recruitment_period,
+            "application_start": result.analysis.application_start,
+            "application_deadline": result.analysis.application_deadline,
+            "period_evidence": result.analysis.period_evidence,
             "latest_company": result.analysis.latest_company,
             "latest_posted_at": result.analysis.latest_posted_at,
             "channel_status": result.analysis.channel_status,
@@ -493,6 +721,7 @@ class JobWatchWorkflow:
             "report_path": result.report_path,
             "result_path": result.result_path,
             "snapshot_path": result.snapshot_path,
+            "trace_path": str(self.config.trace_path),
         }
         snapshot_payload = {
             "metadata": metadata_payload,
@@ -500,6 +729,7 @@ class JobWatchWorkflow:
             "crawl": crawl_payload,
             "analysis": analysis_payload,
             "changes": result.changes,
+            "paths": paths_payload,
             "structure_note": "selection=公司筛选结果; crawl=爬取页面结果; analysis=最终判断",
             # Backward-compatible top-level fields.
             "job_role": result.job_role,
@@ -512,6 +742,7 @@ class JobWatchWorkflow:
         Path(result.result_path).parent.mkdir(parents=True, exist_ok=True)
         Path(result.snapshot_path).parent.mkdir(parents=True, exist_ok=True)
         Path(result.report_path).parent.mkdir(parents=True, exist_ok=True)
+        self.config.trace_path.parent.mkdir(parents=True, exist_ok=True)
         Path(result.result_path).write_text(
             json.dumps(payload, ensure_ascii=False, indent=2),
             encoding="utf-8",
@@ -521,6 +752,7 @@ class JobWatchWorkflow:
             encoding="utf-8",
         )
         Path(result.report_path).write_text(self._render_markdown(result), encoding="utf-8")
+        self.config.trace_path.write_text(self._render_trace_markdown(result), encoding="utf-8")
 
     def _build_result_payload(
         self,
@@ -535,12 +767,24 @@ class JobWatchWorkflow:
                 {
                     "company": page.company,
                     "website": "",
+                    "recruitment_period": "",
+                    "application_start": "",
+                    "application_deadline": "",
+                    "period_evidence": "",
                     "latest_posted_at": "",
                     "channel_status": "unknown",
                 },
             )
             if page.page_url and not record["website"]:
                 record["website"] = page.page_url
+            if page.recruitment_period and not record["recruitment_period"]:
+                record["recruitment_period"] = page.recruitment_period
+            if page.application_start and not record["application_start"]:
+                record["application_start"] = page.application_start
+            if page.application_deadline and not record["application_deadline"]:
+                record["application_deadline"] = page.application_deadline
+            if page.period_evidence and not record["period_evidence"]:
+                record["period_evidence"] = page.period_evidence
             if page.latest_posted_at and not record["latest_posted_at"]:
                 record["latest_posted_at"] = page.latest_posted_at
             if page.channel_status in {"open", "closed"}:
@@ -554,6 +798,10 @@ class JobWatchWorkflow:
                 {
                     "company": candidate.name,
                     "website": candidate.recruitment_url,
+                    "recruitment_period": "",
+                    "application_start": "",
+                    "application_deadline": "",
+                    "period_evidence": "",
                     "latest_posted_at": "",
                     "channel_status": "unknown",
                 },
@@ -564,6 +812,10 @@ class JobWatchWorkflow:
                 {
                     "company": record.get("company", candidate.name),
                     "website": record.get("website", candidate.recruitment_url),
+                    "recruitment_period": record.get("recruitment_period", ""),
+                    "application_start": record.get("application_start", ""),
+                    "application_deadline": record.get("application_deadline", ""),
+                    "period_evidence": record.get("period_evidence", ""),
                     "latest_posted_at": record.get("latest_posted_at", ""),
                     "channel_status": record.get("channel_status", "unknown"),
                 }
@@ -606,11 +858,137 @@ class JobWatchWorkflow:
         return {
             "company": page.company,
             "page_url": page.page_url,
+            "recruitment_period": page.recruitment_period,
+            "application_start": page.application_start,
+            "application_deadline": page.application_deadline,
+            "period_evidence": page.period_evidence,
             "date": page.date_candidates[:1],
             "site_type": page.site_type,
             "channel_status": page.channel_status,
             "error": page.error,
         }
+
+    def _render_trace_markdown(self, result: WorkflowResult) -> str:
+        pages_by_company: dict[str, list[CrawledPage]] = {}
+        for page in result.crawled_pages:
+            pages_by_company.setdefault(page.company, []).append(page)
+
+        lines = [
+            "# Job Watch Trace",
+            "",
+            f"- 岗位：{result.job_role}",
+            f"- 公司数：{result.top_x}",
+            "",
+            "## 筛选公司",
+            "",
+            "| 排名 | 公司 | 招聘官网入口 |",
+            "| --- | --- | --- |",
+        ]
+        for candidate in result.selected_companies:
+            lines.append(f"| {candidate.rank} | {candidate.name} | {candidate.recruitment_url} |")
+
+        for candidate in result.selected_companies:
+            lines.extend(["", f"## {candidate.rank}. {candidate.name}", "", f"- 筛选网址：{candidate.recruitment_url}"])
+            company_pages = pages_by_company.get(candidate.name, [])
+            if not company_pages:
+                lines.append("- 没有抓取记录")
+                continue
+            for task_type in ("period", "channel"):
+                task_pages = [page for page in company_pages if page.task_type == task_type]
+                if not task_pages:
+                    continue
+                task_label = "招聘时间段 agent" if task_type == "period" else "通道状态 agent"
+                lines.extend(["", f"### {task_label}"])
+                trace_steps = task_pages[-1].trace_steps
+                if not trace_steps:
+                    lines.append("- 没有链路明细")
+                    continue
+                for step in trace_steps:
+                    lines.extend(self._render_trace_step(step))
+
+        return "\n".join(lines) + "\n"
+
+    def _render_trace_step(self, step: dict[str, Any]) -> list[str]:
+        task_type = str(step.get("task_type", ""))
+        decision = step.get("decision") if isinstance(step.get("decision"), dict) else {}
+        observation = step.get("observation") if isinstance(step.get("observation"), dict) else {}
+        next_hops = step.get("next_hops") if isinstance(step.get("next_hops"), list) else []
+        action_chain = step.get("action_chain") if isinstance(step.get("action_chain"), list) else []
+        lines = [
+            "",
+            f"#### 第 {step.get('hop_index', '')} 跳",
+            "",
+            f"- 请求网址：{step.get('requested_url', '')}",
+            f"- 实际页面：{step.get('page_url', '')}",
+            f"- 页面标题：{step.get('title', '') or observation.get('title', '') or '未提取'}",
+            f"- 是否足够：{'是' if step.get('is_sufficient') else '否'}",
+            f"- 选择目标：{step.get('selected_action_type', '') or '无'} / {step.get('selected_menu', '') or '无'}",
+            f"- 点击后 URL：{', '.join(str(item) for item in next_hops) if next_hops else '无'}",
+        ]
+        if action_chain:
+            lines.extend(["", "Hover/点击链路：", "", "```json", json.dumps(action_chain, ensure_ascii=False, indent=2), "```"])
+        if step.get("error"):
+            lines.append(f"- 抓取错误：{step.get('error')}")
+
+        lines.extend(
+            [
+                "",
+                "DOM 轻量化抽取：",
+                "",
+                "```json",
+                json.dumps(self._compact_observation_for_trace(observation), ensure_ascii=False, indent=2),
+                "```",
+                "",
+                "模型原始输出：",
+                "",
+                "```json",
+                self._format_raw_model_output(str(step.get("raw_model_output", ""))),
+                "```",
+                "",
+                "模型解析结果：",
+                "",
+                "```json",
+                json.dumps(decision, ensure_ascii=False, indent=2),
+                "```",
+            ]
+        )
+        if task_type == "period":
+            period = str(decision.get("recruitment_period") or step.get("recruitment_period") or "")
+            deadline = str(decision.get("application_deadline") or step.get("application_deadline") or "")
+            evidence = str(decision.get("period_evidence") or step.get("period_evidence") or "")
+            lines.append(f"- 招聘时间段：{period or '未提取'}")
+            lines.append(f"- 投递截止：{deadline or '未提取'}")
+            if evidence:
+                lines.append(f"- 时间证据：{evidence}")
+        elif task_type == "channel":
+            lines.append(f"- 通道状态：{self._status_display(str(decision.get('channel_status', 'unknown')))}")
+        return lines
+
+    @staticmethod
+    def _compact_observation_for_trace(observation: dict[str, Any]) -> dict[str, Any]:
+        sections = observation.get("sections") if isinstance(observation.get("sections"), list) else []
+        menus = observation.get("menus") if isinstance(observation.get("menus"), list) else []
+        actions = observation.get("actions") if isinstance(observation.get("actions"), list) else []
+        content = str(observation.get("content") or observation.get("visible_text_excerpt") or "")
+        return {
+            "page_url": observation.get("page_url", ""),
+            "title": observation.get("title", ""),
+            "headings": observation.get("headings", [])[:10] if isinstance(observation.get("headings"), list) else [],
+            "content": content[:800],
+            "sections": sections[:5],
+            "menus": menus[:12],
+            "actions": actions[:12],
+        }
+
+    @staticmethod
+    def _format_raw_model_output(raw_output: str) -> str:
+        raw_output = raw_output.strip()
+        if not raw_output:
+            return "{}"
+        try:
+            return json.dumps(json.loads(raw_output), ensure_ascii=False, indent=2)
+        except Exception:  # noqa: BLE001
+            return raw_output
 
     def _render_markdown(self, result: WorkflowResult) -> str:
         lines = [
@@ -618,8 +996,10 @@ class JobWatchWorkflow:
             "",
             f"- 岗位：{result.job_role}",
             f"- 公司数：{result.top_x}",
-            f"- 最新公司：{result.analysis.latest_company or '未识别'}",
-            f"- 最新日期：{result.analysis.latest_posted_at or '未识别'}",
+            f"- 招聘时间公司：{result.analysis.period_company or '未识别'}",
+            f"- 招聘时间段：{result.analysis.recruitment_period or '未识别'}",
+            f"- 投递开始：{result.analysis.application_start or '未识别'}",
+            f"- 投递截止：{result.analysis.application_deadline or '未识别'}",
             f"- 通道状态：{self._status_display(result.analysis.channel_status)}",
             f"- 置信度：{result.analysis.confidence}",
             "",
@@ -631,19 +1011,26 @@ class JobWatchWorkflow:
         lines.extend(["", "## 页面"])
         for page in result.crawled_pages:
             lines.append(f"- {page.company} | {page.page_url} | {page.site_type} | {self._status_display(page.channel_status)}")
-            if page.date_candidates:
-                lines.append(f"  - 日期：{', '.join(page.date_candidates[:3])}")
+            if page.recruitment_period:
+                lines.append(f"  - 招聘时间段：{page.recruitment_period}")
+            if page.application_deadline:
+                lines.append(f"  - 投递截止：{page.application_deadline}")
+            if page.period_evidence:
+                lines.append(f"  - 时间证据：{page.period_evidence}")
             if page.error:
                 lines.append(f"  - 错误：{page.error}")
 
         lines.extend(["", "## 变化"])
         if result.changes.get("has_previous"):
             lines.append(f"- 有历史快照：是")
-            lines.append(f"- 最近日期是否变化：{ '是' if result.changes.get('latest_changed') else '否' }")
+            lines.append(f"- 招聘时间段是否变化：{ '是' if result.changes.get('period_changed') else '否' }")
+            lines.append(f"- 投递截止是否变化：{ '是' if result.changes.get('deadline_changed') else '否' }")
             lines.append(f"- 通道状态是否变化：{ '是' if result.changes.get('status_changed') else '否' }")
             for item in result.changes.get("updated_companies", []):
                 lines.append(
-                    f"- {item.get('company', '')} | {self._status_display(str(item.get('previous_status', 'unknown')))} -> {self._status_display(str(item.get('current_status', 'unknown')))}"
+                    f"- {item.get('company', '')} | "
+                    f"{item.get('previous_period', '') or '未识别'} -> {item.get('current_period', '') or '未识别'} | "
+                    f"{self._status_display(str(item.get('previous_status', 'unknown')))} -> {self._status_display(str(item.get('current_status', 'unknown')))}"
                 )
         else:
             lines.append("- 无历史快照")

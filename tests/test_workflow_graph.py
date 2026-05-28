@@ -24,21 +24,24 @@ class _DummyBackend:
                     "job_role": "前端工程师",
                     "is_sufficient": True,
                     "reason": "示例页面信息已经足够",
-                    "next_hops": [],
+                    "next_action": {"type": "", "text": ""},
                     "channel_status": "open",
                     "confidence": "high",
                 },
                 ensure_ascii=False,
             )
-        if "latest_posted_at" in system_text:
+        if "recruitment_period" in system_text:
             return json.dumps(
                 {
                     "job_role": "前端工程师",
                     "is_sufficient": True,
                     "reason": "示例页面信息已经足够",
-                    "next_hops": [],
-                    "latest_company": "示例公司",
-                    "latest_posted_at": "2026-05-25",
+                    "next_action": {"type": "", "text": ""},
+                    "period_company": "示例公司",
+                    "recruitment_period": "2026-05-25 至 2026-06-25",
+                    "application_start": "2026-05-25",
+                    "application_deadline": "2026-06-25",
+                    "period_evidence": "示例招聘活动时间",
                     "confidence": "high",
                 },
                 ensure_ascii=False,
@@ -77,10 +80,14 @@ def test_langgraph_workflow_runs_end_to_end(tmp_path, monkeypatch) -> None:
             company=company,
             recruitment_url=recruitment_url,
             page_url=recruitment_url,
-            task_type="date",
+            task_type="period",
             site_type="html",
             channel_status="open",
-            latest_posted_at="2026-05-25",
+            recruitment_period="2026-05-25 至 2026-06-25",
+            application_start="2026-05-25",
+            application_deadline="2026-06-25",
+            period_evidence="示例招聘活动时间",
+            latest_posted_at="2026-05-25 至 2026-06-25",
             decision_confidence="high",
             is_sufficient=True,
             title="示例招聘页",
@@ -100,8 +107,9 @@ def test_langgraph_workflow_runs_end_to_end(tmp_path, monkeypatch) -> None:
         for call in backend.calls
         for message in call
     )
-    assert result.analysis.latest_company == "示例公司"
-    assert result.analysis.latest_posted_at == "2026-05-25"
+    assert result.analysis.period_company == "示例公司"
+    assert result.analysis.recruitment_period == "2026-05-25 至 2026-06-25"
+    assert result.analysis.application_deadline == "2026-06-25"
     assert result.analysis.channel_status == "open"
     assert result.changes["has_previous"] is False
     assert Path(result.result_path).exists()
