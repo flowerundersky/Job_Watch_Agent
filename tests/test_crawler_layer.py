@@ -8,7 +8,6 @@ import pytest
 
 from src.crawler import crawl_company_pages, load_company_candidates_from_selection
 from src.models import CompanyCandidate
-from src.prompt import build_channel_status_messages, build_recruitment_period_messages
 
 
 SELECTION_PATHS = (
@@ -82,18 +81,6 @@ def test_crawler_can_crawl_selected_company_pages() -> None:
                     }
                     for page in pages
                 ],
-                "recruitment_period_request": build_recruitment_period_messages(
-                    job_role,
-                    selected_candidates[0].name if selected_candidates else "",
-                    pages[0].page_url if pages else "",
-                    pages[0].observation if pages else {},
-                ),
-                "channel_status_request": build_channel_status_messages(
-                    job_role,
-                    selected_candidates[0].name if selected_candidates else "",
-                    pages[0].page_url if pages else "",
-                    pages[0].observation if pages else {},
-                ),
             },
             ensure_ascii=False,
             indent=2,

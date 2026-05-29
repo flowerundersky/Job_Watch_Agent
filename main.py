@@ -11,16 +11,12 @@ DEFAULT_CONFIG_PATH = Path(__file__).with_name("config.yaml")
 
 
 def main(argv: list[str] | None = None) -> int:
-    arguments = sys.argv[1:] if argv is None else argv
-    config = load_config(Path(arguments[0]) if arguments else DEFAULT_CONFIG_PATH)
+    
+    config = load_config(DEFAULT_CONFIG_PATH)
+
     workflow = JobWatchWorkflow(config)
     result = workflow.run()
 
-    print(result.summary)
-    print(f"report: {result.report_path}")
-    print(f"result: {result.result_path}")
-    print(f"snapshot: {result.snapshot_path}")
-    print(f"trace: {config.trace_path}")
     return 0
 
 

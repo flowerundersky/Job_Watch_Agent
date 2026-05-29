@@ -27,7 +27,7 @@ class ModelBackendSettings:
     backend: str = "openai_compatible"
     api_base_url: str = ""
     api_key: str = ""
-    model: str = "gpt-4o-mini"
+    model: str = "gpt-5.5"
     timeout_seconds: int = 30
     temperature: float = 0.0
     max_tokens: int = 1024
@@ -43,7 +43,7 @@ class AppConfig:
 
     @property
     def snapshot_path(self) -> Path:
-        return self.runtime.output_dir / self.runtime.snapshot_filename
+        return self.runtime.output_dir / self.runtime.snapshot_filename #拼接路径
 
     @property
     def report_path(self) -> Path:
@@ -92,7 +92,7 @@ def _to_model_backend_settings(data: dict[str, Any] | None) -> ModelBackendSetti
         backend=str(data.get("backend", "openai_compatible")),
         api_base_url=str(data.get("api_base_url", "")),
         api_key=str(data.get("api_key", "")),
-        model=str(data.get("model", "gpt-4o-mini")),
+        model=str(data.get("model", "gpt-5.5")),
         timeout_seconds=int(data.get("timeout_seconds", 30)),
         temperature=float(data.get("temperature", 0.0)),
         max_tokens=int(data.get("max_tokens", 1024)),

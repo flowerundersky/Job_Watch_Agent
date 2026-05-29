@@ -68,7 +68,7 @@ def test_langgraph_workflow_runs_end_to_end(tmp_path, monkeypatch) -> None:
         company_filters="优先校招官网；只看技术岗",
         top_x=1,
         runtime=RuntimeSettings(output_dir=tmp_path),
-        model_backend=ModelBackendSettings(backend="heuristic"),
+        model_backend=ModelBackendSettings(backend="openai_compatible"),
     )
     workflow = JobWatchWorkflow(config)
     backend = _DummyBackend()
