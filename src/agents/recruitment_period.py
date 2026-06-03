@@ -10,10 +10,13 @@ from .page_exploration import PageExplorationAgent
 
 
 class RecruitmentPeriodAgent(PageExplorationAgent):
+    """页面探索 agent：寻找官方招聘活动时间段，而不是单个岗位发布时间。"""
+
     task_type = "period"
     log_label = "时间"
 
     def build_messages(self, candidate: CompanyCandidate, page: CrawledPage) -> list[dict[str, str]]:
+        """把当前页轻量 DOM 证据交给模型，要求判断时间是否足够或选择下一跳。"""
         evidence = {"company": candidate.name, "page_url": page.page_url, "observation": page.observation}
         return [
             {
@@ -41,6 +44,7 @@ class RecruitmentPeriodAgent(PageExplorationAgent):
         ]
 
     def apply_decision(self, page: CrawledPage, decision: dict[str, Any]) -> None:
+        """把模型抽取到的时间段/截止日期写回 CrawledPage。"""
         page.is_sufficient = bool(decision.get("is_sufficient"))
         page.decision_reason = str(decision.get("reason", "")).strip()
         page.recruitment_period = str(decision.get("recruitment_period", "")).strip()

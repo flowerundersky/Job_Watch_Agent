@@ -24,6 +24,7 @@ class CompanySelectionAgent:
         self.company_filters = company_filters
 
     def run(self) -> dict[str, Any]:
+        """让网络模型选公司；数量不足时最多追问两轮补齐。"""
         messages = self._build_messages()
         raw_output = self.backend.chat(messages)
         payload = extract_json_object(raw_output)
@@ -47,6 +48,7 @@ class CompanySelectionAgent:
         return {"selected": selected, "missing": self._finalize_missing(selected, missing_candidates)}
 
     def _build_messages(self) -> list[dict[str, str]]:
+        """构造公司筛选 agent 的初始提示词。"""
         filter_text = f"\n筛选条件：{self.company_filters}" if self.company_filters.strip() else ""
         return [
             {
@@ -71,6 +73,7 @@ class CompanySelectionAgent:
         ]
 
     def _build_retry_message(self, current_companies: list[dict[str, Any]]) -> list[dict[str, str]]:
+        """构造补齐公司列表的追问提示词。"""
         filter_line = f"筛选条件：{self.company_filters}\n" if self.company_filters.strip() else ""
         missing_count = max(0, self.top_x - len(current_companies))
         return [
@@ -87,6 +90,7 @@ class CompanySelectionAgent:
         ]
 
     def _parse_candidates(self, payload: dict[str, Any]) -> tuple[list[CompanyCandidate], list[dict[str, Any]]]:
+        """把模型 JSON 转成 CompanyCandidate，并把缺字段/不像招聘页的项放入 missing。"""
         raw_companies = payload.get("companies", [])
         if not isinstance(raw_companies, list):
             raise ValueError("company selection output missing companies list")

@@ -10,10 +10,13 @@ from .page_exploration import PageExplorationAgent
 
 
 class ChannelStatusAgent(PageExplorationAgent):
+    """页面探索 agent：判断招聘通道是开放、关闭还是证据不足。"""
+
     task_type = "channel"
     log_label = "通道"
 
     def build_messages(self, candidate: CompanyCandidate, page: CrawledPage) -> list[dict[str, str]]:
+        """把当前页轻量 DOM 证据交给模型，要求判断通道状态或选择下一跳。"""
         evidence = {"company": candidate.name, "page_url": page.page_url, "observation": page.observation}
         return [
             {
@@ -40,6 +43,7 @@ class ChannelStatusAgent(PageExplorationAgent):
         ]
 
     def apply_decision(self, page: CrawledPage, decision: dict[str, Any]) -> None:
+        """把模型判断出的通道状态写回 CrawledPage。"""
         page.is_sufficient = bool(decision.get("is_sufficient"))
         page.decision_reason = str(decision.get("reason", "")).strip()
         page.channel_status = str(decision.get("channel_status", page.channel_status or "unknown")).strip() or "unknown"

@@ -25,6 +25,7 @@ class PageExplorationAgent(ABC):
         self.max_hops = max_hops
 
     def run(self, candidate: CompanyCandidate) -> CrawledPage:
+        """围绕一个公司循环执行：爬当前页 -> 问模型 -> 必要时点击下一跳。"""
         visited_urls: list[str] = []
         current_url = candidate.recruitment_url
         final_page: CrawledPage | None = None
@@ -95,6 +96,7 @@ class PageExplorationAgent(ABC):
         """Return a log line for the completed agent run."""
 
     def _normalize_next_action(self, observation: dict[str, Any], decision: dict[str, Any]) -> dict[str, str]:
+        """把模型输出的 next_action 对齐到页面真实存在的 menu/action 文本。"""
         next_action = decision.get("next_action")
         if isinstance(next_action, dict):
             raw_type = str(next_action.get("type") or "").strip().lower()
@@ -131,6 +133,7 @@ class PageExplorationAgent(ABC):
         return targets
 
     def _resolve_next_action(self, page_url: str, target: dict[str, str], candidate: CompanyCandidate) -> dict[str, Any]:
+        """在真实浏览器里先 hover 再点击模型选择的目标，拿到下一跳 URL。"""
         if not target.get("text"):
             return {}
         return resolve_click_target_to_url(
@@ -143,6 +146,7 @@ class PageExplorationAgent(ABC):
         )
 
     def _choose_hover_target(self, candidate: CompanyCandidate, parent: dict[str, str], hover_targets: list[dict[str, str]]) -> dict[str, str]:
+        """hover 后如果出现二级菜单，再让模型从二级菜单中选择一个目标。"""
         if not hover_targets:
             return {}
         raw_output = self.backend.chat(self.build_hover_messages(candidate, parent, hover_targets))
@@ -163,6 +167,7 @@ class PageExplorationAgent(ABC):
         return hover_targets[0]
 
     def build_hover_messages(self, candidate: CompanyCandidate, parent_target: dict[str, str], hover_targets: list[dict[str, str]]) -> list[dict[str, str]]:
+        """构造“二级 hover 菜单选择”提示词。"""
         task_label = "招聘时间段" if self.task_type == "period" else "校园招聘通道状态"
         evidence = {
             "company": candidate.name,
@@ -195,6 +200,7 @@ class PageExplorationAgent(ABC):
         raw_model_output: str,
         decision: dict[str, Any],
     ) -> dict[str, Any]:
+        """记录单跳页面证据、模型原始输出、选择的目标和下一跳，用于 trace.md。"""
         return {
             "company": candidate.name,
             "rank": candidate.rank,

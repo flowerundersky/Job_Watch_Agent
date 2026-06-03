@@ -28,12 +28,15 @@ class WorkflowState(TypedDict, total=False):
 
 
 class JobWatchWorkflow:
+    """主工作流编排器：串起公司筛选、页面探索、结果合并和文件输出。"""
+
     def __init__(self, config: AppConfig) -> None:
         self.config = config
         self.backend = create_backend(config.model_backend)
         self.graph = self._build_graph()
 
     def run(self) -> WorkflowResult:
+        """运行一次完整任务，并返回最终结构化结果。"""
         self.config.runtime.output_dir.mkdir(parents=True, exist_ok=True)
 
         final_state = self.graph.invoke({})
@@ -41,6 +44,7 @@ class JobWatchWorkflow:
         return result
 
     def _build_graph(self) -> Any:
+        """定义 LangGraph 节点顺序：筛公司 -> 爬页面 -> 分析 -> 落盘。"""
         graph = StateGraph(WorkflowState)
         graph.add_node("select_companies", self._graph_select_companies)
         graph.add_node("crawl_pages", self._graph_crawl_pages)
@@ -54,6 +58,7 @@ class JobWatchWorkflow:
         return graph.compile()
 
     def _graph_select_companies(self, state: WorkflowState) -> dict[str, Any]:
+        """第一步：让筛选 agent 产出目标公司和招聘官网入口。"""
         selection = self._select_companies_with_missing()
         self._write_selection_output(selection["selected"], selection["missing"])
         print("公司筛选已完成")
@@ -63,6 +68,7 @@ class JobWatchWorkflow:
         }
 
     def _graph_crawl_pages(self, state: WorkflowState) -> dict[str, Any]:
+        """第二步：并行运行时间 agent 和通道 agent 的页面探索流程。"""
         selected_candidates = state["selected_candidates"]
         print("开始抓取页面")
         with ThreadPoolExecutor(max_workers=2) as executor:
@@ -76,12 +82,14 @@ class JobWatchWorkflow:
         }
 
     def _graph_analyze(self, state: WorkflowState) -> dict[str, Any]:
+        """第三步：把两个 agent 的页面级判断合并成一个总分析结果。"""
         date_pages = state.get("date_crawled_pages", [])
         channel_pages = state.get("channel_crawled_pages", [])
         analysis = self._combine_agent_results(date_pages, channel_pages)
         return {"analysis": analysis}
 
     def _graph_persist(self, state: WorkflowState) -> dict[str, Any]:
+        """第四步：生成报告、JSON、快照和 trace 文件。"""
         selected_candidates = state["selected_candidates"]
         missing_candidates = state.get("missing_candidates", [])
         date_pages = state.get("date_crawled_pages", [])
@@ -111,6 +119,7 @@ class JobWatchWorkflow:
         return self._select_companies_with_missing()["selected"]
 
     def _select_companies_with_missing(self) -> dict[str, Any]:
+        """调用公司筛选 agent，保留成功项和缺失/非法项，便于排查。"""
         return CompanySelectionAgent(
             self.backend,
             job_role=self.config.job_role,
@@ -119,6 +128,7 @@ class JobWatchWorkflow:
         ).run()
 
     def _combine_agent_results(self, date_pages: list[CrawledPage], channel_pages: list[CrawledPage]) -> AnalysisResult:
+        """从页面探索结果中选出最可信的招聘时间段和通道状态。"""
         period_company = ""
         recruitment_period = ""
         application_start = ""
@@ -161,10 +171,12 @@ class JobWatchWorkflow:
         )
 
     def _crawl_time_pages(self, candidates: list[CompanyCandidate]) -> list[CrawledPage]:
+        """运行专门判断官方招聘时间段的页面探索 agent。"""
         agent = RecruitmentPeriodAgent(self.backend, job_role=self.config.job_role, runtime=self.config.runtime)
         return [agent.run(candidate) for candidate in candidates]
 
     def _crawl_channel_pages(self, candidates: list[CompanyCandidate]) -> list[CrawledPage]:
+        """运行专门判断招聘通道 open/closed/unknown 的页面探索 agent。"""
         agent = ChannelStatusAgent(self.backend, job_role=self.config.job_role, runtime=self.config.runtime)
         return [agent.run(candidate) for candidate in candidates]
 
@@ -181,6 +193,7 @@ class JobWatchWorkflow:
         )
 
     def _build_changes(self, crawled_pages: list[CrawledPage], analysis: AnalysisResult) -> dict[str, Any]:
+        """和上一次 snapshot 对比，判断时间段、截止日期或通道状态是否变化。"""
         current_snapshot = self._snapshot_payload(crawled_pages, analysis)
         previous_snapshot = self._load_previous_snapshot()
         if not previous_snapshot:

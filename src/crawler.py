@@ -1,4 +1,8 @@
-"""Crawler helpers for recruitment pages."""
+"""招聘官网页面抓取与点击链路解析。
+
+这个模块只负责“看网页”和“真实点击网页”，不负责让模型做判断。
+输出的 CrawledPage 会交给 agent，让模型决定当前页面是否足够，或者下一步点哪个 menu/action。
+"""
 
 from __future__ import annotations
 
@@ -14,7 +18,7 @@ from bs4 import BeautifulSoup
 from .models import CompanyCandidate, CrawledPage
 
 
-NAVIGATION_CLICK_HINTS = (   #还可以优化
+NAVIGATION_CLICK_HINTS = (
     "校园招聘",
     "实习",
     "招聘动态",
@@ -54,6 +58,7 @@ CHANNEL_CLOSED_HINTS = ("已结束", "停止招聘", "暂未开放", "未开启"
 
 
 def normalize_text(value: str) -> str:
+    """把网页文本压成单行，减少多余换行和空格对规则/模型的干扰。"""
     return " ".join(value.split()).strip()
 
 
@@ -67,6 +72,7 @@ def crawl_company_pages(
     max_links_per_page: int = 20,
     user_agent: str = "JobWatchAgent/2.0",
 ) -> list[CrawledPage]:
+    """批量抓取公司招聘入口页，返回每个公司的 CrawledPage。"""
     pages: list[CrawledPage] = []
     for candidate in candidates:
         pages.append(
@@ -94,6 +100,11 @@ def crawl_url(
     max_links_per_page: int = 20,
     user_agent: str = "JobWatchAgent/2.0",
 ) -> CrawledPage:
+    """抓取单个 URL，并把渲染后的页面整理成 agent 可用的 CrawledPage。
+
+    这里会真实启动 Playwright 浏览器，所以能看到 JS 渲染后的菜单、按钮和正文。
+    如果页面打不开，会返回带 error 的 CrawledPage，而不是让整个工作流崩掉。
+    """
     try:
         rendered = _render_page_with_playwright(
             recruitment_url,
@@ -111,6 +122,7 @@ def crawl_url(
         links: list[str] = []
         date_candidates = _extract_date_candidates(soup, text)
         channel_status = _extract_channel_status(text, date_candidates)
+
         observation = _build_page_observation(
             soup,
             page_url=final_url,
@@ -157,6 +169,11 @@ def resolve_click_target_to_url(
     render_retries: int = 2,
     user_agent: str = "JobWatchAgent/2.0",
 ) -> dict[str, Any]:
+    """执行模型选择的下一跳目标，并返回真实点击后的 URL 和点击链路。
+
+    点击前会先 hover：如果 hover 出现二级菜单，就回调 choose_hover_target 让模型再选一次；
+    如果没有二级菜单，才直接点击原目标。
+    """
     if not _is_navigable_http_url(url) or not str(target.get("text", "")).strip():
         return {"url": "", "chain": []}
     try:
@@ -192,6 +209,7 @@ def resolve_click_target_to_url(
 
 
 def load_company_candidates_from_selection(path: Path) -> list[CompanyCandidate]:
+    """从 selection 输出文件恢复公司列表，主要用于测试或从中间结果继续调试。"""
     payload = json.loads(path.read_text(encoding="utf-8"))
     raw_candidates = _extract_candidates_from_selection_payload(payload)
     candidates: list[CompanyCandidate] = []
@@ -225,6 +243,7 @@ def load_company_candidates_from_selection(path: Path) -> list[CompanyCandidate]
 
 
 def _extract_candidates_from_selection_payload(payload: dict[str, Any]) -> list[Any]:
+    """兼容几种 selection JSON 结构，取出里面的公司数组。"""
     selection = payload.get("selection")
     if isinstance(selection, dict):
         value = selection.get("selected_companies")
@@ -247,6 +266,7 @@ def crawl_company_page(
     max_links_per_page: int = 20,
     user_agent: str = "JobWatchAgent/2.0",
 ) -> CrawledPage:
+    """把 CompanyCandidate 转成 crawl_url 的入参。"""
     return crawl_url(
         candidate.name,
         candidate.recruitment_url,
@@ -260,6 +280,7 @@ def crawl_company_page(
 
 
 def _extract_title(soup: BeautifulSoup) -> str:
+    """从 HTML 中取一个可读标题，优先 title，其次 h1/h2。"""
     for selector in ("title", "h1", "h2"):
         node = soup.select_one(selector)
         if node:
@@ -270,6 +291,7 @@ def _extract_title(soup: BeautifulSoup) -> str:
 
 
 def _extract_date_candidates(soup: BeautifulSoup, text: str) -> list[str]:
+    """用轻量正则提取日期候选，作为模型判断招聘时间段的辅助证据。"""
     candidates: list[str] = []
     for pattern in DATE_PATTERNS:
         for match in re.findall(pattern, text):
@@ -284,6 +306,7 @@ def _extract_date_candidates(soup: BeautifulSoup, text: str) -> list[str]:
 
 
 def _extract_channel_status(text: str, date_candidates: list[str]) -> str:
+    """用关键词做通道状态粗判；最终 open/closed 仍以通道 agent 的模型判断为准。"""
     compact = normalize_text(text)
     if any(hint in compact for hint in CHANNEL_CLOSED_HINTS):
         return "closed"
@@ -303,6 +326,10 @@ def _render_page_with_playwright(
     user_agent: str,
     max_links: int,
 ) -> dict[str, Any]:
+    """用 Playwright 渲染页面，并收集正文、HTML、标题和可点击元素。
+
+    这里会按浏览器优先级重试，避免单个浏览器 blank、超时或兼容性问题导致任务失败。
+    """
     if not _is_navigable_http_url(url):
         raise ValueError(f"URL is not navigable: {url}")
 
@@ -376,6 +403,7 @@ def _render_page_with_playwright(
 
 
 def _looks_like_navigation_click(text: str) -> bool:
+    """判断一个短文本是否像导航栏菜单。"""
     if not text or len(text) > 30:
         return False
     if text in {"首页", "登录", "个人中心", "关于我们", "了解百度", "生活在腾讯", "产品和服务", "工作地点"}:
@@ -384,12 +412,14 @@ def _looks_like_navigation_click(text: str) -> bool:
 
 
 def _looks_like_action_click(text: str) -> bool:
+    """判断一个短文本是否像正文里的操作按钮。"""
     if not text or len(text) > 40:
         return False
     return any(hint in text for hint in ACTION_CLICK_HINTS)
 
 
 def _browser_attempt_order(browser_name: str) -> list[str]:
+    """生成浏览器尝试顺序：优先配置项，失败后回退到其他浏览器。"""
     preferred = browser_name.strip().lower() or "firefox"
     if preferred not in {"firefox", "chromium", "webkit"}:
         preferred = "firefox"
@@ -401,11 +431,13 @@ def _browser_attempt_order(browser_name: str) -> list[str]:
 
 
 def _is_navigable_http_url(url: str) -> bool:
+    """只允许 Playwright 打开 http/https 页面。"""
     parsed = urlparse(url.strip())
     return parsed.scheme in {"http", "https"} and bool(parsed.netloc)
 
 
 def _raise_if_blank_render(rendered: dict[str, Any]) -> None:
+    """把 about:blank 或无标题无正文的页面视为渲染失败，以便触发重试。"""
     page_url = str(rendered.get("url") or "")
     title = normalize_text(str(rendered.get("title") or ""))
     visible_text = normalize_text(str(rendered.get("visible_text") or ""))
@@ -425,6 +457,11 @@ def _build_page_observation(
     browser_elements: Any,
     max_links: int,
 ) -> dict[str, Any]:
+    """把完整页面压缩成模型可读的轻量 DOM 观察。
+
+    observation 只保留标题、正文摘要、主要区块、导航菜单 menus 和正文按钮 actions。
+    agent 后续只能从 menus/actions 中选择下一跳。
+    """
     headings = _collect_headings(soup)
     elements = _normalize_browser_elements(browser_elements, max_items=max_links * 2)
     menus = _extract_navigation_elements(elements, max_items=max_links)
@@ -441,6 +478,7 @@ def _build_page_observation(
 
 
 def _collect_headings(soup: BeautifulSoup) -> list[str]:
+    """收集页面标题层级，帮助模型理解当前页面主题。"""
     headings: list[str] = []
     for node in soup.select("h1,h2,h3,h4,[role='heading']"):
         text = normalize_text(node.get_text(" ", strip=True))
@@ -455,6 +493,7 @@ def _collect_section_observations(
     *,
     max_sections: int,
 ) -> list[dict[str, Any]]:
+    """抽取页面主要内容区块，避免直接把整页 HTML 塞给模型。"""
     sections: list[dict[str, Any]] = []
     candidates = soup.select("main,section,article,nav,header,footer")
     if not candidates:
@@ -478,6 +517,7 @@ def _collect_section_observations(
 
 
 def _normalize_browser_elements(elements: Any, *, max_items: int) -> list[dict[str, Any]]:
+    """清洗 Playwright 从浏览器 DOM 中拿到的原始可点击元素。"""
     if not isinstance(elements, list):
         return []
     normalized: list[dict[str, Any]] = []
@@ -504,6 +544,7 @@ def _normalize_browser_elements(elements: Any, *, max_items: int) -> list[dict[s
 
 
 def _extract_navigation_elements(elements: list[dict[str, Any]], *, max_items: int) -> list[dict[str, Any]]:
+    """从可点击元素中筛出顶部导航、菜单栏、招聘相关入口。"""
     navigation_elements: list[dict[str, Any]] = []
     for item in elements:
         if not isinstance(item, dict) or not item.get("visible"):
@@ -528,6 +569,7 @@ def _extract_navigation_elements(elements: list[dict[str, Any]], *, max_items: i
 
 
 def _extract_action_elements(elements: list[dict[str, Any]], *, max_items: int) -> list[dict[str, Any]]:
+    """从正文区域筛出报名、投递、查看职位等操作入口。"""
     actions: list[dict[str, Any]] = []
     for item in elements:
         if not isinstance(item, dict) or not item.get("visible") or item.get("in_navigation"):
@@ -550,6 +592,11 @@ def _extract_action_elements(elements: list[dict[str, Any]], *, max_items: int) 
 
 
 def _resolve_click_target_on_page(page: Any, target: dict[str, str], choose_hover_target: Any, *, max_depth: int) -> dict[str, Any]:
+    """在一个已打开页面中解析点击链路。
+
+    每一层都先 hover 当前目标；如果出现新目标，继续深入；
+    如果没有新目标，就点击当前目标并检查 URL 是否变化。
+    """
     current = _normalize_target_dict(target)
     chain: list[dict[str, Any]] = []
     seen: set[tuple[str, str]] = set()
@@ -596,6 +643,7 @@ def _resolve_click_target_on_page(page: Any, target: dict[str, str], choose_hove
 
 
 def _hover_target_and_collect(page: Any, target: dict[str, str], before_texts: set[str]) -> list[dict[str, str]]:
+    """悬停当前目标，并收集悬停后新增出现的菜单/action。"""
     try:
         locator = _target_locator(page, target.get("text", ""))
         locator.hover(timeout=2500)
@@ -614,6 +662,7 @@ def _hover_target_and_collect(page: Any, target: dict[str, str], before_texts: s
 
 
 def _extract_click_targets_from_page(page: Any) -> list[dict[str, str]]:
+    """直接从当前浏览器页面读取可见的 menu/action，用于 hover 后二次选择。"""
     raw_items = page.evaluate(
         """
         () => Array.from(document.querySelectorAll('a,button,[role="button"],[role="menuitem"],input[type="button"],input[type="submit"]'))
@@ -647,6 +696,7 @@ def _extract_click_targets_from_page(page: Any) -> list[dict[str, str]]:
 
 
 def _normalize_target_dict(value: Any) -> dict[str, str]:
+    """把模型/内部传入的点击目标标准化成 {'type': ..., 'text': ...}。"""
     if not isinstance(value, dict):
         return {"type": "", "text": ""}
     target_type = str(value.get("type") or "").strip().lower()
@@ -656,6 +706,7 @@ def _normalize_target_dict(value: Any) -> dict[str, str]:
 
 
 def _click_target_text(page: Any, target_text: str) -> None:
+    """按文本点击页面元素；多个定位策略依次尝试。"""
     last_error: Exception | None = None
     for locator in _target_locators(page, target_text):
         try:
@@ -668,10 +719,12 @@ def _click_target_text(page: Any, target_text: str) -> None:
 
 
 def _target_locator(page: Any, target_text: str) -> Any:
+    """返回第一个候选定位器，主要给 hover 使用。"""
     return _target_locators(page, target_text)[0]
 
 
 def _target_locators(page: Any, target_text: str) -> list[Any]:
+    """为同一段文本构造多个定位方式，提高点击/悬停成功率。"""
     text = normalize_text(target_text)
     return [
         page.get_by_text(text, exact=True).first,
@@ -681,5 +734,5 @@ def _target_locators(page: Any, target_text: str) -> list[Any]:
 
 
 def _click_menu_text(page: Any, menu_text: str) -> None:
+    """旧菜单点击入口的兼容包装；内部已统一走 _click_target_text。"""
     _click_target_text(page, menu_text)
-

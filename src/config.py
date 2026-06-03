@@ -43,7 +43,7 @@ class AppConfig:
 
     @property
     def snapshot_path(self) -> Path:
-        return self.runtime.output_dir / self.runtime.snapshot_filename #拼接路径
+        return self.runtime.output_dir / self.runtime.snapshot_filename
 
     @property
     def report_path(self) -> Path:
@@ -100,6 +100,7 @@ def _to_model_backend_settings(data: dict[str, Any] | None) -> ModelBackendSetti
 
 
 def load_config(path: Path) -> AppConfig:
+    """读取 YAML 配置，并补齐未配置字段的默认值。"""
     raw = _read_yaml(path)
     return AppConfig(
         job_role=str(raw.get("job_role", "前端工程师")),

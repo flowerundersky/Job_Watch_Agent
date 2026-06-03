@@ -52,6 +52,7 @@ class OpenAICompatibleBackend:
 
 
 def create_backend(settings: ModelBackendSettings) -> ModelBackend:
+    """根据配置创建网络模型后端；项目不再提供本地规则模型兜底。"""
     backend_name = settings.backend.strip().lower()
     if backend_name in {"openai", "openai_compatible", "openai-compatible", "api", "proxy", "relay"}:
         return OpenAICompatibleBackend(settings)
@@ -59,6 +60,7 @@ def create_backend(settings: ModelBackendSettings) -> ModelBackend:
 
 
 def _normalize_openai_endpoint(base_url: str) -> str:
+    """把用户配置的 OpenAI 兼容 base_url 统一成 chat/completions 地址。"""
     normalized = base_url.strip().rstrip("/")
     if normalized.endswith("/chat/completions"):
         return normalized
