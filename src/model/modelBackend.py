@@ -8,7 +8,7 @@ from typing import Protocol
 
 import requests
 
-from .config import ModelBackendSettings
+from ..config import ModelBackendSettings
 
 
 class ModelBackend(Protocol):
@@ -52,11 +52,10 @@ class OpenAICompatibleBackend:
 
 
 def create_backend(settings: ModelBackendSettings) -> ModelBackend:
-    """根据配置创建网络模型后端；项目不再提供本地规则模型兜底。"""
-    backend_name = settings.backend.strip().lower()
-    if backend_name in {"openai", "openai_compatible", "openai-compatible", "api", "proxy", "relay"}:
+    """Create the configured model backend."""
+    if settings.backend == "openai_compatible":
         return OpenAICompatibleBackend(settings)
-    raise ValueError(f"unsupported model backend: {settings.backend!r}; only network model backends are supported")
+    raise ValueError(f"unsupported model backend: {settings.backend}")
 
 
 def _normalize_openai_endpoint(base_url: str) -> str:
