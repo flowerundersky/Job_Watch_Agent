@@ -21,6 +21,8 @@ class WorkflowContext:
 
 
 class WorkflowState(TypedDict, total=False):
+    selection_job_role: str
+    selection_top_x: int
     selected_candidates: list[CompanyCandidate]
     missing_candidates: list[dict[str, Any]]
     date_crawled_pages: list[CrawledPage]

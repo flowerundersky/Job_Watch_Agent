@@ -41,14 +41,8 @@ class JobWatchWorkflow:
         """定义 LangGraph 节点顺序：筛公司 -> 爬页面 -> 分析 -> 落盘。"""
         graph = StateGraph(WorkflowState)
         graph.add_node("select_companies", partial(graph_select_companies, self.context))
-        graph.add_node("crawl_pages", partial(graph_crawl_pages, self.context))
-        graph.add_node("analyze", partial(graph_analyze, self.context))
-        graph.add_node("persist", partial(graph_persist, self.context))
         graph.add_edge(START, "select_companies")
-        graph.add_edge("select_companies", "crawl_pages")
-        graph.add_edge("crawl_pages", "analyze")
-        graph.add_edge("analyze", "persist")
-        graph.add_edge("persist", END)
+        graph.add_edge("select_companies", END)
         return graph.compile()
 
     def _select_companies(self) -> list[CompanyCandidate]:

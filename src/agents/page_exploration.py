@@ -7,9 +7,9 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 from ..config import RuntimeSettings
-from ..crawler import crawl_company_page, crawl_url, resolve_click_target_to_url
-from ..models import CompanyCandidate, CrawledPage
-from ..json_utils import extract_json_object
+from ..model.modelresults import CompanyCandidate, CrawledPage
+from ..tools.crawler import crawl_company_page, crawl_url, resolve_click_target_to_url
+from ..tools.json_utils import extract_json_object
 
 
 class PageExplorationAgent(ABC):

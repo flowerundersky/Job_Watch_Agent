@@ -14,7 +14,6 @@ from src.workflow import JobWatchWorkflow
 def test_relay_api_can_select_companies() -> None:
     config_path = Path("config.yaml")
     config = load_config(config_path)
-    config.company_filters = os.getenv("JOB_WATCH_COMPANY_FILTERS", config.company_filters or "优先校招官网")
 
     api_base_url = os.getenv("JOB_WATCH_API_BASE_URL", config.model_backend.api_base_url).strip()
     api_key = os.getenv("JOB_WATCH_API_KEY", config.model_backend.api_key).strip()
@@ -40,12 +39,13 @@ def test_relay_api_can_select_companies() -> None:
     selection = workflow._select_companies_with_missing()
     selected = selection["selected"]
     missing = selection["missing"]
+    job_role = selection["job_role"]
+    top_x = selection["top_x"]
 
     output_path = Path("output/test_output/test_relay_connect.json")
     output_payload = {
-        "job_role": config.job_role,
-        "company_filters": config.company_filters,
-        "top_x": config.top_x,
+        "job_role": job_role,
+        "top_x": top_x,
         "model_backend": {
             "backend": config.model_backend.backend,
             "api_base_url": api_base_url,
@@ -66,8 +66,8 @@ def test_relay_api_can_select_companies() -> None:
     assert selected, "expected at least one company candidate"
     assert "selected" in output_payload and "missing" in output_payload
     assert list(output_payload.keys()).index("selected") < list(output_payload.keys()).index("missing")
-    assert len(selected) <= config.top_x
-    assert len(selected) + len(missing) >= config.top_x
+    assert len(selected) <= top_x
+    assert len(selected) + len(missing) >= top_x
     assert selected[0].name.strip()
     assert selected[0].recruitment_url.strip()
     assert selected[0].recruitment_url.startswith(("http://", "https://"))

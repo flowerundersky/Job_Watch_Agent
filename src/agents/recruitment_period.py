@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from ..models import CompanyCandidate, CrawledPage
+from ..model.modelresults import CompanyCandidate, CrawledPage
 from .page_exploration import PageExplorationAgent
 
 

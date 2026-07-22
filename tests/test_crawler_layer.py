@@ -6,8 +6,8 @@ from pathlib import Path
 
 import pytest
 
-from src.crawler import crawl_company_pages, load_company_candidates_from_selection
-from src.models import CompanyCandidate
+from src.tools.crawler import crawl_company_pages, load_company_candidates_from_selection
+from src.model.modelresults import CompanyCandidate
 
 
 SELECTION_PATHS = (

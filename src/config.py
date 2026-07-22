@@ -35,9 +35,6 @@ class ModelBackendSettings:
 
 @dataclass(slots=True)
 class AppConfig:
-    job_role: str = "前端工程师"
-    company_filters: str = ""
-    top_x: int = 3
     runtime: RuntimeSettings = field(default_factory=RuntimeSettings)
     model_backend: ModelBackendSettings = field(default_factory=ModelBackendSettings)
 
@@ -103,9 +100,6 @@ def load_config(path: Path) -> AppConfig:
     """读取 YAML 配置，并补齐未配置字段的默认值。"""
     raw = _read_yaml(path)
     return AppConfig(
-        job_role=str(raw.get("job_role", "前端工程师")),
-        company_filters=str(raw.get("company_filters", "")),
-        top_x=int(raw.get("top_x", 3)),
         runtime=_to_runtime_settings(raw.get("runtime")),
         model_backend=_to_model_backend_settings(raw.get("model_backend")),
     )

@@ -7,7 +7,7 @@ from typing import Any
 
 from ..agents.channel_status import ChannelStatusAgent
 from ..agents.recruitment_period import RecruitmentPeriodAgent
-from ..agents.selection import CompanySelectionAgent
+from ..agents.selection import CompanySelectionBusiness
 from ..models import CompanyCandidate, CrawledPage, WorkflowResult
 from .analysis import build_summary, combine_agent_results
 from .changes import build_changes
@@ -17,12 +17,7 @@ from .state import WorkflowContext, WorkflowState
 
 def select_companies_with_missing(context: WorkflowContext) -> dict[str, Any]:
     """调用公司筛选 agent，保留成功项和缺失/非法项，便于排查。"""
-    return CompanySelectionAgent(
-        context.backend,
-        job_role=context.config.job_role,
-        top_x=context.config.top_x,
-        company_filters=context.config.company_filters,
-    ).run()
+    return CompanySelectionBusiness(context.backend).run()
 
 
 def select_companies(context: WorkflowContext) -> list[CompanyCandidate]:
@@ -35,6 +30,8 @@ def graph_select_companies(context: WorkflowContext, state: WorkflowState) -> di
     write_selection_output(context.config, selection["selected"], selection["missing"])
     print("公司筛选已完成")
     return {
+        "selection_job_role": selection["job_role"],
+        "selection_top_x": selection["top_x"],
         "selected_candidates": selection["selected"],
         "missing_candidates": selection["missing"],
     }
@@ -43,10 +40,11 @@ def graph_select_companies(context: WorkflowContext, state: WorkflowState) -> di
 def graph_crawl_pages(context: WorkflowContext, state: WorkflowState) -> dict[str, Any]:
     """第二步：并行运行时间 agent 和通道 agent 的页面探索流程。"""
     selected_candidates = state["selected_candidates"]
+    job_role = state["selection_job_role"]
     print("开始抓取页面")
     with ThreadPoolExecutor(max_workers=2) as executor:
-        date_future = executor.submit(crawl_time_pages, context, selected_candidates)
-        channel_future = executor.submit(crawl_channel_pages, context, selected_candidates)
+        date_future = executor.submit(crawl_time_pages, context, selected_candidates, job_role)
+        channel_future = executor.submit(crawl_channel_pages, context, selected_candidates, job_role)
         date_pages = date_future.result()
         channel_pages = channel_future.result()
     return {
@@ -59,7 +57,7 @@ def graph_analyze(context: WorkflowContext, state: WorkflowState) -> dict[str, A
     """第三步：把两个 agent 的页面级判断合并成一个总分析结果。"""
     date_pages = state.get("date_crawled_pages", [])
     channel_pages = state.get("channel_crawled_pages", [])
-    analysis = combine_agent_results(context.config.job_role, date_pages, channel_pages)
+    analysis = combine_agent_results(state["selection_job_role"], date_pages, channel_pages)
     return {"analysis": analysis}
 
 
@@ -71,10 +69,12 @@ def graph_persist(context: WorkflowContext, state: WorkflowState) -> dict[str, A
     channel_pages = state.get("channel_crawled_pages", [])
     crawled_pages = [*date_pages, *channel_pages]
     analysis = state["analysis"]
+    job_role = state["selection_job_role"]
+    top_x = state["selection_top_x"]
     changes = build_changes(context.config.snapshot_path, crawled_pages, analysis)
     result = WorkflowResult(
-        job_role=context.config.job_role,
-        top_x=context.config.top_x,
+        job_role=job_role,
+        top_x=top_x,
         selected_companies=selected_candidates,
         missing_companies=missing_candidates,
         crawled_pages=crawled_pages,
@@ -82,7 +82,7 @@ def graph_persist(context: WorkflowContext, state: WorkflowState) -> dict[str, A
         report_path=str(context.config.report_path),
         result_path=str(context.config.result_path),
         snapshot_path=str(context.config.snapshot_path),
-        summary=build_summary(context.config.job_role, selected_candidates, crawled_pages, analysis),
+        summary=build_summary(job_role, selected_candidates, crawled_pages, analysis),
         changes=changes,
     )
 
@@ -91,13 +91,13 @@ def graph_persist(context: WorkflowContext, state: WorkflowState) -> dict[str, A
     return {"result": result, "changes": changes}
 
 
-def crawl_time_pages(context: WorkflowContext, candidates: list[CompanyCandidate]) -> list[CrawledPage]:
+def crawl_time_pages(context: WorkflowContext, candidates: list[CompanyCandidate], job_role: str) -> list[CrawledPage]:
     """运行专门判断官方招聘时间段的页面探索 agent。"""
-    agent = RecruitmentPeriodAgent(context.backend, job_role=context.config.job_role, runtime=context.config.runtime)
+    agent = RecruitmentPeriodAgent(context.backend, job_role=job_role, runtime=context.config.runtime)
     return [agent.run(candidate) for candidate in candidates]
 
 
-def crawl_channel_pages(context: WorkflowContext, candidates: list[CompanyCandidate]) -> list[CrawledPage]:
+def crawl_channel_pages(context: WorkflowContext, candidates: list[CompanyCandidate], job_role: str) -> list[CrawledPage]:
     """运行专门判断招聘通道 open/closed/unknown 的页面探索 agent。"""
-    agent = ChannelStatusAgent(context.backend, job_role=context.config.job_role, runtime=context.config.runtime)
+    agent = ChannelStatusAgent(context.backend, job_role=job_role, runtime=context.config.runtime)
     return [agent.run(candidate) for candidate in candidates]

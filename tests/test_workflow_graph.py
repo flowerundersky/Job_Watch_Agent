@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 from src.config import AppConfig, ModelBackendSettings, RuntimeSettings
-from src.models import CrawledPage
+from src.model.modelresults import CrawledPage
 from src.workflow import JobWatchWorkflow
 
 
@@ -64,9 +64,6 @@ class _DummyBackend:
 
 def test_langgraph_workflow_runs_end_to_end(tmp_path, monkeypatch) -> None:
     config = AppConfig(
-        job_role="前端工程师",
-        company_filters="优先校招官网；只看技术岗",
-        top_x=1,
         runtime=RuntimeSettings(output_dir=tmp_path),
         model_backend=ModelBackendSettings(backend="openai_compatible"),
     )
@@ -103,7 +100,7 @@ def test_langgraph_workflow_runs_end_to_end(tmp_path, monkeypatch) -> None:
     result = workflow.run()
 
     assert any(
-        "筛选条件：优先校招官网；只看技术岗" in str(message.get("content", ""))
+        "筛选条件：优先中文招聘网站" in str(message.get("content", ""))
         for call in backend.calls
         for message in call
     )
